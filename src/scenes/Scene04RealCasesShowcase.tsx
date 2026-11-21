@@ -16,8 +16,10 @@ import {
   lerp,
   progressBetween,
 } from '../theme';
+import { useT } from '../locale';
 
 export const Scene04RealCasesShowcase: React.FC = () => {
+  const t = useT();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -62,8 +64,8 @@ export const Scene04RealCasesShowcase: React.FC = () => {
   const isVue = frame >= 256;
   const vueCaption =
     vF < 74
-      ? '真实 PR · Vue #2532：外层 processExpression() 圈复杂度 22 → 22，常规报表完全无感…'
-      : '镜头直接下钻嵌套函数 prefix()：圈复杂度 2 → 6、嵌套深度 0 → 2，静态度量附着节点并展开源码';
+      ? t('真实 PR · Vue #2532：外层 processExpression() 圈复杂度 22 → 22，常规报表完全无感…', 'Vue #2532: processExpression() stays at 22. A summary would miss the change.')
+      : t('镜头直接下钻嵌套函数 prefix()：圈复杂度 2 → 6、嵌套深度 0 → 2，静态度量附着节点并展开源码', 'Zoom in on prefix(): cyclomatic complexity 2 → 6, nesting depth 0 → 2. See the metrics beside the source.');
 
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.paper, overflow: 'hidden' }}>
@@ -88,7 +90,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                   01 · WORK-STEALING TOPOLOGY
                 </div>
                 <div style={{ fontFamily: FONTS.display, fontSize: 34, fontWeight: 800, color: COLORS.ink, marginTop: 4 }}>
-                  局部队列 · 溢出回退 · 批量窃取
+                  {t('局部队列 · 溢出回退 · 批量窃取', 'Local Queues · Overflow · Batch Stealing')}
                 </div>
               </div>
 
@@ -97,7 +99,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                   02 · WORKER LIFECYCLE
                 </div>
                 <div style={{ fontFamily: FONTS.display, fontSize: 34, fontWeight: 800, color: COLORS.ink, marginTop: 4 }}>
-                  搜索 · 执行 · 休眠 · 精准唤醒
+                  {t('搜索 · 执行 · 休眠 · 精准唤醒', 'Search · Execute · Park · Wake One')}
                 </div>
               </div>
 
@@ -121,7 +123,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                     Global Injector Queue
                   </text>
                   <text x="22" y="76" fill={COLORS.muted} fontFamily={FONTS.sans} fontSize="14.5">
-                    溢出半队列承接 & 外部 spawn 入口
+                    {t('溢出半队列承接 & 外部 spawn 入口', 'Half-queue overflow + external spawns')}
                   </text>
                 </g>
 
@@ -253,10 +255,10 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                 }}
               >
                 {[
-                  { name: 'Searching', desc: '持锁探测其他 Worker 队列（限流防惊群）', color: COLORS.frontend },
-                  { name: 'Executing', desc: '找到任务 → 释放搜索名额，按需唤醒下一个', color: COLORS.backend },
-                  { name: 'Parked', desc: '全队列为空 → 归还搜索位并进入低耗休眠', color: COLORS.database },
-                  { name: 'Unparked', desc: '新任务到达 → 精准唤醒单个空闲 Worker', color: COLORS.cloud },
+                  { name: 'Searching', desc: t('持锁探测其他 Worker 队列（限流防惊群）', 'Probe peer queues under lock; limit concurrent searchers.'), color: COLORS.frontend },
+                  { name: 'Executing', desc: t('找到任务 → 释放搜索名额，按需唤醒下一个', 'Found work → release the search slot and wake a peer if needed.'), color: COLORS.backend },
+                  { name: 'Parked', desc: t('全队列为空 → 归还搜索位并进入低耗休眠', 'No work → release the search slot and park.'), color: COLORS.database },
+                  { name: 'Unparked', desc: t('新任务到达 → 精准唤醒单个空闲 Worker', 'New work → wake a single idle worker.'), color: COLORS.cloud },
                 ].map((st, idx) => {
                   const isActive = Math.floor(lifecycleHop) === idx;
                   return (
@@ -294,7 +296,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
 
           <FloatingCaption
             kicker="TOKIO #1657"
-            text="100 个文件的调度器大重构：镜头从批量窃取平滑摇入 Worker 生命周期，一条主线讲透"
+            text={t('100 个文件的调度器大重构：镜头从批量窃取平滑摇入 Worker 生命周期，一条主线讲透', 'A 100-file scheduler rewrite, from batch work-stealing to the worker lifecycle.')}
             accent={COLORS.messagebus}
             opacity={1 - wipeT}
           />
@@ -388,7 +390,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                   </span>
                 </div>
                 <div style={{ fontFamily: FONTS.sans, fontSize: 14, color: COLORS.muted, marginTop: 10 }}>
-                  编译期绑定元数据 → 运行期访问代码
+                  {t('编译期绑定元数据 → 运行期访问代码', 'Compile-time bindings → runtime access code')}
                 </div>
               </div>
 
@@ -443,7 +445,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                 </div>
 
                 <div style={{ fontFamily: FONTS.sans, fontSize: 16.5, color: COLORS.muted, marginTop: 10 }}>
-                  外层圈复杂度看似纹丝不动，常规汇总报表直接放行 ——
+                  {t('外层圈复杂度看似纹丝不动，常规汇总报表直接放行 ——', 'The outer complexity stays flat. A summary misses the change.')}
                 </div>
 
                 {/* CRACKED-OPEN NESTED FUNCTION: prefix() */}
@@ -618,7 +620,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                   color: '#FFE4E6',
                 }}
               >
-                不替你武断定罪，但 3 秒把审阅者带到最该看的代码行。
+                {t('不替你武断定罪，但 3 秒把审阅者带到最该看的代码行。', 'Find the lines worth reviewing in three seconds. You make the call.')}
               </div>
             </div>
           )}

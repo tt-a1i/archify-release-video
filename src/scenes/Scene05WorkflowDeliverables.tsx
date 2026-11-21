@@ -16,6 +16,7 @@ import {
   lerp,
   progressBetween,
 } from '../theme';
+import { useT } from '../locale';
 
 const DualThemeDiagramSurface: React.FC<{ theme: 'light' | 'dark'; pulseU: number }> = ({
   theme,
@@ -104,6 +105,7 @@ const DualThemeDiagramSurface: React.FC<{ theme: 'light' | 'dark'; pulseU: numbe
 };
 
 export const Scene05WorkflowDeliverables: React.FC = () => {
+  const t = useT();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -194,18 +196,18 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 44, padding: '0 12px' }}>
                   {[
                     {
-                      title: '无脚本双主题动态 SVG',
-                      sub: '零 <script> 零外链，直贴 GitHub PR、GitLab MR 与文档自动播放',
+                      title: t('无脚本双主题动态 SVG', 'Script-Free SVG · Two Themes'),
+                      sub: t('零 <script> 零外链，直贴 GitHub PR、GitLab MR 与文档自动播放', 'No scripts or external assets. Plays inline in PRs, MRs, and docs.'),
                       color: COLORS.brandBlue,
                     },
                     {
                       title: '1080p60 MP4 / WebM',
-                      sub: '直出无损动效片段，无缝并入 Remotion、剪映或 Premiere 视频制作流',
+                      sub: t('直出无损动效片段，无缝并入 Remotion、剪映或 Premiere 视频制作流', 'Lossless motion clips for Remotion, CapCut, or Premiere.'),
                       color: COLORS.ember,
                     },
                     {
-                      title: '4 预设离线 Stage HTML',
-                      sub: '实时切换 Classic / Signal Flow / Blueprint / Editorial，随时暂停核对源码',
+                      title: t('4 预设离线 Stage HTML', 'Offline Stage · 4 Presets'),
+                      sub: t('实时切换 Classic / Signal Flow / Blueprint / Editorial，随时暂停核对源码', 'Switch between Classic, Signal Flow, Blueprint, and Editorial. Pause to inspect the source.'),
                       color: COLORS.backend,
                     },
                   ].map((d) => (
@@ -225,7 +227,7 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
 
           <FloatingCaption
             kicker="DELIVERABLES"
-            text="一次编排，直出贴入 GitHub PR / GitLab MR 的无脚本动图 SVG、4 预设 Stage 与可并入视频流的 1080p60 素材"
+            text={t('一次编排，直出贴入 GitHub PR / GitLab MR 的无脚本动图 SVG、4 预设 Stage 与可并入视频流的 1080p60 素材', 'One Story, three outputs: script-free SVG for PRs and MRs, a four-preset Stage, and 1080p60 video.')}
             accent={COLORS.brandBlue}
             opacity={1 - partOutT}
           />
@@ -247,11 +249,11 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
               <div style={{ width: 1680, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 52 }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ fontFamily: FONTS.display, fontSize: 54, fontWeight: 800, color: COLORS.ink, letterSpacing: '-0.02em' }}>
-                    不止于看懂，直接把证据喂回给{' '}
+                    {t('不止于看懂，直接把证据喂回给', 'Give the evidence to your')}{' '}
                     <span style={{ color: COLORS.backend }}>Coding Agent</span>
                   </div>
                   <div style={{ fontFamily: FONTS.sans, fontSize: 22, color: COLORS.muted, marginTop: 12 }}>
-                    工具负责确定性事实与清晰表达，人类永远握紧最终判断
+                    {t('工具负责确定性事实与清晰表达，人类永远握紧最终判断', 'Archify shows the facts. You make the final call.')}
                   </div>
                 </div>
 
@@ -282,8 +284,8 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
                   {[
                     {
                       step: '01',
-                      title: 'Atlas 静态诊断',
-                      sub: '捕获循环依赖、架构漂移与嵌套复杂度',
+                      title: t('Atlas 静态诊断', 'Atlas Diagnostics'),
+                      sub: t('捕获循环依赖、架构漂移与嵌套复杂度', 'Find dependency cycles, drift, and nested complexity.'),
                       badge: '1 cycle · 2 drift',
                       color: COLORS.security,
                       sigil: 'security' as const,
@@ -292,7 +294,7 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
                     {
                       step: '02',
                       title: 'Copy Task for AI',
-                      sub: '一键生成带源码快照与校验摘要的结构化任务',
+                      sub: t('一键生成带源码快照与校验摘要的结构化任务', 'Copy a structured task with source snapshots and a verification summary.'),
                       badge: 'SHA-verified brief',
                       color: COLORS.frontend,
                       sigil: 'backend' as const,
@@ -300,8 +302,8 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
                     },
                     {
                       step: '03',
-                      title: 'Coding Agent 修复',
-                      sub: 'Cursor · Claude Code · Codex 精准落地补丁',
+                      title: t('Coding Agent 修复', 'Coding Agent Fix'),
+                      sub: t('Cursor · Claude Code · Codex 精准落地补丁', 'Apply a targeted patch with Cursor, Claude Code, or Codex.'),
                       badge: 'targeted patch',
                       color: COLORS.database,
                       sigil: 'cloud' as const,
@@ -309,8 +311,8 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
                     },
                     {
                       step: '04',
-                      title: 'Re-analyze 复检',
-                      sub: '原地重算前后对照，确认架构与复杂度清零',
+                      title: t('Re-analyze 复检', 'Re-analyze'),
+                      sub: t('原地重算前后对照，确认架构与复杂度清零', 'Compare before and after to verify the fixes.'),
                       badge: resolvedT > 0.4 ? '✓ 0 cycles · 0 drift' : 're-checking…',
                       color: COLORS.backend,
                       sigil: 'lifecycle' as const,
@@ -378,7 +380,7 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
 
           <FloatingCaption
             kicker="AI LOOP"
-            text="发现结构债？一键复制带源码依据的 AI Task 给 Coding Agent 修复，再原地 Re-analyze 验绿"
+            text={t('发现结构债？一键复制带源码依据的 AI Task 给 Coding Agent 修复，再原地 Re-analyze 验绿', 'Copy a source-backed task to your coding agent, then rerun the analysis to verify the fix.')}
             accent={COLORS.backend}
           />
         </AbsoluteFill>

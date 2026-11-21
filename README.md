@@ -11,6 +11,7 @@
 | 合成 ID | 主题 | 核心画面与动效 |
 | --- | --- | --- |
 | `ArchifyReleasePromo` | **完整主片（112.7s）** | 全六幕无缝串联 + 纯振幅交叉淡入淡出 BGM 与逐帧卡点音效 |
+| `ArchifyReleasePromoEN` | English full film | Same scenes, timing and soundtrack with English on-screen copy |
 | `01-CognitiveDebt` | **AI 时代与绿色 CI 幻觉** | Archify 蓝图装配式品牌开场 → Prompt 与 `CI 全绿` 假象 → 三层 Clean Architecture 绿灯下静默漂移 + 指标对照 → 「我们做了什么」悬浮转折 → 现存 9 个漂移节点直接裂变并连同图纸背景黑化变形为 Atlas 星盘 |
 | `02-CodeAnalysisAtlas` | **代码分析三视图** | ① **2D 全仓星盘 Atlas**（18 层余辉雷达扫光实时点亮 `coupling/cycle` / `complexity/function` / `architecture/boundary` / `coupling/internal-leak` 信号 + 六大语言 + 扇区聚焦 + 循环彗星 + PR 差异模式）→ ② **Atlas 3D 粒子树**（2D 底座倾倒消融、480+ 粒子螺旋拔地升维）→ ③ **原版架构图无侵入叠加（`--ir`）**（信任边界、5 色诊断光晕全貌、5 色图例条 + 右侧 Workbench 优先级清单、内嵌循环/复杂度迷你图、Git Diff 源码边栏与 `Accept Baseline`） |
 | `03-StoryChoreography` | **动态演示引擎（Pulse Billing #5）** | 原生 10 种图结构 → 「为什么不让 AI 直接手写动效？」对照揭秘（`choreography.json` 声明式意图 → 自动相机 / Git SHA 校验 / 直入 PR 与视频流）→ Pulse Billing #5 实机演示（架构图同源变身时序图 + `src/routes/checkout.ts:19-34 @ 8bcb443` 真实源码 + `db/schema.sql` UUID / `bigint` / `UNIQUE(idempotency_key)` ERD） |
@@ -35,6 +36,12 @@ npm run typecheck
 # 导出 1080p MP4 成片（输出至 out/archify-release-promo.mp4）
 npm run build
 ```
+
+## English edition
+
+In Remotion Studio, choose `ArchifyReleasePromoEN` for the full English-language film. It shares the Chinese edition's scene sequence, timing and synthesized soundtrack. Original repository names, paths, identifiers and code citations are retained. The default `ArchifyReleasePromo` composition and `npm run build` remain Chinese.
+
+To render the English edition locally when needed, run `npm run build:en`. Its output is `out/archify-release-promo-en.mp4`.
 
 ## 关联仓库
 

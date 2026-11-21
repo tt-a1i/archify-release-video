@@ -9,8 +9,10 @@ import {
   lerp,
   progressBetween,
 } from '../theme';
+import { useT } from '../locale';
 
 export const Scene06MetaOutro: React.FC = () => {
+  const t = useT();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -87,7 +89,7 @@ export const Scene06MetaOutro: React.FC = () => {
               </div>
 
               <div style={{ fontFamily: FONTS.display, fontSize: 30, fontWeight: 700, color: COLORS.ink }}>
-                你刚才看到的每一帧架构演进，都由代码与确定性规则驱动
+                {t('你刚才看到的每一帧架构演进，都由代码与确定性规则驱动', 'Every frame you just saw was driven by code and deterministic rules.')}
               </div>
             </div>
           </AbsoluteFill>
@@ -139,9 +141,9 @@ export const Scene06MetaOutro: React.FC = () => {
                 transform: `translateY(${interpolate(textSpring, [0, 1], [24, 0])}px)`,
               }}
             >
-              <EditorialPill label="CODE ANALYSIS · 全仓星盘 × PR 影响" color={COLORS.backend} />
+              <EditorialPill label={t("CODE ANALYSIS · 全仓星盘 × PR 影响", "CODE ANALYSIS · REPO ATLAS × PR IMPACT")} color={COLORS.backend} />
               <span style={{ fontFamily: FONTS.mono, fontSize: 18, color: COLORS.dim }}>×</span>
-              <EditorialPill label="STORY CHOREOGRAPHY · 动态演示引擎" color={COLORS.ember} />
+              <EditorialPill label={t("STORY CHOREOGRAPHY · 动态演示引擎", "STORY CHOREOGRAPHY · ANIMATION ENGINE")} color={COLORS.ember} />
             </div>
 
             {/* Signature Tagline with Warm Archify Gradient */}
@@ -157,7 +159,7 @@ export const Scene06MetaOutro: React.FC = () => {
                 transform: `translateY(${interpolate(textSpring, [0, 1], [24, 0])}px)`,
               }}
             >
-              AI 时代，把复杂代码变成看得懂的
+              {t('AI 时代，把复杂代码变成看得懂的', 'For the AI era: complex code, ')}
               <span
                 style={{
                   background: `linear-gradient(100deg, ${COLORS.emberLight} 0%, ${COLORS.ember} 48%, ${COLORS.emberDeep} 100%)`,
@@ -165,9 +167,9 @@ export const Scene06MetaOutro: React.FC = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                动态真相
+                {t('动态真相', 'made clear in motion')}
               </span>
-              。
+              {t('。', '.')}
             </div>
 
             {/* Crisp Dark-Ink Command Capsule on Bright Paper */}

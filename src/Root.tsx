@@ -9,6 +9,13 @@ import { Scene04RealCasesShowcase } from './scenes/Scene04RealCasesShowcase';
 import { Scene05WorkflowDeliverables } from './scenes/Scene05WorkflowDeliverables';
 import { Scene06MetaOutro } from './scenes/Scene06MetaOutro';
 import { FPS, HEIGHT, WIDTH } from './theme';
+import { PromoLocaleContext } from './locale';
+
+const EnglishPromo: React.FC = () => (
+  <PromoLocaleContext.Provider value="en">
+    <ArchifyPromoVideo />
+  </PromoLocaleContext.Provider>
+);
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -16,6 +23,14 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="ArchifyReleasePromo"
         component={ArchifyPromoVideo}
+        durationInFrames={TOTAL_DURATION}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="ArchifyReleasePromoEN"
+        component={EnglishPromo}
         durationInFrames={TOTAL_DURATION}
         fps={FPS}
         width={WIDTH}

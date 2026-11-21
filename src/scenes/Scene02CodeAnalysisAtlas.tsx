@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useLocale } from '../locale';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import {
   CameraRig,
@@ -542,6 +543,7 @@ const ClassicOverlayNode: React.FC<{
 };
 
 export const Scene02CodeAnalysisAtlas: React.FC = () => {
+  const en = useLocale() === 'en';
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -778,32 +780,32 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
   const activeModeIdx = frame < 358 ? 0 : frame < 562 ? 1 : 2;
   let kicker = 'VIEW 1/3 · 2D ATLAS';
   let kickerColor: string = COLORS.neonCyan;
-  let caption = '原生支持 TS/JS、Python、Java、Go、Rust、C/C++ 六大语言静态解析：全仓星盘一眼洞穿依赖与复杂度';
+  let caption = en ? 'Map dependencies and complexity across TS/JS, Python, Java, Go, Rust, and C/C++.' : '原生支持 TS/JS、Python、Java、Go、Rust、C/C++ 六大语言静态解析：全仓星盘一眼洞穿依赖与复杂度';
 
   if (frame >= 108 && frame < 196) {
     kicker = 'ATLAS · SECTOR ZOOM';
     kickerColor = COLORS.neonGreen;
-    caption = '扇区聚焦缩放：镜头推入热点模块，圆内无遮挡展开全部文件与复杂度尖刺';
+    caption = en ? 'Zoom into a hotspot to see its files and complexity spikes without overlap.' : '扇区聚焦缩放：镜头推入热点模块，圆内无遮挡展开全部文件与复杂度尖刺';
   } else if (frame >= 196 && frame < 278) {
     kicker = 'ATLAS · CYCLE & DRIFT';
     kickerColor = COLORS.neonRose;
-    caption = '光轨直击跨模块循环依赖与边界越权 —— 每条信号都绑定精确源码行号';
+    caption = en ? 'Trace import cycles and boundary violations, each linked to exact source lines.' : '光轨直击跨模块循环依赖与边界越权 —— 每条信号都绑定精确源码行号';
   } else if (frame >= 278 && frame < 358) {
     kicker = 'ATLAS · PR DIFF MODE';
     kickerColor = COLORS.neonGreen;
-    caption = '一键切入 PR 差异分析：固定基线与当前提交，增删改依赖与基线复杂度同屏对照';
+    caption = en ? 'Compare dependencies and complexity at the pinned baseline and PR head.' : '一键切入 PR 差异分析：固定基线与当前提交，增删改依赖与基线复杂度同屏对照';
   } else if (frame >= 358 && frame < 562) {
     kicker = 'VIEW 2/3 · ATLAS 3D TREE';
     kickerColor = COLORS.neonViolet;
-    caption = '同一份静态分析数据三维升维：核心主干拔地而起，依赖层为高度、函数复杂度化作发光粒子云';
+    caption = en ? 'The same graph in 3D: height shows dependency layers, and particles show function complexity.' : '同一份静态分析数据三维升维：核心主干拔地而起，依赖层为高度、函数复杂度化作发光粒子云';
   } else if (frame >= 562 && frame < 678) {
     kicker = 'VIEW 3/3 · CLASSIC OVERLAY';
     kickerColor = COLORS.ember;
-    caption = '原生架构图叠加改造：五色诊断光晕覆盖报错、告警、信息、洁净与未映射外部依赖，直指越界漂移连线';
+    caption = en ? 'Five diagnostic colors flag errors, warnings, info, clean nodes, and unmapped external dependencies.' : '原生架构图叠加改造：五色诊断光晕覆盖报错、告警、信息、洁净与未映射外部依赖，直指越界漂移连线';
   } else if (frame >= 678) {
     kicker = 'CLASSIC · WORKBENCH';
     kickerColor = COLORS.security;
-    caption = '优先级清单 + 内嵌循环/复杂度迷你图 + 工作区 Diff 源码直连 — 支持 Baseline 接纳与一键复制 AI 任务';
+    caption = en ? 'Prioritize findings, inspect source diffs, accept a baseline, or copy a task for your agent.' : '优先级清单 + 内嵌循环/复杂度迷你图 + 工作区 Diff 源码直连 — 支持 Baseline 接纳与一键复制 AI 任务';
   }
 
   return (
@@ -1241,7 +1243,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                     SECTOR EXPANDED · MAX CC 25
                   </text>
                   <text x={billingAnchor[0] + 72} y={billingAnchor[1] - 24} fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize={15} fontWeight={600}>
-                    热点扇区圆内平滑放大，其余模块无重叠压缩
+                    {en ? 'Expand the hotspot without crowding other modules' : '热点扇区圆内平滑放大，其余模块无重叠压缩'}
                   </text>
                 </g>
               )}
@@ -1266,14 +1268,14 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                     + PR DIFF ANALYSIS · --pr
                   </text>
                   <text x="1418" y="314" fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize="16" fontWeight="600">
-                    固定基线 → 当前提交 · 2 处直接调用方已定位
+                    {en ? 'Pinned base → head · 2 direct callers found' : '固定基线 → 当前提交 · 2 处直接调用方已定位'}
                   </text>
                   <polyline points="630,395 515,316 185,316" fill="none" stroke={COLORS.neonRose} strokeWidth={1.8} strokeDasharray="5 4" />
                   <text x="185" y="300" fill={COLORS.neonRose} fontFamily={FONTS.mono} fontSize="14" fontWeight="800">
                     − REMOVED DEPENDENCIES · DRIFT GATE
                   </text>
                   <text x="185" y="340" fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize="16" fontWeight="600">
-                    移除同步 audit 依赖 · 灰虚线对照基线复杂度
+                    {en ? 'Sync audit removed · dashed CC baseline' : '移除同步 audit 依赖 · 灰虚线对照基线复杂度'}
                   </text>
                 </g>
               )}
@@ -1549,7 +1551,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                     2,841 FUNCTIONS · 138 FILES
                   </text>
                   <text x="1845" y="314" textAnchor="end" fill={COLORS.darkMuted} fontFamily={FONTS.sans} fontSize="15.5">
-                    光簇大小 = 圈复杂度 · 发光连丝 = 跨模块泄漏
+                    {en ? 'Cluster size = complexity · glowing links = boundary leaks' : '光簇大小 = 圈复杂度 · 发光连丝 = 跨模块泄漏'}
                   </text>
                 </g>
               </svg>
@@ -1576,7 +1578,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
           <div style={{ position: 'absolute', top: 36, left: 56, display: 'flex', alignItems: 'center', gap: 14, zIndex: 55 }}>
             <EditorialPill label="CLASSIC OVERLAY · --ir architecture.json" color={COLORS.ember} />
             <span style={{ fontFamily: FONTS.mono, fontSize: 13, fontWeight: 700, color: COLORS.muted }}>
-              保留原版架构图，一键叠加静态诊断光晕
+              {en ? 'Add static diagnostics to your original diagram' : '保留原版架构图，一键叠加静态诊断光晕'}
             </span>
           </div>
 
@@ -1832,7 +1834,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                 w={355}
                 h={112}
                 title="Legacy Audit"
-                sub="未声明连线 — 代码里却偷偷导入"
+                sub={en ? 'Undeclared import in code' : '未声明连线 — 代码里却偷偷导入'}
                 sigil="security"
                 baseColor={COLORS.security}
                 halo="red"
@@ -1939,7 +1941,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                       rank: '#1',
                       rule: 'architecture/drift',
                       loc: 'checkout.ts:38',
-                      detail: '未声明导入 legacy-audit/writer',
+                      detail: en ? 'Undeclared import: legacy-audit/writer' : '未声明导入 legacy-audit/writer',
                       c: COLORS.security,
                     },
                     {
@@ -2172,8 +2174,8 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                   ✓ STRUCTURE VERIFIED · NEXT STEP
                 </div>
                 <div style={{ fontFamily: FONTS.display, fontSize: 48, fontWeight: 800, color: COLORS.ink, marginTop: 10 }}>
-                  代码分析看清了真相，
-                  <span style={{ color: COLORS.ember }}>怎么让团队十秒听懂？</span>
+                  {en ? 'Analysis shows what changed. ' : '代码分析看清了真相，'}
+                  <span style={{ color: COLORS.ember }}>{en ? 'Can your team grasp it in ten seconds?' : '怎么让团队十秒听懂？'}</span>
                 </div>
               </div>
             </AbsoluteFill>

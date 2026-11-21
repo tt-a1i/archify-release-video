@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useLocale } from '../locale';
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import {
   AnimatedArchifyBrandReveal,
@@ -43,22 +44,28 @@ const WHAT_WE_BUILT = [
   {
     num: '01',
     title: '六大语言 AST 静态解析',
+    titleEn: 'AST parsing for six languages',
     en: 'DETERMINISTIC GRAPH',
     desc: '不靠大模型猜拓扑，直接提取真实依赖网与函数圈复杂度',
+    descEn: 'Extract real dependencies and cyclomatic complexity directly from code, without an LLM guessing the topology.',
     color: COLORS.brandBlue,
   },
   {
     num: '02',
     title: '三种视角透视全仓',
+    titleEn: 'Three views of your codebase',
     en: 'ATLAS · 3D · OVERLAY',
     desc: '2D 全仓星盘、3D 粒子树、原版架构图无侵入叠加诊断',
+    descEn: 'Explore the 2D Atlas, a 3D particle tree, or diagnostics over your original architecture diagram.',
     color: COLORS.backend,
   },
   {
     num: '03',
     title: '可验证的工程闭环',
+    titleEn: 'A verifiable review workflow',
     en: 'DRIFT · PR · AI TASK',
     desc: '拦截架构漂移、钉住 PR 影响面，一键导出源码证据任务',
+    descEn: 'Catch architectural drift, pin the impact of a PR, and export tasks backed by source evidence.',
     color: COLORS.ember,
   },
 ];
@@ -98,6 +105,7 @@ const TIERS = [
 ];
 
 export const Scene01CognitiveDebt: React.FC = () => {
+  const en = useLocale() === 'en';
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -337,7 +345,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
               >
                 <EditorialPill label="THE AI CODING ERA" color={COLORS.brandBlue} />
                 <div style={{ fontFamily: FONTS.display, fontSize: 60, fontWeight: 800, color: COLORS.ink, letterSpacing: '-0.025em', textAlign: 'center' }}>
-                  AI 正在以
+                  {en ? 'AI is rewriting codebases ' : 'AI 正在以'}
                   <span
                     style={{
                       background: `linear-gradient(100deg, ${COLORS.brandBlue}, ${COLORS.brandTeal})`,
@@ -345,9 +353,9 @@ export const Scene01CognitiveDebt: React.FC = () => {
                       WebkitTextFillColor: 'transparent',
                     }}
                   >
-                    前所未有的速度
+                    {en ? 'faster than ever' : '前所未有的速度'}
                   </span>
-                  改写代码库。
+                  {en ? '.' : '改写代码库。'}
                 </div>
               </div>
 
@@ -454,7 +462,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
                   transform: `translateY(${(1 - ciInSpring) * 18}px)`,
                 }}
               >
-                CI 全绿，测试全过。<span style={{ color: COLORS.muted }}>然后呢？</span>
+                {en ? 'Green CI. All tests pass. ' : 'CI 全绿，测试全过。'}<span style={{ color: COLORS.muted }}>{en ? 'Now what?' : '然后呢？'}</span>
               </div>
             </div>
           </AbsoluteFill>
@@ -733,23 +741,23 @@ export const Scene01CognitiveDebt: React.FC = () => {
 
               {[
                 {
-                  label: 'LAYER BYPASSES · 跨层偷连',
+                  label: en ? 'LAYER BYPASSES' : 'LAYER BYPASSES · 跨层偷连',
                   val: String(violationsCount),
-                  tag: violationsCount > 0 ? 'CI 未报错' : 'CLEAN',
+                  tag: violationsCount > 0 ? (en ? 'NO CI ERRORS' : 'CI 未报错') : 'CLEAN',
                   color: violationsCount > 0 ? COLORS.ember : COLORS.backend,
                   hot: violationsCount > 0,
                 },
                 {
-                  label: 'IMPORT CYCLES · 循环依赖',
+                  label: en ? 'IMPORT CYCLES' : 'IMPORT CYCLES · 循环依赖',
                   val: String(cyclesCount),
-                  tag: cyclesCount > 0 ? '单测全绿' : 'CLEAN',
+                  tag: cyclesCount > 0 ? (en ? 'TESTS PASS' : '单测全绿') : 'CLEAN',
                   color: cyclesCount > 0 ? COLORS.security : COLORS.backend,
                   hot: cyclesCount > 0,
                 },
                 {
-                  label: 'MAX COMPLEXITY · 峰值复杂度',
+                  label: en ? 'MAX COMPLEXITY' : 'MAX COMPLEXITY · 峰值复杂度',
                   val: `CC ${maxCcCount}`,
-                  tag: maxCcCount > 15 ? '暗中飙升' : 'HEALTHY',
+                  tag: maxCcCount > 15 ? (en ? 'RISING FAST' : '暗中飙升') : 'HEALTHY',
                   color: maxCcCount > 15 ? COLORS.security : COLORS.backend,
                   hot: maxCcCount > 15,
                 },
@@ -801,7 +809,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
               }}
             >
               <div style={{ fontFamily: FONTS.display, fontSize: 48, fontWeight: 800, color: COLORS.ink, letterSpacing: '-0.02em' }}>
-                CI 一路全绿，但架构早已
+                {en ? 'CI stayed green. The architecture ' : 'CI 一路全绿，但架构早已'}
                 <span
                   style={{
                     background: `linear-gradient(100deg, ${COLORS.emberLight} 0%, ${COLORS.ember} 48%, ${COLORS.emberDeep} 100%)`,
@@ -809,12 +817,12 @@ export const Scene01CognitiveDebt: React.FC = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  面目全非
+                  {en ? 'drifted anyway' : '面目全非'}
                 </span>
-                。
+                {en ? '.' : '。'}
               </div>
               <div style={{ fontFamily: FONTS.sans, fontSize: 20.5, color: COLORS.muted, marginTop: 8 }}>
-                AI 写的测试只验证单点「跑得通」，防不住跨层偷连、循环耦合与复杂度失控
+                {en ? 'Tests can pass in isolation and still miss layer bypasses, import cycles, and runaway complexity.' : 'AI 写的测试只验证单点「跑得通」，防不住跨层偷连、循环耦合与复杂度失控'}
               </div>
             </div>
           </AbsoluteFill>
@@ -849,7 +857,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
               <EditorialPill label="SO WHAT WE BUILT · ARCHIFY CODE ANALYSIS" color={COLORS.backend} />
 
               <div style={{ textAlign: 'center', fontFamily: FONTS.display, fontSize: 64, fontWeight: 800, lineHeight: 1.18, color: COLORS.ink, letterSpacing: '-0.025em' }}>
-                所以我们为 Archify 打造了：
+                {en ? 'So we built Archify a' : '所以我们为 Archify 打造了：'}
                 <br />
                 <span
                   style={{
@@ -858,12 +866,12 @@ export const Scene01CognitiveDebt: React.FC = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  确定性代码分析引擎
+                  {en ? 'deterministic code analysis engine' : '确定性代码分析引擎'}
                 </span>
               </div>
 
               <div style={{ fontFamily: FONTS.sans, fontSize: 22.5, color: COLORS.muted, textAlign: 'center' }}>
-                不靠大模型盲猜，也不只盯着单测绿灯——直接把眼前的代码架构变成看得见的图谱
+                {en ? 'See the architecture your code actually implements. No LLM guesswork, no reliance on green tests alone.' : '不靠大模型盲猜，也不只盯着单测绿灯——直接把眼前的代码架构变成看得见的图谱'}
               </div>
 
               <div style={{ display: 'flex', gap: 38, marginTop: 8 }}>
@@ -888,10 +896,10 @@ export const Scene01CognitiveDebt: React.FC = () => {
                         {item.num} · {item.en}
                       </div>
                       <div style={{ fontFamily: FONTS.display, fontSize: 26, fontWeight: 800, color: COLORS.ink, marginTop: 8 }}>
-                        {item.title}
+                        {en ? item.titleEn : item.title}
                       </div>
                       <div style={{ fontFamily: FONTS.sans, fontSize: 16, color: COLORS.muted, marginTop: 6, lineHeight: 1.55 }}>
-                        {item.desc}
+                        {en ? item.descEn : item.desc}
                       </div>
                     </div>
                   );

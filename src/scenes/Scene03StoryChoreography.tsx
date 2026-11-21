@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocale, useT } from '../locale';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import {
   CameraRig,
@@ -215,6 +216,8 @@ const ARCH_LOCK_LEG: [number, number][] = [
 ];
 
 export const Scene03StoryChoreography: React.FC = () => {
+  const t = useT();
+  const isEnglish = useLocale() === 'en';
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -292,17 +295,17 @@ export const Scene03StoryChoreography: React.FC = () => {
   const activeStep = f < 228 ? 0 : f < 458 ? 1 : 2;
   const progressPct = clamp01(f / 555) * 100;
 
-  let caption = '把 Archify 原生 10 种图结构直接变成动态演示：PR 评审、文档讲解、方案汇报或视频工作流，随需导出 SVG 与视频';
+  let caption = t("把 Archify 原生 10 种图结构直接变成动态演示：PR 评审、文档讲解、方案汇报或视频工作流，随需导出 SVG 与视频", "Turn 10 native diagram types into motion for PR reviews, docs, presentations and video. Export SVG or video.");
   if (frame >= 92 && frame < 248) {
-    caption = '为什么不让 AI 直接手写动效代码？AI 只写 20 行声明式意图，镜头、源码校验与无脚本烘焙全交由确定性引擎';
+    caption = t("为什么不让 AI 直接手写动效代码？AI 只写 20 行声明式意图，镜头、源码校验与无脚本烘焙全交由确定性引擎", "Why not hand-code motion with AI? Just 20 lines of intent; the engine handles cameras, source checks and script-free output.");
   } else if (frame >= 248 && f < 205) {
-    caption = 'Pulse Billing #5：一份 JSON 直接编译出活体演示 —— 同步扣款虚化、异步队列入场，镜头自动紧跟语义流';
+    caption = t("Pulse Billing #5：一份 JSON 直接编译出活体演示 —— 同步扣款虚化、异步队列入场，镜头自动紧跟语义流", "Pulse Billing #5: one JSON animates the change. Sync billing fades, an async queue enters, and the camera follows the flow.");
   } else if (f >= 205 && f < 325) {
-    caption = '跨视图同源变身：同一核心服务从架构图滑入时序图，清晰区分首次 202 与重复幂等命中';
+    caption = t("跨视图同源变身：同一核心服务从架构图滑入时序图，清晰区分首次 202 与重复幂等命中", "One service morphs from architecture into sequence, separating the first 202 response from an idempotent retry.");
   } else if (f >= 325 && f < 448) {
-    caption = '镜头自动让位：右侧滑出 Git 固定提交的真实源码与诚实桩函数边界声明';
+    caption = t("镜头自动让位：右侧滑出 Git 固定提交的真实源码与诚实桩函数边界声明", "The camera makes room for Git-pinned source and an explicit note about the demo stub.");
   } else if (f >= 448) {
-    caption = '一镜到底切入 ERD：UUID 主键不变，新增 org_id 归属、idempotency_key 唯一索引与 amount_cents 升 bigint';
+    caption = t("一镜到底切入 ERD：UUID 主键不变，新增 org_id 归属、idempotency_key 唯一索引与 amount_cents 升 bigint", "Into the ERD: UUID stays; org_id and a unique idempotency_key are added; amount_cents becomes bigint.");
   }
 
   return (
@@ -369,20 +372,20 @@ export const Scene03StoryChoreography: React.FC = () => {
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 30, maxWidth: 1460 }}>
-            <EditorialPill label="PART 02 · FROM SEEING TO EXPLAINING · 动态演示引擎" color={COLORS.ember} />
+            <EditorialPill label={t("PART 02 · FROM SEEING TO EXPLAINING · 动态演示引擎", "PART 02 \u00b7 FROM SEEING TO EXPLAINING \u00b7 MOTION ENGINE")} color={COLORS.ember} />
 
             <div
               style={{
                 textAlign: 'center',
                 fontFamily: FONTS.display,
-                fontSize: 68,
+                fontSize: isEnglish ? 60 : 68,
                 fontWeight: 800,
                 lineHeight: 1.18,
                 color: COLORS.ink,
                 letterSpacing: '-0.025em',
               }}
             >
-              把 Archify 原生{' '}
+              {t('把 Archify 原生', 'Turn Archify’s')}{' '}
               <span
                 style={{
                   background: `linear-gradient(100deg, ${COLORS.brandBlue}, ${COLORS.brandTeal})`,
@@ -390,15 +393,15 @@ export const Scene03StoryChoreography: React.FC = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                10 种图结构
+                {t("10 种图结构", "10 native diagram types")}
               </span>
-              ，
+              {t('，', '')}
               <br />
-              直接变成可自由编排的动态演示。
+              {t("直接变成可自由编排的动态演示。", "into freely choreographed motion.")}
             </div>
 
             <div style={{ fontFamily: FONTS.sans, fontSize: 22, color: COLORS.muted, fontWeight: 500 }}>
-              PR 评审 · 技术文档 · 架构汇报 · 视频工作流 — 一次编排，按场景自由交付
+              {t("PR 评审 · 技术文档 · 架构汇报 · 视频工作流 — 一次编排，按场景自由交付", "PR reviews \u00b7 Technical docs \u00b7 Architecture talks \u00b7 Video pipelines. Compose once, deliver anywhere.")}
             </div>
 
             {/* 10 Native Diagram Family Pills (clean symmetrical 5 + 5 grid!) */}
@@ -475,15 +478,15 @@ export const Scene03StoryChoreography: React.FC = () => {
               <div
                 style={{
                   fontFamily: FONTS.display,
-                  fontSize: 54,
+                  fontSize: isEnglish ? 39 : 54,
                   fontWeight: 800,
                   color: COLORS.ink,
                   letterSpacing: '-0.025em',
                   lineHeight: 1.15,
                 }}
               >
-                为什么不让 AI 直接手写动效？
-                <span style={{ color: COLORS.brandBlue }}>AI 只写意图，引擎确定性编译。</span>
+                {t("为什么不让 AI 直接手写动效？", "Why not let AI hand-code motion? ")}
+                <span style={{ color: COLORS.brandBlue }}>{t("AI 只写意图，引擎确定性编译。", "AI writes intent. The engine compiles it.")}</span>
               </div>
             </div>
 
@@ -508,23 +511,23 @@ export const Scene03StoryChoreography: React.FC = () => {
                     VS. DIRECT AI HAND-CODED SVG / HTML / VIDEO
                   </div>
                   <div style={{ fontFamily: FONTS.display, fontSize: 25, fontWeight: 800, color: COLORS.ink, marginTop: 6 }}>
-                    直接让 AI 手写动画代码
+                    {t("直接让 AI 手写动画代码", "AI hand-codes the animation")}
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
                   {[
                     {
-                      title: '手猜像素坐标，改一处全图撞车',
-                      sub: '元素遮挡、字数溢出、镜头走位全靠人肉反复微调',
+                      title: t("手猜像素坐标，改一处全图撞车", "Guess pixels. One edit breaks the layout."),
+                      sub: t("元素遮挡、字数溢出、镜头走位全靠人肉反复微调", "Overlaps, text overflow and camera moves need manual tuning."),
                     },
                     {
-                      title: '源码容易编造，与真实提交脱节',
-                      sub: 'AI 随手改写示例行号与字段，代码一合并立刻过时',
+                      title: t("源码容易编造，与真实提交脱节", "Invented source, detached from the commit."),
+                      sub: t("AI 随手改写示例行号与字段，代码一合并立刻过时", "Invented lines and fields go stale as soon as code merges."),
                     },
                     {
-                      title: '一次性死资产，贴不进 PR 与文档',
-                      sub: '无法在 GitHub PR / GitLab MR 原生播放，也难复用',
+                      title: t("一次性死资产，贴不进 PR 与文档", "One-off assets, hard to embed or reuse."),
+                      sub: t("无法在 GitHub PR / GitLab MR 原生播放，也难复用", "No native playback in GitHub PRs or GitLab MRs."),
                     },
                   ].map((item, idx) => {
                     const rowT = easeOutCubic(progressBetween(frame, 108 + idx * 14, 128 + idx * 14));
@@ -571,8 +574,8 @@ export const Scene03StoryChoreography: React.FC = () => {
                     <div style={{ fontFamily: FONTS.mono, fontSize: 12, fontWeight: 800, color: COLORS.brandBlue, letterSpacing: '0.1em' }}>
                       ARCHIFY STORY CHOREOGRAPHY · DECLARATIVE SPEC
                     </div>
-                    <div style={{ fontFamily: FONTS.display, fontSize: 25, fontWeight: 800, color: COLORS.ink, marginTop: 4 }}>
-                      一份极简 JSON 编排 → 确定性编译多端交付
+                    <div style={{ fontFamily: FONTS.display, fontSize: isEnglish ? 21 : 25, fontWeight: 800, color: COLORS.ink, marginTop: 4 }}>
+                      {t("一份极简 JSON 编排 → 确定性编译多端交付", "One JSON \u2192 deterministic, multi-format output")}
                     </div>
                   </div>
                   <EditorialPill label="ZERO KEYFRAMES" color={COLORS.backend} />
@@ -596,8 +599,8 @@ export const Scene03StoryChoreography: React.FC = () => {
                   </div>
                   {[
                     { code: '"views": ["architecture", "sequence", "erd"],', c: '#E2E8F0', hl: false },
-                    { code: '"transition": { "shared": ["checkout_api"] },   // 跨视图同源变形', c: COLORS.neonCyan, hl: true },
-                    { code: '"trace": { "edges": ["m_claim", "m_enq"] },    // 原生路径语义流', c: COLORS.neonGreen, hl: true },
+                    { code: t('"transition": { "shared": ["checkout_api"] },   // 跨视图同源变形', '"transition": { "shared": ["checkout_api"] },   // shared morph'), c: COLORS.neonCyan, hl: true },
+                    { code: t('"trace": { "edges": ["m_claim", "m_enq"] },    // 原生路径语义流', '"trace": { "edges": ["m_claim", "m_enq"] },    // native flow'), c: COLORS.neonGreen, hl: true },
                     { code: '"detail": { "path": "src/routes/checkout.ts", "revision": "8bcb443" }', c: COLORS.neonAmber, hl: true },
                   ].map((ln, idx) => (
                     <div
@@ -620,20 +623,20 @@ export const Scene03StoryChoreography: React.FC = () => {
                   {[
                     {
                       tag: 'AUTO CAMERA',
-                      title: '原生包围盒算镜头',
-                      sub: 'fitCamera() 自动取景，改图重跑零返工',
+                      title: t("原生包围盒算镜头", "Bounds-driven camera"),
+                      sub: t("fitCamera() 自动取景，改图重跑零返工", "fitCamera() frames the view. Edit the diagram, then rebuild."),
                       color: COLORS.brandBlue,
                     },
                     {
                       tag: 'GUARDRAILS',
-                      title: 'Git SHA 真实校验',
-                      sub: '强校验文件行号与护栏，拒绝编造幻觉',
+                      title: t("Git SHA 真实校验", "Git-pinned validation"),
+                      sub: t("强校验文件行号与护栏，拒绝编造幻觉", "Validate source lines and enforce guardrails."),
                       color: COLORS.backend,
                     },
                     {
                       tag: 'VIDEO PIPELINE',
-                      title: '直入 PR & 视频流',
-                      sub: '贴 PR/MR 动图，或出 1080p60 入 Remotion',
+                      title: t("直入 PR & 视频流", "PRs & video pipelines"),
+                      sub: t("贴 PR/MR 动图，或出 1080p60 入 Remotion", "Embed PR/MR motion or send 1080p60 to Remotion."),
                       color: COLORS.ember,
                     },
                   ].map((p, idx) => {
@@ -1223,7 +1226,7 @@ export const Scene03StoryChoreography: React.FC = () => {
               color: COLORS.neonAmber,
             }}
           >
-            诚实边界：enqueueCheckoutJob() 为示例桩，仅返回示例 ID，不从动效虚构持久化保证。
+            {t("诚实边界：enqueueCheckoutJob() 为示例桩，仅返回示例 ID，不从动效虚构持久化保证。", "Demo boundary: enqueueCheckoutJob() is a stub returning a sample ID. The animation makes no persistence guarantee.")}
           </div>
         </div>
       )}
