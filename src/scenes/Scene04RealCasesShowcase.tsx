@@ -467,7 +467,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                       <div>
                         <EditorialPill label="NESTED FUNCTION SPIKE" color={COLORS.security} />
                         <div style={{ fontFamily: FONTS.mono, fontSize: 32, fontWeight: 800, color: COLORS.ink, marginTop: 12 }}>
-                          ↳ prefix(node)
+                          ↳ prefix(raw: string)
                         </div>
                       </div>
 
@@ -531,19 +531,19 @@ export const Scene04RealCasesShowcase: React.FC = () => {
             </div>
           </CameraRig>
 
-          {/* Dark-Ink Pinned Vue Source Card Floating Over Paper */}
+          {/* Dark-Ink Pinned Vue Source Card — Vertically Centered on Optical Axis (y=508, EXACT vuejs/core @ 2a4fc32d!) */}
           {vueCodeIn > 0.01 && (
             <div
               style={{
                 position: 'absolute',
-                right: 60,
-                top: 155,
-                width: 600,
+                right: 52,
+                top: 508,
+                width: 660,
                 borderRadius: 20,
                 backgroundColor: '#0C111D',
                 border: `1px solid rgba(251, 113, 133, 0.5)`,
                 boxShadow: '0 32px 84px rgba(18, 20, 23, 0.28)',
-                transform: `translateX(${(1 - vueCodeIn) * 660}px)`,
+                transform: `translateY(-50%) translateX(${(1 - vueCodeIn) * 720}px)`,
                 opacity: vueCodeIn,
                 overflow: 'hidden',
                 zIndex: 55,
@@ -559,7 +559,7 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                 }}
               >
                 <span style={{ fontFamily: FONTS.mono, fontSize: 13.5, fontWeight: 700, color: '#F8FAFC' }}>
-                  transformExpression.ts · prefix()
+                  transformExpression.ts : L101–L114
                 </span>
                 <span
                   style={{
@@ -572,37 +572,39 @@ export const Scene04RealCasesShowcase: React.FC = () => {
                     backgroundColor: 'rgba(251, 113, 133, 0.16)',
                   }}
                 >
-                  PINNED REVISION
+                  PINNED @ 2a4fc32d
                 </span>
               </div>
-              <div style={{ padding: '20px 22px', fontFamily: FONTS.mono, fontSize: 14, lineHeight: 1.8 }}>
+              <div style={{ padding: '18px 20px', fontFamily: FONTS.mono, fontSize: 13.2, lineHeight: 1.72 }}>
                 {[
-                  { n: 214, code: 'const prefix = (raw: string) => {', hl: false },
-                  { n: 215, code: '  const type = bindingMetadata[raw];', hl: true, c: COLORS.neonAmber },
-                  { n: 216, code: '  if (isInline) {', hl: true, c: COLORS.neonRose },
-                  { n: 217, code: '    if (type === BindingTypes.SETUP_REF) {', hl: true, c: COLORS.neonRose },
-                  { n: 218, code: '      return `${raw}.value`;', hl: true, c: COLORS.neonRose },
-                  { n: 219, code: '    } else if (type === SETUP_MAYBE_REF) {', hl: true, c: COLORS.neonRose },
-                  { n: 220, code: '      return `${helper(UNREF)}(${raw})`;', hl: true, c: COLORS.neonRose },
-                  { n: 221, code: '    } else if (type === SETUP_CONST) {', hl: true, c: COLORS.neonAmber },
-                  { n: 222, code: '      return raw;', hl: false },
-                  { n: 223, code: '    }', hl: false },
-                  { n: 224, code: '  }', hl: false },
-                  { n: 225, code: '  return `_ctx.${raw}`;', hl: false },
+                  { n: 101, code: 'const { inline, bindingMetadata } = context', hl: false },
+                  { n: 102, code: 'const prefix = (raw: string) => {', hl: false },
+                  { n: 103, code: '  const type = hasOwn(bindingMetadata, raw) && bindingMetadata[raw]', hl: true, c: COLORS.neonAmber },
+                  { n: 104, code: '  if (inline) {', hl: true, c: COLORS.neonRose },
+                  { n: 105, code: '    // setup inline mode', hl: false },
+                  { n: 106, code: "    if (type === 'setup') {", hl: true, c: COLORS.neonRose },
+                  { n: 107, code: '      return `${context.helperString(UNREF)}(${raw})`', hl: true, c: COLORS.neonRose },
+                  { n: 108, code: "    } else if (type === 'component-import') {", hl: true, c: COLORS.neonRose },
+                  { n: 109, code: '      return raw', hl: true, c: COLORS.neonAmber },
+                  { n: 110, code: '    }', hl: false },
+                  { n: 111, code: '  }', hl: false },
+                  { n: 112, code: '  // fallback to normal', hl: false },
+                  { n: 113, code: '  return `${type ? `$${type}` : `_ctx`}.${raw}`', hl: false },
+                  { n: 114, code: '}', hl: false },
                 ].map((line) => (
                   <div
                     key={line.n}
                     style={{
                       display: 'flex',
-                      gap: 14,
-                      padding: '1.5px 10px',
+                      gap: 12,
+                      padding: '1.5px 8px',
                       borderRadius: 5,
                       backgroundColor: line.hl ? `${line.c}20` : 'transparent',
                       borderLeft: line.hl ? `3px solid ${line.c}` : '3px solid transparent',
                     }}
                   >
-                    <span style={{ color: '#475569', width: 28, textAlign: 'right' }}>{line.n}</span>
-                    <span style={{ color: line.hl ? '#FFFFFF' : '#94A3B8' }}>{line.code}</span>
+                    <span style={{ color: '#475569', width: 28, textAlign: 'right', flexShrink: 0 }}>{line.n}</span>
+                    <span style={{ color: line.hl ? '#FFFFFF' : '#94A3B8', whiteSpace: 'pre-wrap' }}>{line.code}</span>
                   </div>
                 ))}
               </div>

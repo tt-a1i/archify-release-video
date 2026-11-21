@@ -151,26 +151,56 @@ function genTensionReveal() {
   writeWavStereo('sfx-tension-reveal.wav', L, R);
 }
 
-// 5. Sci-Fi Optical Portal Lock-On & Whoosh (Scene 1 -> Scene 2 Atlas!)
+// 5. Silky Magnetic Convergence Whoosh + Soft Lock-On (Scene 1 -> Scene 2 Atlas! ZERO step clicks!)
 function genPortalWhoosh() {
-  const { len, L, R } = makeBuf(1.9);
-  const rnd = makeNoise(2026);
-  let phase = 0;
+  const duration = 2.25;
+  const { len, L, R } = makeBuf(duration);
+  const rndL = makeNoise(2026);
+  const rndR = makeNoise(4052);
+  let lpL = 0, bpL = 0;
+  let lpR = 0, bpR = 0;
+  const lockChord = [220.0, 329.63, 440.0, 659.25]; // pure in-tune A-minor/open 5th lock-on shimmer
+
   for (let i = 0; i < len; i++) {
     const t = i / SAMPLE_RATE;
-    const p = t / 1.9;
-    const rise = Math.pow(p, 1.7);
-    const freq = 110 + rise * 640;
-    phase += (2 * Math.PI * freq) / SAMPLE_RATE;
-    const env = Math.sin(Math.min(1, p) * Math.PI);
-    const impact = t > 1.25 ? Math.exp(-(t - 1.25) * 6.5) * Math.sin(2 * Math.PI * 72 * (t - 1.25)) * 0.55 : 0;
-    const synth = (Math.sin(phase) * 0.22 + Math.sin(phase * 1.5) * 0.1) * env;
-    const air = rnd() * env * 0.25;
-    L[i] = synth + air + impact;
-    R[i] = synth * 0.92 + rnd() * env * 0.25 + impact;
+    const p = t / duration;
+    // Silky rising-then-resolving air sweep (state-variable filtered, zero metallic harshness)
+    const swell = Math.pow(Math.sin(p * Math.PI), 1.45);
+    const cutoff = 160 + Math.pow(Math.sin(Math.min(1, p * 1.15) * Math.PI), 1.2) * 1080;
+    const f = 2 * Math.sin((Math.PI * cutoff) / SAMPLE_RATE);
+    const q = 0.88;
+
+    const hpL = rndL() - lpL - q * bpL;
+    bpL += f * hpL;
+    lpL += f * bpL;
+
+    const hpR = rndR() - lpR - q * bpR;
+    bpR += f * hpR;
+    lpR += f * bpR;
+
+    // Gentle warm sub-bass breath peaking softly around t=1.15s (zero abrupt step!)
+    const subEnv = Math.pow(Math.sin(p * Math.PI), 2.1);
+    const sub = Math.sin(2 * Math.PI * 62 * t) * subEnv * 0.24;
+
+    // Soft magnetic lock-on harmonic bloom starting smoothly at t=0.95s with 60ms attack
+    let lockL = 0;
+    let lockR = 0;
+    if (t > 0.95) {
+      const lt = t - 0.95;
+      const lockEnv = Math.min(1, lt / 0.06) * Math.exp(-lt * 2.6);
+      for (let k = 0; k < lockChord.length; k++) {
+        const w = Math.sin(2 * Math.PI * lockChord[k] * lt) * (0.095 / (1 + k * 0.3));
+        const pan = (k / (lockChord.length - 1)) * 0.6 - 0.3;
+        lockL += w * lockEnv * (0.5 - pan * 0.5);
+        lockR += w * lockEnv * (0.5 + pan * 0.5);
+      }
+    }
+
+    // Guaranteed smooth fade-out tail to exact 0.0 in final 180ms
+    const tailFade = Math.min(1, Math.max(0, (duration - t) / 0.18));
+    L[i] = ((bpL * 0.24 + lpL * 0.11) * swell + sub + lockL) * tailFade;
+    R[i] = ((bpR * 0.24 + lpR * 0.11) * swell + sub + lockR) * tailFade;
   }
-  lowpass(L, 1900);
-  lowpass(R, 1900);
   writeWavStereo('sfx-portal-whoosh.wav', L, R);
 }
 
@@ -318,10 +348,10 @@ function genSuccessChord() {
   writeWavStereo('sfx-success-chord.wav', L, R);
 }
 
-// 11. Full-Length Minimal Modern Tech BGM Bed (~105s, 116 BPM)
+// 11. Full-Length Minimal Modern Tech BGM Bed (~114s, 116 BPM)
 // Bright warm electronic chords on paper sections, shifting smoothly to deep obsidian tech pulse during Scene 2 Atlas!
 function genBgmBed() {
-  const duration = 105;
+  const duration = 120;
   const { len, L, R } = makeBuf(duration);
   const bpm = 116;
   const beatDur = 60 / bpm;
@@ -341,65 +371,97 @@ function genBgmBed() {
     [130.81, 196.0, 293.66, 329.63, 493.88], // Cmaj9
   ];
 
+  const smoothstep = (edge0, edge1, x) => {
+    const u = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+    return u * u * (3 - 2 * u);
+  };
+
+  // Pure in-tune chord synthesis helper (ZERO frequency pitch-bending — pure studio amplitude crossfade!)
+  const evalChordPad = (chord, t) => {
+    let l = 0;
+    let r = 0;
+    for (let c = 0; c < chord.length; c++) {
+      const f = chord[c];
+      const gain = c === 0 ? 0.15 : 0.062;
+      l += Math.sin(2 * Math.PI * f * t) * gain;
+      r += Math.sin(2 * Math.PI * (f * 1.0018) * t + c * 0.4) * gain;
+    }
+    return [l, r];
+  };
+
   const rnd = makeNoise(44100);
+  const barXfadeSec = 0.16; // 160ms silky sustain-pedal overlap at bar changes (zero click, zero dip, 100% in tune!)
 
   for (let i = 0; i < len; i++) {
     const t = i / SAMPLE_RATE;
     const barIndex = Math.floor(t / barDur);
-    const barPos = (t % barDur) / barDur;
+    const barTime = t - barIndex * barDur;
+    const barPos = barTime / barDur;
     const beatPos = (t % beatDur) / beatDur;
     const eighthPos = (t % (beatDur / 2)) / (beatDur / 2);
 
-    // Scene 2 dark Atlas / 3D spans roughly 14s..34s
-    const inTechZone = t >= 13.5 && t <= 34.5;
-    const chords = inTechZone ? techChords : lightChords;
-    const chord = chords[barIndex % chords.length];
+    // Pure AMPLITUDE crossfade between light paper chords and obsidian Atlas tech chords (100% in tune at 19s..21s & 38s..41s!)
+    const techIn = smoothstep(18.6, 21.0, t);
+    const techOut = 1 - smoothstep(38.2, 40.8, t);
+    const techMix = techIn * techOut;
 
-    // Smooth bar pad envelope
-    const padEnv = Math.min(1, barPos / 0.14) * Math.min(1, (1 - barPos) / 0.14 + 0.35);
-    let padL = 0;
-    let padR = 0;
-    for (let c = 0; c < chord.length; c++) {
-      const f = chord[c];
-      const w1 = Math.sin(2 * Math.PI * f * t);
-      const w2 = Math.sin(2 * Math.PI * (f * 1.0025) * t); // gentle stereo chorus detune
-      const gain = c === 0 ? 0.16 : 0.068;
-      padL += w1 * gain * padEnv;
-      padR += w2 * gain * padEnv;
-    }
+    const curL = lightChords[barIndex % lightChords.length];
+    const prevL = lightChords[Math.max(0, barIndex - 1) % lightChords.length];
+    const curT = techChords[barIndex % techChords.length];
+    const prevT = techChords[Math.max(0, barIndex - 1) % techChords.length];
+
+    // Smooth bar-boundary amplitude overlap (constant-power feel, zero drop to 0!)
+    const xfade = barIndex > 0 && barTime < barXfadeSec ? smoothstep(0, barXfadeSec, barTime) : 1;
+    const padBreath = 0.88 + 0.12 * Math.sin(barPos * Math.PI);
+
+    const [cLL, cLR] = evalChordPad(curL, t);
+    const [pLL, pLR] = xfade < 1 ? evalChordPad(prevL, t) : [0, 0];
+    const lightPadL = (cLL * xfade + pLL * (1 - xfade)) * padBreath;
+    const lightPadR = (cLR * xfade + pLR * (1 - xfade)) * padBreath;
+
+    const [cTL, cTR] = evalChordPad(curT, t);
+    const [pTL, pTR] = xfade < 1 ? evalChordPad(prevT, t) : [0, 0];
+    const techPadL = (cTL * xfade + pTL * (1 - xfade)) * padBreath;
+    const techPadR = (cTR * xfade + pTR * (1 - xfade)) * padBreath;
+
+    const padL = lightPadL * (1 - techMix) + techPadL * techMix;
+    const padR = lightPadR * (1 - techMix) + techPadR * techMix;
 
     // Minimalist warm sub-kick on beat 1 & 3 (muted, refined)
     const beatInBar = Math.floor((t % barDur) / beatDur);
     let kick = 0;
-    if (t > 2.0 && t < 96.0 && (beatInBar === 0 || beatInBar === 2)) {
+    if (t > 2.0 && t < 110.5 && (beatInBar === 0 || beatInBar === 2)) {
       const kt = beatPos * beatDur;
       if (kt < 0.22) {
         const kf = 52 + 65 * Math.exp(-kt * 28);
-        kick = Math.sin(2 * Math.PI * kf * kt) * Math.exp(-kt * 14) * (inTechZone ? 0.22 : 0.14);
+        kick = Math.sin(2 * Math.PI * kf * kt) * Math.exp(-kt * 14) * (0.14 + 0.07 * techMix);
       }
     }
 
-    // Delicate 8th-note melodic arpeggio pluck (adds modern forward momentum!)
+    // Delicate 8th-note melodic arpeggio pluck — amplitude-blended across light/tech (ZERO sudden chord jump!)
     let pluck = 0;
-    if (t > 4.0 && t < 95.0) {
+    if (t > 4.0 && t < 109.5) {
       const step = Math.floor(t / (beatDur / 2));
-      const noteFreq = chord[1 + (step % (chord.length - 1))] * (step % 4 === 3 ? 2 : 1);
+      const voiceIdx = 1 + (step % 4);
+      const oct = step % 4 === 3 ? 2 : 1;
       const pt = eighthPos * (beatDur / 2);
       const pEnv = Math.min(1, pt / 0.008) * Math.exp(-pt * 10);
-      pluck = Math.sin(2 * Math.PI * noteFreq * pt) * pEnv * (inTechZone ? 0.085 : 0.06);
+      const pLight = Math.sin(2 * Math.PI * (curL[voiceIdx] * oct) * pt) * 0.058;
+      const pTech = Math.sin(2 * Math.PI * (curT[voiceIdx] * oct) * pt) * 0.082;
+      pluck = (pLight * (1 - techMix) + pTech * techMix) * pEnv;
     }
 
     // Whisper-soft hi-hat tick on off-beats during active tech/showcase sections
     let hat = 0;
-    if (t > 12.0 && t < 92.0) {
+    if (t > 16.0 && t < 106.5) {
       const ht = eighthPos * (beatDur / 2);
       if (ht < 0.035) {
-        hat = rnd() * Math.exp(-ht * 95) * (inTechZone ? 0.032 : 0.018);
+        hat = rnd() * Math.exp(-ht * 95) * (0.017 + 0.014 * techMix);
       }
     }
 
     // Overall master fade in / fade out
-    const master = Math.min(1, t / 1.5) * Math.min(1, Math.max(0, (101 - t) / 3.5));
+    const master = Math.min(1, t / 1.5) * Math.min(1, Math.max(0, (116.0 - t) / 3.5));
     L[i] = (padL + kick + pluck * 0.85 + hat) * master * 0.72;
     R[i] = (padR + kick + pluck * 1.15 - hat * 0.7) * master * 0.72;
   }

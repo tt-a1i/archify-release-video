@@ -48,7 +48,7 @@ const DualThemeDiagramSurface: React.FC<{ theme: 'light' | 'dark'; pulseU: numbe
           {dark ? 'DARK THEME · prefers-color-scheme: dark' : 'LIGHT THEME · prefers-color-scheme: light'}
         </span>
         <span style={{ fontFamily: FONTS.mono, fontSize: 12.5, color: muted }}>
-          pulse-billing-{theme}.svg · GitHub PR Camo-safe
+          pulse-billing-{theme}.svg · Zero-Script Camo-safe (GitHub PR / GitLab MR)
         </span>
       </div>
 
@@ -83,8 +83,8 @@ const DualThemeDiagramSurface: React.FC<{ theme: 'light' | 'dark'; pulseU: numbe
           <text x="22" y="48" fill={ink} fontFamily={FONTS.mono} fontSize="18" fontWeight="800">
             Idempotency
           </text>
-          <text x="22" y="82" fill={green} fontFamily={FONTS.mono} fontSize="14" fontWeight="800">
-            + UNIQUE(org, key)
+          <text x="22" y="82" fill={green} fontFamily={FONTS.mono} fontSize="13" fontWeight="800">
+            + UNIQUE(idempotency_key)
           </text>
         </g>
 
@@ -143,7 +143,7 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
           <div style={{ position: 'absolute', top: 38, left: 56, display: 'flex', alignItems: 'center', gap: 14, zIndex: 50 }}>
             <EditorialPill label="ZERO-FRICTION DELIVERY" color={COLORS.brandBlue} />
             <span style={{ fontFamily: FONTS.mono, fontSize: 13, fontWeight: 700, color: COLORS.muted }}>
-              DUAL-THEME SVG · OFFLINE STAGE · 1080P60 MP4
+              GITHUB PR & GITLAB MR · 4 PRESETS STAGE · 1080P60 VIDEO PIPELINE
             </span>
           </div>
 
@@ -193,9 +193,21 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
                 {/* Borderless Editorial 3-Column Deliverable Strip */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 44, padding: '0 12px' }}>
                   {[
-                    { title: '双主题动态 SVG', sub: '零外链零服务，直贴 PR、README 与技术文档自动播放', color: COLORS.brandBlue },
-                    { title: '1080p60 MP4 / WebM', sub: '汇报演示、分享传播，也可自由并入你的视频工作流', color: COLORS.ember },
-                    { title: '离线交互 Stage HTML', sub: '单文件可拖拽分镜时间轴，随时暂停下钻核对源码', color: COLORS.backend },
+                    {
+                      title: '无脚本双主题动态 SVG',
+                      sub: '零 <script> 零外链，直贴 GitHub PR、GitLab MR 与文档自动播放',
+                      color: COLORS.brandBlue,
+                    },
+                    {
+                      title: '1080p60 MP4 / WebM',
+                      sub: '直出无损动效片段，无缝并入 Remotion、剪映或 Premiere 视频制作流',
+                      color: COLORS.ember,
+                    },
+                    {
+                      title: '4 预设离线 Stage HTML',
+                      sub: '实时切换 Classic / Signal Flow / Blueprint / Editorial，随时暂停核对源码',
+                      color: COLORS.backend,
+                    },
                   ].map((d) => (
                     <div key={d.title} style={{ paddingTop: 14, borderTop: `3px solid ${d.color}` }}>
                       <div style={{ fontFamily: FONTS.display, fontSize: 23, fontWeight: 800, color: COLORS.ink }}>
@@ -213,7 +225,7 @@ export const Scene05WorkflowDeliverables: React.FC = () => {
 
           <FloatingCaption
             kicker="DELIVERABLES"
-            text="一次编排，直出直贴 GitHub PR 的双主题动态 SVG、离线交互 Stage 与 1080p 视频"
+            text="一次编排，直出贴入 GitHub PR / GitLab MR 的无脚本动图 SVG、4 预设 Stage 与可并入视频流的 1080p60 素材"
             accent={COLORS.brandBlue}
             opacity={1 - partOutT}
           />

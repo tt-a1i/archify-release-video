@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { COLORS, FONTS } from '../theme';
+import { COLORS, FONTS, clamp01, easeInOutCubic, easeOutCubic, easeOutExpo, lerp, progressBetween } from '../theme';
 
 /**
  * Archify Official Architectural Paper Canvas (#F5F6F3)
@@ -175,6 +175,155 @@ export const ArchifyLockup: React.FC<{
     </g>
   </svg>
 );
+
+/**
+ * Signature Archify Brand Assembly Reveal — 100% Archify DNA (NO generic white glare!):
+ * 1. Blueprint drafting crosshairs + wireframe outlines draw the 3 Archify nodes
+ * 2. Routed connector paths draw downward with two glowing semantic flow beads
+ * 3. Nodes fill solidly into official Cobalt (#0856F5) & Teal (#1DBBB7)
+ * 4. Official Rubik wordmark glides cleanly from behind an architectural hairline mask
+ */
+export const AnimatedArchifyBrandReveal: React.FC<{
+  localFrame: number;
+  width?: number;
+}> = ({ localFrame, width = 560 }) => {
+  // 0..14: Blueprint crosshairs & wireframe node strokes draw in
+  const draftT = easeOutCubic(progressBetween(localFrame, 0, 14));
+  // 10..24: 3 nodes solidly fill & settle
+  const fillT = easeOutExpo(progressBetween(localFrame, 10, 24));
+  // 14..30: 2 routed graph arms draw downward + semantic flow beads race down into child nodes
+  const edgeT = easeInOutCubic(progressBetween(localFrame, 14, 29));
+  // 24..40: Symbol slides left into lockup position & wordmark unveils behind clean mask
+  const wordmarkT = easeOutExpo(progressBetween(localFrame, 22, 40));
+  // Blueprint crosshairs gracefully vanish once assembled
+  const guideFade = 1 - easeOutCubic(progressBetween(localFrame, 26, 38));
+
+  // Center symbol before wordmark slides out, then glide cleanly into its exact lockup x=0 slot!
+  const symbolShiftX = lerp(295, 0, wordmarkT);
+  const perim = 420;
+
+  return (
+    <svg
+      width={width}
+      height={(width * 240) / 875}
+      viewBox="0 0 875 240"
+      fill="none"
+      style={{ overflow: 'visible' }}
+    >
+      <defs>
+        <clipPath id="archify-wordmark-reveal">
+          <rect x="242" y="20" width={lerp(0, 640, wordmarkT)} height="210" />
+        </clipPath>
+      </defs>
+
+      {/* Architectural Symbol Group (3 Nodes + 2 Routed Edges) */}
+      <g transform={`translate(${symbolShiftX.toFixed(1)} 20) scale(.55)`}>
+        {/* Precision Blueprint Registration Crosshairs & Axis Guides */}
+        {guideFade > 0.01 && (
+          <g opacity={draftT * guideFade * 0.65}>
+            <line x1="201" y1="-26" x2="201" y2="375" stroke={COLORS.brandBlue} strokeWidth="2" strokeDasharray="6 6" />
+            <line x1="-18" y1="68" x2="418" y2="68" stroke={COLORS.brandBlue} strokeWidth="1.6" strokeDasharray="6 6" />
+            <line x1="-18" y1="290" x2="418" y2="290" stroke={COLORS.brandTeal} strokeWidth="1.6" strokeDasharray="6 6" />
+            <text x="272" y="42" fill={COLORS.brandBlue} fontFamily={FONTS.mono} fontSize="22" fontWeight="700">
+              NODE_ROOT
+            </text>
+            <text x="-8" y="378" fill={COLORS.brandBlue} fontFamily={FONTS.mono} fontSize="20" fontWeight="700">
+              01
+            </text>
+            <text x="366" y="378" fill={COLORS.brandTeal} fontFamily={FONTS.mono} fontSize="20" fontWeight="700">
+              02
+            </text>
+          </g>
+        )}
+
+        {/* Routed Edges (Left Cobalt & Right Teal) unveiling along vertical clip */}
+        <g opacity={clamp01(edgeT * 1.4)}>
+          <path
+            d="M151 94 81 164C67 178 60 191 60 212V248H97V212C97 204 100 199 106 193L179 120Z"
+            fill={COLORS.brandBlue}
+            opacity={edgeT}
+          />
+          <path
+            d="M238 135C252 132 261 126 270 116L321 167C334 180 339 194 339 213V248H303V213C303 204 300 199 294 193Z"
+            fill={COLORS.brandTeal}
+            opacity={edgeT}
+          />
+        </g>
+
+        {/* Live Semantic Flow Beads racing down the 2 routed arms during assembly! */}
+        {edgeT > 0.05 && edgeT < 0.96 && (
+          <g>
+            <circle
+              cx={lerp(165, 78, edgeT)}
+              cy={lerp(110, 232, edgeT)}
+              r={13}
+              fill="#FFFFFF"
+              stroke={COLORS.brandBlue}
+              strokeWidth={5}
+            />
+            <circle
+              cx={lerp(245, 321, edgeT)}
+              cy={lerp(122, 232, edgeT)}
+              r={13}
+              fill="#FFFFFF"
+              stroke={COLORS.brandTeal}
+              strokeWidth={5}
+            />
+          </g>
+        )}
+
+        {/* 3 Official Archify Nodes: Wireframe Blueprint Stroke -> Solid Cobalt & Teal Fill */}
+        {[
+          { x: 146, y: 16, w: 110, h: 104, rx: 30, color: COLORS.brandBlue, delay: 0 },
+          { x: 18, y: 238, w: 110, h: 104, rx: 28, color: COLORS.brandBlue, delay: 0.14 },
+          { x: 274, y: 238, w: 108, h: 104, rx: 28, color: COLORS.brandTeal, delay: 0.22 },
+        ].map((box, idx) => {
+          const localFill = clamp01((fillT - box.delay) / (1 - box.delay));
+          return (
+            <g key={idx}>
+              <rect
+                x={box.x}
+                y={box.y}
+                width={box.w}
+                height={box.h}
+                rx={box.rx}
+                fill={box.color}
+                fillOpacity={localFill}
+                stroke={box.color}
+                strokeWidth={guideFade > 0.05 ? 5 : 0}
+                strokeDasharray={perim}
+                strokeDashoffset={perim * (1 - draftT)}
+              />
+            </g>
+          );
+        })}
+      </g>
+
+      {/* Clean Architectural Hairline Mask Unveiling the Official Rubik Wordmark */}
+      {wordmarkT > 0.02 && wordmarkT < 0.96 && (
+        <line
+          x1={242 + lerp(0, 625, wordmarkT)}
+          y1="44"
+          x2={242 + lerp(0, 625, wordmarkT)}
+          y2="196"
+          stroke={COLORS.brandBlue}
+          strokeWidth="2.5"
+          opacity={Math.sin(wordmarkT * Math.PI)}
+        />
+      )}
+
+      <g clipPath="url(#archify-wordmark-reveal)" fill="#111827" transform={`translate(${lerp(-24, 0, wordmarkT).toFixed(1)}, 0)`}>
+        <path d="M279.71 150.77 270.09 175.375Q268.425 180.0 262.875 180.0H256.03Q254.365 180.0 253.1625 178.7975Q251.96 177.595 251.96 175.93Q251.96 175.005 252.7 173.34L298.025 56.605Q300.43 50.5 306.35 50.5H317.45Q323.37 50.5 325.775 56.605L370.915 173.34Q371.655 175.005 371.655 175.93Q371.655 177.595 370.4525 178.7975Q369.25 180.0 367.585 180.0H360.74Q355.19 180.0 353.525 175.375L343.905 150.77ZM337.43 134.12 311.9 68.075 286.185 134.12Z" />
+        <path d="M439.51 88.795V94.715Q439.51 96.75 438.03 98.23Q436.55 99.71 434.515 99.71H423.785Q413.425 99.71 407.9675 105.1675Q402.51 110.625 402.51 120.985V175.005Q402.51 177.04 401.03 178.52Q399.55 180.0 397.515 180.0H390.67Q388.635 180.0 387.155 178.52Q385.675 177.04 385.675 175.005V88.795Q385.675 86.76 387.155 85.28Q388.635 83.8 390.67 83.8H397.515Q399.55 83.8 401.03 85.28Q402.51 86.76 402.51 88.795V94.53Q406.21 88.98 411.39 86.39Q416.57 83.8 424.895 83.8H434.515Q436.55 83.8 438.03 85.28Q439.51 86.76 439.51 88.795Z" />
+        <path d="M516.43 151.51Q517.725 148.735 519.02 147.625Q520.315 146.515 522.535 146.515H528.085Q530.12 146.515 531.6 147.9025Q533.08 149.29 533.08 151.14Q533.08 157.43 528.085 164.645Q523.09 171.86 513.655 176.855Q504.22 181.85 491.455 181.85Q478.32 181.85 468.7 176.3Q459.08 170.75 453.9 161.0375Q448.72 151.325 448.165 139.3Q447.98 137.08 447.98 130.79Q447.98 126.35 448.165 124.5Q449.83 105.63 460.93 93.79Q472.03 81.95 491.455 81.95Q504.22 81.95 513.5625 86.8525Q522.905 91.755 527.8075 98.8775Q532.71 106.0 533.08 112.29Q533.265 114.325 531.6925 115.805Q530.12 117.285 528.085 117.285H522.535Q520.315 117.285 519.02 116.175Q517.725 115.065 516.43 112.29Q509.955 97.86 491.455 97.86Q481.28 97.86 473.695 104.705Q466.11 111.55 465.0 125.425Q464.815 127.46 464.815 132.085Q464.815 136.34 465.0 138.375Q466.295 152.25 473.7875 159.095Q481.28 165.94 491.455 165.94Q509.955 165.94 516.43 151.51Z" />
+        <path d="M632.755 180.0H625.91Q623.875 180.0 622.395 178.52Q620.915 177.04 620.915 175.005V126.165Q620.915 112.29 614.07 105.075Q607.225 97.86 595.015 97.86Q582.99 97.86 576.0525 105.075Q569.115 112.29 569.115 126.165V175.005Q569.115 177.04 567.635 178.52Q566.155 180.0 564.12 180.0H557.275Q555.24 180.0 553.76 178.52Q552.28 177.04 552.28 175.005V53.645Q552.28 51.61 553.76 50.13Q555.24 48.65 557.275 48.65H564.12Q566.155 48.65 567.635 50.13Q569.115 51.61 569.115 53.645V94.53Q573.185 89.165 580.3075 85.5575Q587.43 81.95 597.79 81.95Q609.445 81.95 618.51 86.945Q627.575 91.94 632.6625 101.2825Q637.75 110.625 637.75 123.39V175.005Q637.75 177.04 636.27 178.52Q634.79 180.0 632.755 180.0Z" />
+        <path d="M675.265 69.185H664.72Q662.685 69.185 661.205 67.705Q659.725 66.225 659.725 64.19V53.645Q659.725 51.61 661.205 50.13Q662.685 48.65 664.72 48.65H675.265Q677.3 48.65 678.78 50.13Q680.26 51.61 680.26 53.645V64.19Q680.26 66.225 678.78 67.705Q677.3 69.185 675.265 69.185ZM673.415 180.0H666.57Q664.535 180.0 663.055 178.52Q661.575 177.04 661.575 175.005V88.795Q661.575 86.76 663.055 85.28Q664.535 83.8 666.57 83.8H673.415Q675.45 83.8 676.93 85.28Q678.41 86.76 678.41 88.795V175.005Q678.41 177.04 676.93 178.52Q675.45 180.0 673.415 180.0Z" />
+        <path d="M753.665 83.8Q755.7 83.8 757.18 85.28Q758.66 86.76 758.66 88.795V94.715Q758.66 96.75 757.18 98.23Q755.7 99.71 753.665 99.71H730.17V175.005Q730.17 177.04 728.69 178.52Q727.21 180.0 725.175 180.0H718.33Q716.295 180.0 714.815 178.52Q713.335 177.04 713.335 175.005V99.71H697.795Q695.76 99.71 694.28 98.23Q692.8 96.75 692.8 94.715V88.795Q692.8 86.76 694.28 85.28Q695.76 83.8 697.795 83.8H713.335V74.55Q713.335 58.64 720.735 50.87Q728.135 43.1 743.86 43.1H755.515Q757.55 43.1 759.03 44.58Q760.51 46.06 760.51 48.095V54.015Q760.51 56.05 759.03 57.53Q757.55 59.01 755.515 59.01H745.71Q736.645 59.01 733.4075 63.265Q730.17 67.52 730.17 75.475V83.8Z" />
+        <path d="M795.25 215.15H787.665Q785.815 215.15 784.52 213.855Q783.225 212.56 783.225 210.71Q783.225 209.97 783.41 209.415L801.17 170.75L764.54 89.535Q764.355 88.98 764.355 88.24Q764.355 86.39 765.65 85.095Q766.945 83.8 768.795 83.8H776.38Q780.08 83.8 781.745 88.24L810.235 151.14L839.095 88.24Q840.76 83.8 844.46 83.8H852.045Q853.895 83.8 855.19 85.095Q856.485 86.39 856.485 88.24Q856.485 88.98 856.3 89.535L800.615 210.71Q798.95 215.15 795.25 215.15Z" />
+      </g>
+    </svg>
+  );
+};
 
 /**
  * Minimal Editorial Floating Caption (NO bulky boxes!)

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import {
-  ArchifyLockup,
+  AnimatedArchifyBrandReveal,
   ArchifySymbol,
   CameraRig,
   EditorialPill,
@@ -10,6 +10,7 @@ import {
 import {
   COLORS,
   FONTS,
+  clamp01,
   easeInCubic,
   easeInOutCubic,
   easeInOutQuart,
@@ -38,24 +39,61 @@ const CI_CHECKS = [
   { label: '27 files · +1,842 lines', sub: 'generated in 14.2s' },
 ];
 
-const HIDDEN_TRUTHS = [
+const WHAT_WE_BUILT = [
   {
     num: '01',
-    title: '架构悄然漂移',
-    desc: '绕过分层直连内部实现 — CI 不会报错',
-    color: COLORS.ember,
+    title: '六大语言 AST 静态解析',
+    en: 'DETERMINISTIC GRAPH',
+    desc: '不靠大模型猜拓扑，直接提取真实依赖网与函数圈复杂度',
+    color: COLORS.brandBlue,
   },
   {
     num: '02',
-    title: '隐形循环与耦合',
-    desc: '跨文件依赖越滚越大 — 单测照样全绿',
-    color: COLORS.security,
+    title: '三种视角透视全仓',
+    en: 'ATLAS · 3D · OVERLAY',
+    desc: '2D 全仓星盘、3D 粒子树、原版架构图无侵入叠加诊断',
+    color: COLORS.backend,
   },
   {
     num: '03',
-    title: '局部复杂度暗涨',
-    desc: '嵌套分支激增，认知债留给下个月的维护者',
-    color: COLORS.cloud,
+    title: '可验证的工程闭环',
+    en: 'DRIFT · PR · AI TASK',
+    desc: '拦截架构漂移、钉住 PR 影响面，一键导出源码证据任务',
+    color: COLORS.ember,
+  },
+];
+
+// Clean 3-Tier Layered Architecture Stack (Strictly Top-Down at PR #1 -> Violated by Bypasses, Reverse Arrows & Cycles by PR #47!)
+const TIERS = [
+  {
+    name: '01 · API / EDGE LAYER',
+    y: 230,
+    color: COLORS.frontend,
+    nodes: [
+      { id: 'checkout-api', label: 'Checkout API', x: 290 },
+      { id: 'webhook-api', label: 'Webhook API', x: 640 },
+      { id: 'admin-api', label: 'Admin API', x: 990 },
+    ],
+  },
+  {
+    name: '02 · DOMAIN LAYER',
+    y: 440,
+    color: COLORS.backend,
+    nodes: [
+      { id: 'billing-core', label: 'Billing Core', x: 290 },
+      { id: 'ledger-rules', label: 'Ledger Rules', x: 640 },
+      { id: 'auth-policy', label: 'Auth Policy', x: 990 },
+    ],
+  },
+  {
+    name: '03 · INFRA / DATA LAYER',
+    y: 650,
+    color: COLORS.database,
+    nodes: [
+      { id: 'invoices-db', label: 'Invoices DB', x: 290 },
+      { id: 'org-queue', label: 'Org Queue', x: 640 },
+      { id: 'legacy-audit', label: 'Legacy Audit', x: 990 },
+    ],
   },
 ];
 
@@ -63,112 +101,174 @@ export const Scene01CognitiveDebt: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const graph = useMemo(() => {
+  // Each of the 9 EXISTING architecture nodes splits into 4 real source file ticks (36 total)
+  // born from the EXACT centered coordinates of those 9 boxes, then magnetically snaps into Scene 2's Atlas ring (cx=960, cy=526, R=244)!
+  const liveMorphGraph = useMemo(() => {
     const rand = mulberry32(4201);
-    const nodes = Array.from({ length: 32 }).map((_, i) => {
-      const angle = rand() * Math.PI * 2;
-      const dist = 170 + rand() * 520;
-      const cx = 960 + Math.cos(angle) * dist * 1.45;
-      const cy = 540 + Math.sin(angle) * dist * 0.78;
-      const ringA = -Math.PI / 2 + (i / 32) * Math.PI * 2;
-      const rx = 960 + Math.cos(ringA) * 252;
-      const ry = 540 + Math.sin(ringA) * 252;
-      const hue = Math.round(((i / 32) * 330 + 195) % 360);
-      const isAlert = i % 7 === 0 || i % 11 === 0;
-      return { id: i, cx, cy, rx, ry, ringA, hue, isAlert };
+    const CENTER_SHIFT_X = 232; // shifts 3-tier stack (x: 130..1325, center=727.5) cleanly to screen center 960!
+    const nodes: {
+      id: number;
+      tierIdx: number;
+      parentX: number;
+      parentY: number;
+      rx: number;
+      ry: number;
+      ringA: number;
+      hue: number;
+      spikeLen: number;
+    }[] = [];
+
+    const tierHues = [192, 158, 266, 348, 28, 215, 285, 42, 172];
+    let idx = 0;
+    TIERS.forEach((tier, ti) => {
+      tier.nodes.forEach((n, ni) => {
+        const boxCenterX = n.x + 120 + CENTER_SHIFT_X;
+        const boxCenterY = tier.y + 46;
+        const boxIdx = ti * 3 + ni;
+        const hue = tierHues[boxIdx % tierHues.length];
+        for (let f = 0; f < 4; f++) {
+          const jitterX = (f - 1.5) * 44;
+          const jitterY = (f % 2 === 0 ? -1 : 1) * 14;
+          const ringA = -Math.PI / 2 + (idx / 36) * Math.PI * 2;
+          const rx = 960 + Math.cos(ringA) * 244;
+          const ry = 526 + Math.sin(ringA) * 244;
+          nodes.push({
+            id: idx,
+            tierIdx: ti,
+            parentX: boxCenterX + jitterX,
+            parentY: boxCenterY + jitterY,
+            rx,
+            ry,
+            ringA,
+            hue,
+            spikeLen: 18 + Math.floor(rand() * 44),
+          });
+          idx++;
+        }
+      });
     });
 
     const edges = Array.from({ length: 78 }).map((_, i) => {
-      const a = Math.floor(rand() * 32);
-      let b = Math.floor(rand() * 32);
-      if (b === a) b = (a + 5) % 32;
-      return { a, b, isBad: i < 12 };
+      const a = Math.floor(rand() * nodes.length);
+      let b = Math.floor(rand() * nodes.length);
+      if (b === a) b = (a + 7) % nodes.length;
+      return { a, b, isBad: i < 16 };
     });
-
-    return { nodes, edges };
+    return { nodes, edges, CENTER_SHIFT_X };
   }, []);
 
-  // ==================== CLEAN 4-BEAT FILM OPENING (465 frames = 15.5s) ====================
-  // Beat 0 (0 - 54): Minimalist Archify Brand Sting (NO feature spoiler — clean brand signature!)
-  const brandIn = spring({ frame, fps, config: { damping: 16, stiffness: 145 } });
-  const brandSheenT = easeInOutCubic(progressBetween(frame, 12, 40));
-  const brandOut = easeInOutQuart(progressBetween(frame, 40, 62));
+  // ==================== 5-BEAT FILM TIMELINE (620 frames = 20.7s) ====================
+  // Beat 0 (0 - 58): Signature Archify Blueprint-to-Nodes Logo Assembly!
+  const brandOut = easeInOutQuart(progressBetween(frame, 44, 64));
 
-  // Beat 1 (54 - 116): Proper Era Premise Setup ("AI 正在以前所未有的速度改写代码库")
-  const eraIn = spring({
-    frame: Math.max(0, frame - 52),
-    fps,
-    config: { damping: 18, stiffness: 135 },
-  });
-  // Era headline glides gracefully upward to anchor the Prompt Capsule below it!
-  const eraLiftT = easeInOutQuart(progressBetween(frame, 98, 128));
-
-  // Beat 2 (108 - 196): Concrete Prompt typing -> Blazing Green CI Checkmarks -> "然后呢？"
-  const promptIn = easeOutCubic(progressBetween(frame, 106, 126));
+  // Beat 1 (50 - 188): AI Era Premise -> Single-Line Prompt -> Green CI Checkmarks -> "然后呢？"
+  const eraIn = spring({ frame: Math.max(0, frame - 52), fps, config: { damping: 18, stiffness: 135 } });
+  const eraLiftT = easeInOutQuart(progressBetween(frame, 92, 118));
+  const promptIn = easeOutCubic(progressBetween(frame, 98, 116));
   const typedChars = Math.floor(
-    interpolate(frame, [114, 148], [0, PROMPT_TEXT.length], {
+    interpolate(frame, [104, 136], [0, PROMPT_TEXT.length], {
       extrapolateLeft: 'clamp',
       extrapolateRight: 'clamp',
     })
   );
-  const enterFlashT = easeOutExpo(progressBetween(frame, 148, 164));
-  const ciInSpring = spring({
-    frame: Math.max(0, frame - 151),
-    fps,
-    config: { damping: 16, stiffness: 150 },
-  });
+  const enterFlashT = easeOutExpo(progressBetween(frame, 136, 152));
+  const ciInSpring = spring({ frame: Math.max(0, frame - 140), fps, config: { damping: 16, stiffness: 150 } });
+  const ciExitT = easeInOutCubic(progressBetween(frame, 180, 206));
 
-  // Beat 3 (198 - 376): Peel away Green CI Illusion -> Spaghetti Chaos & Why AI Tests Can't Stop Drift!
-  const peelT = easeInOutCubic(progressBetween(frame, 198, 236));
-  const chaosBurstT = easeOutExpo(progressBetween(frame, 202, 250));
-  const truthHeadlineIn = spring({
-    frame: Math.max(0, frame - 228),
-    fps,
-    config: { damping: 16, stiffness: 135 },
-  });
+  // Beat 2 (196 - 384): CRISP 3-TIER ARCHITECTURE STACK SILENTLY CORRUPTING UNDER GREEN CI!
+  const driftStageIn = easeOutCubic(progressBetween(frame, 196, 222));
+  // Only the side telemetry, top CI pill & bottom punchline exit — THE LIVE ARCHITECTURE DIAGRAM STAYS ON SCREEN!
+  const driftChromeOut = easeInOutCubic(progressBetween(frame, 364, 392));
+  // Live 3-tier diagram smoothly glides to dead-center (960, 526) to become the living background of Beat 3, then morphs into Atlas!
+  const diagramCenterT = easeInOutQuart(progressBetween(frame, 368, 408));
 
-  // Beat 4 (376 - 465): Optical Reticle Lock-On -> Magnetic Snap to Circle -> Iris into Obsidian Atlas!
-  const reticleInT = easeOutCubic(progressBetween(frame, 372, 400));
-  const snapToCircleT = easeInOutQuart(progressBetween(frame, 386, 438));
-  const portalDarkT = easeInOutCubic(progressBetween(frame, 414, 462));
-  const reticleSpin = (frame - 372) * 2.4;
+  const prNumber = Math.round(
+    interpolate(frame, [212, 246, 286, 326], [1, 14, 29, 47], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    })
+  );
+  const testsCount = Math.round(
+    interpolate(frame, [212, 246, 286, 326], [128, 142, 168, 214], {
+      extrapolateLeft: 'clamp',
+      extrapolateRight: 'clamp',
+    })
+  );
+
+  // Sharp, clean 3-stage structural breakdown milestones:
+  const bypassT = easeOutExpo(progressBetween(frame, 238, 266));   // PR #14: Top API bypasses Domain straight into Infra!
+  const reverseT = easeOutExpo(progressBetween(frame, 276, 306));  // PR #29: Upward reverse arrows + Domain Cycle Loop!
+  const chaosT = easeOutExpo(progressBetween(frame, 314, 344));    // PR #47: Full cross-layer short-circuit + Complexity spike!
+
+  const violationsCount = Math.round(
+    interpolate(frame, [238, 266, 296, 332], [0, 3, 6, 9], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+  );
+  const cyclesCount = Math.round(
+    interpolate(frame, [274, 300, 332], [0, 2, 4], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+  );
+  const maxCcCount = Math.round(
+    interpolate(frame, [238, 286, 334], [8, 15, 26], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+  );
+
+  const prFlash = Math.max(
+    Math.exp(-Math.pow((frame - 246) / 6, 2)),
+    Math.exp(-Math.pow((frame - 284) / 6, 2)),
+    Math.exp(-Math.pow((frame - 324) / 6, 2))
+  );
+
+  // Beat 3 (376 - 504): "SO WHAT WE BUILT" floats directly OVER the living drifted architecture background!
+  const builtIn = spring({ frame: Math.max(0, frame - 378), fps, config: { damping: 16, stiffness: 140 } });
+  const builtOut = easeInCubic(progressBetween(frame, 480, 506));
+
+  // Beat 4 (498 - 620): DIRECT BACKGROUND + ARCHITECTURE TRANSFORMATION INTO OBSIDIAN 2D ATLAS!
+  // The living 9 boxes surge back to full clarity, split into 36 file ticks, and snap straight into Scene 2's R=244 ring
+  // while the light drafting paper radially transforms into Obsidian!
+  const boxSplitT = easeInOutQuart(progressBetween(frame, 504, 540));
+  const snapToCircleT = easeInOutQuart(progressBetween(frame, 520, 594));
+  const portalDarkT = easeInOutCubic(progressBetween(frame, 536, 608));
+  const reticleInT = easeOutCubic(progressBetween(frame, 502, 530));
+  const reticleSpin = (frame - 502) * 2.2;
+
+  // How opaque the live 3-tier architecture backdrop is:
+  // Full (1.0) during Beat 2 -> softly receded (0.26) during Beat 3 text overlay -> surges back to 0.95 -> dissolves cleanly as boxes split into 36 Atlas file nodes!
+  const diagramBgOpacity =
+    driftStageIn *
+    lerp(1, 0.24, builtIn * (1 - builtOut)) *
+    (1 - boxSplitT);
 
   // Cinematic Camera Rig
   const camZoom =
-    lerp(1.05, 1.0, easeOutCubic(progressBetween(frame, 0, 56))) *
-    lerp(1.0, 0.91, peelT) *
-    lerp(1.0, 1.12, snapToCircleT);
-  const camRotX = lerp(0, 7, peelT) * (1 - snapToCircleT);
-  const camY = lerp(0, -18, peelT) * (1 - snapToCircleT);
-
-  const textFadeForPortal = 1 - easeInCubic(progressBetween(frame, 372, 402));
+    lerp(1.03, 1.0, easeOutCubic(progressBetween(frame, 0, 50))) *
+    lerp(1.0, 1.04, chaosT * (1 - driftChromeOut)) *
+    lerp(1.0, 1.06, snapToCircleT * (1 - portalDarkT * 0.55));
 
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.paper, overflow: 'hidden' }}>
       <PaperCanvas glowA={COLORS.ember} glowB={COLORS.signal} gridOpacity={0.6} />
 
-      {/* Iris Shockwave Portal Transition (Light Paper -> Obsidian Tech Stage!) */}
+      {/* Radial Background Transformation (Light Drafting Paper -> Obsidian Atlas Canvas at exact cx=960, cy=526!) */}
       {portalDarkT > 0.001 && (
         <AbsoluteFill
           style={{
             backgroundColor: COLORS.darkBg,
-            clipPath: `circle(${portalDarkT * 135}% at 50% 50%)`,
+            clipPath: `circle(${portalDarkT * 135}% at 50% 48.7%)`,
             zIndex: 8,
           }}
         >
-          <svg width="1920" height="1080" style={{ opacity: portalDarkT * 0.45 }}>
-            <circle cx="960" cy="540" r="252" fill="none" stroke={COLORS.neonCyan} strokeWidth="1.2" opacity="0.4" />
-            <circle cx="960" cy="540" r="360" fill="none" stroke={COLORS.neonGreen} strokeWidth="1" strokeDasharray="4 8" opacity="0.3" />
+          <svg width="1920" height="1080" style={{ opacity: portalDarkT * 0.52 }}>
+            <circle cx="960" cy="526" r="244" fill="rgba(13, 19, 34, 0.72)" stroke="rgba(148, 163, 184, 0.28)" strokeWidth="1.3" />
+            <circle cx="960" cy="526" r="102" fill="none" stroke="rgba(34, 211, 238, 0.2)" strokeDasharray="4 7" strokeWidth="1" />
+            <circle cx="960" cy="526" r="358" fill="none" stroke={COLORS.neonCyan} strokeWidth="1" strokeDasharray="2 14" opacity="0.32" />
           </svg>
         </AbsoluteFill>
       )}
 
-      {/* Persistent Subtle Top-Left Archify Brand Watermark after Brand Sting */}
+      {/* Subtle Top-Left Archify Brand Watermark after Brand Sting */}
       {brandOut > 0.25 && (
         <div
           style={{
             position: 'absolute',
-            top: 38,
+            top: 36,
             left: 56,
             display: 'flex',
             alignItems: 'center',
@@ -184,42 +284,28 @@ export const Scene01CognitiveDebt: React.FC = () => {
         </div>
       )}
 
-      <CameraRig zoom={camZoom} rotateX={camRotX} y={camY}>
-        {/* ==================== BEAT 0: CLEAN MINIMAL ARCHIFY BRAND STING (0 - 62) ==================== */}
+      <CameraRig zoom={camZoom}>
+        {/* ==================== BEAT 0: SIGNATURE ARCHIFY BLUEPRINT LOGO ASSEMBLY (0 - 64) ==================== */}
         {brandOut < 0.98 && (
           <AbsoluteFill
             style={{
               justifyContent: 'center',
               alignItems: 'center',
               zIndex: 28,
-              opacity: brandIn * (1 - brandOut),
-              transform: `scale(${lerp(0.86, 1, brandIn) * lerp(1, 0.78, brandOut)}) translateY(${-brandOut * 120}px)`,
+              opacity: 1 - brandOut,
+              transform: `scale(${lerp(1, 0.8, brandOut)}) translateY(${-brandOut * 110}px)`,
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
-              <div style={{ position: 'relative', overflow: 'hidden', padding: '12px 24px' }}>
-                <ArchifyLockup width={520} variant="light" />
-                {brandSheenT > 0.01 && brandSheenT < 0.99 && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: -20,
-                      bottom: -20,
-                      left: `${lerp(-30, 130, brandSheenT)}%`,
-                      width: 96,
-                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.82), transparent)',
-                      transform: 'skewX(-24deg)',
-                    }}
-                  />
-                )}
-              </div>
+              <AnimatedArchifyBrandReveal localFrame={frame} width={560} />
               <span
                 style={{
                   fontFamily: FONTS.mono,
-                  fontSize: 14,
+                  fontSize: 13.5,
                   fontWeight: 700,
                   letterSpacing: '0.24em',
                   color: COLORS.muted,
+                  opacity: easeOutCubic(progressBetween(frame, 24, 38)),
                 }}
               >
                 NEW RELEASE FILM
@@ -228,184 +314,29 @@ export const Scene01CognitiveDebt: React.FC = () => {
           </AbsoluteFill>
         )}
 
-        {/* ==================== CHAOTIC SPAGHETTI GRAPH -> MAGNETIC SNAP TO ATLAS CIRCLE ==================== */}
-        {chaosBurstT > 0.01 && (
-          <svg
-            width="1920"
-            height="1080"
-            style={{ position: 'absolute', inset: 0, zIndex: 12, pointerEvents: 'none' }}
-          >
-            <defs>
-              <filter id="s1-glow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="4" result="b" />
-                <feMerge>
-                  <feMergeNode in="b" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {graph.edges.map((e, idx) => {
-              const na = graph.nodes[e.a];
-              const nb = graph.nodes[e.b];
-              const ax = lerp(960, lerp(na.cx, na.rx, snapToCircleT), chaosBurstT);
-              const ay = lerp(540, lerp(na.cy, na.ry, snapToCircleT), chaosBurstT);
-              const bx = lerp(960, lerp(nb.cx, nb.rx, snapToCircleT), chaosBurstT);
-              const by = lerp(540, lerp(nb.cy, nb.ry, snapToCircleT), chaosBurstT);
-              const pull = lerp(0.18, 0.58, snapToCircleT);
-              const c1x = lerp(ax, 960, pull);
-              const c1y = lerp(ay, 540, pull);
-              const c2x = lerp(bx, 960, pull);
-              const c2y = lerp(by, 540, pull);
-
-              const strokeColor =
-                portalDarkT > 0.3
-                  ? e.isBad
-                    ? COLORS.neonRose
-                    : `hsl(${na.hue}, 70%, 62%)`
-                  : e.isBad
-                  ? COLORS.security
-                  : COLORS.ink;
-
-              const baseAlpha =
-                portalDarkT > 0.3
-                  ? e.isBad
-                    ? 0.72
-                    : 0.28
-                  : e.isBad
-                  ? 0.28 * textFadeForPortal + 0.35 * snapToCircleT
-                  : 0.085 * textFadeForPortal + 0.14 * snapToCircleT;
-
-              return (
-                <path
-                  key={idx}
-                  d={`M ${ax.toFixed(1)} ${ay.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(
-                    1
-                  )} ${c2y.toFixed(1)}, ${bx.toFixed(1)} ${by.toFixed(1)}`}
-                  fill="none"
-                  stroke={strokeColor}
-                  strokeWidth={e.isBad ? 1.8 : 1.1}
-                  opacity={baseAlpha * chaosBurstT}
-                />
-              );
-            })}
-
-            {graph.nodes.map((n) => {
-              const nx = lerp(960, lerp(n.cx, n.rx, snapToCircleT), chaosBurstT);
-              const ny = lerp(540, lerp(n.cy, n.ry, snapToCircleT), chaosBurstT);
-              const r = lerp(n.isAlert ? 7 : 4.5, 4.5, snapToCircleT);
-              const fill =
-                portalDarkT > 0.3
-                  ? `hsl(${n.hue}, 72%, 64%)`
-                  : n.isAlert
-                  ? COLORS.security
-                  : COLORS.inkSoft;
-              return (
-                <g key={n.id} opacity={chaosBurstT * (0.28 + 0.72 * snapToCircleT)}>
-                  <circle cx={nx} cy={ny} r={r} fill={fill} />
-                  {snapToCircleT > 0.45 && (
-                    <line
-                      x1={nx}
-                      y1={ny}
-                      x2={nx + Math.cos(n.ringA) * (16 + (n.id % 5) * 14) * snapToCircleT}
-                      y2={ny + Math.sin(n.ringA) * (16 + (n.id % 5) * 14) * snapToCircleT}
-                      stroke={portalDarkT > 0.3 ? `hsl(${n.hue}, 72%, 64%)` : COLORS.signal}
-                      strokeWidth={2.2}
-                      strokeLinecap="round"
-                      opacity={(snapToCircleT - 0.45) * 1.8}
-                    />
-                  )}
-                </g>
-              );
-            })}
-
-            {reticleInT > 0.01 && (
-              <g
-                transform="translate(960, 540)"
-                opacity={reticleInT}
-                filter={portalDarkT > 0.25 ? 'url(#s1-glow)' : undefined}
-              >
-                <g transform={`rotate(${reticleSpin})`}>
-                  <circle
-                    r={lerp(420, 290, snapToCircleT)}
-                    fill="none"
-                    stroke={portalDarkT > 0.3 ? COLORS.neonCyan : COLORS.brandBlue}
-                    strokeWidth={1.8}
-                    strokeDasharray="18 14 4 14"
-                    opacity={0.78}
-                  />
-                </g>
-                <g transform={`rotate(${-reticleSpin * 0.7})`}>
-                  <circle
-                    r={lerp(480, 345, snapToCircleT)}
-                    fill="none"
-                    stroke={portalDarkT > 0.3 ? COLORS.neonGreen : COLORS.ember}
-                    strokeWidth={1.2}
-                    strokeDasharray="6 18"
-                    opacity={0.55}
-                  />
-                </g>
-                {[0, 90, 180, 270].map((deg) => (
-                  <g key={deg} transform={`rotate(${deg})`}>
-                    <line
-                      x1="0"
-                      y1={-lerp(445, 315, snapToCircleT)}
-                      x2="0"
-                      y2={-lerp(410, 282, snapToCircleT)}
-                      stroke={portalDarkT > 0.3 ? COLORS.neonCyan : COLORS.brandBlue}
-                      strokeWidth={2.4}
-                    />
-                  </g>
-                ))}
-                <text
-                  y={-lerp(468, 396, snapToCircleT)}
-                  textAnchor="middle"
-                  fontFamily={FONTS.mono}
-                  fontSize="13.5"
-                  fontWeight="800"
-                  letterSpacing="0.16em"
-                  fill={portalDarkT > 0.12 ? COLORS.neonCyan : COLORS.brandBlue}
-                >
-                  STATIC GRAPH LOCK-ON · AST EXTRACTION
-                </text>
-              </g>
-            )}
-          </svg>
-        )}
-
-        {/* ==================== BEAT 1 & 2: ERA PREMISE -> SEAMLESSLY ANCHORS PROMPT & GREEN CI ==================== */}
-        {frame >= 50 && peelT < 0.98 && (
+        {/* ==================== BEAT 1: AI ERA PREMISE -> PROMPT -> GREEN CI ILLUSION (50 - 206) ==================== */}
+        {frame >= 48 && ciExitT < 0.98 && (
           <AbsoluteFill
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              zIndex: 20,
-              opacity: eraIn * (1 - peelT),
-              transform: `translateY(${-peelT * 90}px) scale(${lerp(1, 0.9, peelT)})`,
+              zIndex: 22,
+              opacity: eraIn * (1 - ciExitT),
+              transform: `translateY(${-ciExitT * 70}px) scale(${lerp(1, 0.93, ciExitT)})`,
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28 }}>
-              {/* Era Statement — starts centered as full-screen editorial beat, then smoothly lifts to frame the prompt! */}
               <div
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   gap: 14,
-                  transform: `translateY(${lerp(120, 0, eraLiftT)}px) scale(${lerp(1.16, 0.88, eraLiftT)})`,
+                  transform: `translateY(${lerp(110, 0, eraLiftT)}px) scale(${lerp(1.15, 0.88, eraLiftT)})`,
                 }}
               >
                 <EditorialPill label="THE AI CODING ERA" color={COLORS.brandBlue} />
-                <div
-                  style={{
-                    fontFamily: FONTS.display,
-                    fontSize: 60,
-                    fontWeight: 800,
-                    color: COLORS.ink,
-                    letterSpacing: '-0.025em',
-                    textAlign: 'center',
-                  }}
-                >
+                <div style={{ fontFamily: FONTS.display, fontSize: 60, fontWeight: 800, color: COLORS.ink, letterSpacing: '-0.025em', textAlign: 'center' }}>
                   AI 正在以
                   <span
                     style={{
@@ -420,7 +351,6 @@ export const Scene01CognitiveDebt: React.FC = () => {
                 </div>
               </div>
 
-              {/* Concrete Prompt Capsule gliding smoothly underneath the era premise */}
               <div
                 style={{
                   width: 960,
@@ -436,7 +366,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   opacity: promptIn,
-                  transform: `translateY(${(1 - promptIn) * 34}px)`,
+                  transform: `translateY(${(1 - promptIn) * 32}px)`,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 0 }}>
@@ -451,7 +381,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
                         backgroundColor: COLORS.ember,
                         marginLeft: 4,
                         verticalAlign: 'middle',
-                        opacity: frame % 16 < 9 && frame < 150 ? 1 : 0,
+                        opacity: frame % 16 < 9 && frame < 138 ? 1 : 0,
                       }}
                     />
                   </span>
@@ -473,15 +403,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
                 </span>
               </div>
 
-              {/* Blazing Green CI Checkmarks */}
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 22,
-                  opacity: ciInSpring,
-                  transform: `translateY(${(1 - ciInSpring) * 24}px)`,
-                }}
-              >
+              <div style={{ display: 'flex', gap: 22, opacity: ciInSpring, transform: `translateY(${(1 - ciInSpring) * 24}px)` }}>
                 {CI_CHECKS.map((ck) => (
                   <div
                     key={ck.label}
@@ -514,9 +436,7 @@ export const Scene01CognitiveDebt: React.FC = () => {
                       ✓
                     </span>
                     <div>
-                      <div style={{ fontFamily: FONTS.mono, fontSize: 15, fontWeight: 700, color: COLORS.ink }}>
-                        {ck.label}
-                      </div>
+                      <div style={{ fontFamily: FONTS.mono, fontSize: 15, fontWeight: 700, color: COLORS.ink }}>{ck.label}</div>
                       <div style={{ fontFamily: FONTS.mono, fontSize: 11.5, color: COLORS.muted }}>{ck.sub}</div>
                     </div>
                   </div>
@@ -540,35 +460,348 @@ export const Scene01CognitiveDebt: React.FC = () => {
           </AbsoluteFill>
         )}
 
-        {/* ==================== BEAT 3: WHY CI & AI TESTS CAN'T STOP DRIFT ==================== */}
-        {frame >= 220 && textFadeForPortal > 0.01 && (
+        {/* ==================== BEAT 2 -> BEAT 4 CONTINUOUS LIVING ARCHITECTURE LAYER (NEVER CUTS AWAY!) ==================== */}
+        {frame >= 194 && diagramBgOpacity > 0.01 && (
           <AbsoluteFill
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              zIndex: 25,
-              opacity: truthHeadlineIn * textFadeForPortal,
-              transform: `scale(${lerp(0.92, 1, truthHeadlineIn)})`,
+              opacity: diagramBgOpacity,
+              zIndex: 20,
+              transform: `translateX(${lerp(0, liveMorphGraph.CENTER_SHIFT_X, diagramCenterT)}px) translateY(${lerp(
+                0,
+                22,
+                diagramCenterT
+              )}px)`,
             }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36, maxWidth: 1460 }}>
-              <EditorialPill label="BEYOND GREEN CI · WHY DEEP ARCHITECTURE ANALYSIS" color={COLORS.ember} />
+            {/* LEFT + CENTER: Crisp 3-Tier Horizontal Architectural Lanes (Stays alive & morphs directly into Atlas!) */}
+            <svg width="1920" height="1080" style={{ position: 'absolute', inset: 0 }}>
+              <defs>
+                <marker id="arrow-clean" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill={COLORS.dim} />
+                </marker>
+                <marker id="arrow-ember" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill={COLORS.ember} />
+                </marker>
+                <marker id="arrow-rose" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill={COLORS.security} />
+                </marker>
+              </defs>
 
-              <div
-                style={{
-                  textAlign: 'center',
-                  fontFamily: FONTS.display,
-                  fontSize: 72,
-                  fontWeight: 800,
-                  lineHeight: 1.18,
-                  letterSpacing: '-0.025em',
-                  color: COLORS.ink,
-                }}
-              >
-                AI 写的测试只验证
-                <span style={{ color: COLORS.backend }}>「跑得通」</span>，
-                <br />
-                防不住
+              {/* 3 Pristine Horizontal Layer Swimlanes (gently dissolve as boxes prepare to orbit into Atlas!) */}
+              <g opacity={1 - diagramCenterT * 0.55}>
+                {TIERS.map((tier) => (
+                  <g key={tier.name}>
+                    <rect
+                      x="130"
+                      y={tier.y - 34}
+                      width="1195"
+                      height="148"
+                      rx="18"
+                      fill="rgba(255, 255, 255, 0.54)"
+                      stroke={COLORS.line}
+                      strokeWidth="1.5"
+                      strokeDasharray="6 6"
+                    />
+                    <text
+                      x="154"
+                      y={tier.y - 10}
+                      fill={tier.color}
+                      fontFamily={FONTS.mono}
+                      fontSize="12"
+                      fontWeight="800"
+                      letterSpacing="0.12em"
+                    >
+                      {tier.name}
+                    </text>
+                  </g>
+                ))}
+              </g>
+
+              {/* Clean Strictly-Downward Arrows (PR #1 Baseline Serenity) */}
+              <g opacity={lerp(0.9, 0.25, chaosT)}>
+                {[410, 760, 1110].map((cx) => (
+                  <React.Fragment key={cx}>
+                    <line x1={cx} y1="312" x2={cx} y2="438" stroke={COLORS.dim} strokeWidth="2.2" markerEnd="url(#arrow-clean)" />
+                    <line x1={cx} y1="522" x2={cx} y2="648" stroke={COLORS.dim} strokeWidth="2.2" markerEnd="url(#arrow-clean)" />
+                  </React.Fragment>
+                ))}
+              </g>
+
+              {/* MILESTONE 1 (PR #14 ✓): Illegal Layer-Skipping Diagonal Bypass (API -> Infra directly!) */}
+              {bypassT > 0.02 && (
+                <g opacity={bypassT}>
+                  <path
+                    d="M 410 312 C 470 430, 960 490, 1085 648"
+                    fill="none"
+                    stroke={COLORS.ember}
+                    strokeWidth="3.8"
+                    strokeDasharray="10 6"
+                    markerEnd="url(#arrow-ember)"
+                  />
+                  <path
+                    d="M 760 312 C 700 440, 490 500, 425 648"
+                    fill="none"
+                    stroke={COLORS.ember}
+                    strokeWidth="3.2"
+                    strokeDasharray="8 5"
+                    opacity="0.82"
+                    markerEnd="url(#arrow-ember)"
+                  />
+                </g>
+              )}
+
+              {/* MILESTONE 2 (PR #29 ✓): Illegal Upward Reverse Dependencies + Domain Circular Loop! */}
+              {reverseT > 0.02 && (
+                <g opacity={reverseT}>
+                  <path
+                    d="M 355 650 C 260 585, 260 545, 355 524"
+                    fill="none"
+                    stroke={COLORS.security}
+                    strokeWidth="3.8"
+                    markerEnd="url(#arrow-rose)"
+                  />
+                  <path
+                    d="M 530 478 L 636 478"
+                    fill="none"
+                    stroke={COLORS.security}
+                    strokeWidth="3.6"
+                    markerEnd="url(#arrow-rose)"
+                  />
+                  <path
+                    d="M 880 478 L 986 478"
+                    fill="none"
+                    stroke={COLORS.security}
+                    strokeWidth="3.6"
+                    markerEnd="url(#arrow-rose)"
+                  />
+                  <path
+                    d="M 1110 440 C 1020 368, 520 368, 430 438"
+                    fill="none"
+                    stroke={COLORS.security}
+                    strokeWidth="3.6"
+                    markerEnd="url(#arrow-rose)"
+                  />
+                </g>
+              )}
+
+              {/* MILESTONE 3 (PR #47 ✓): Full Cross-Layer Short-Circuit Web */}
+              {chaosT > 0.02 && (
+                <g opacity={chaosT}>
+                  <path
+                    d="M 1110 650 C 1220 510, 1220 390, 1135 314"
+                    fill="none"
+                    stroke={COLORS.security}
+                    strokeWidth="3.2"
+                    strokeDasharray="7 5"
+                    markerEnd="url(#arrow-rose)"
+                  />
+                  <path
+                    d="M 760 650 C 860 555, 910 395, 785 314"
+                    fill="none"
+                    stroke={COLORS.ember}
+                    strokeWidth="2.8"
+                    strokeDasharray="7 5"
+                    markerEnd="url(#arrow-ember)"
+                  />
+                </g>
+              )}
+            </svg>
+
+            {/* The 9 Crisp Tier Nodes (physically scale down as they split into 36 Atlas file nodes!) */}
+            {TIERS.map((tier, ti) =>
+              tier.nodes.map((n, ni) => {
+                const isCycleNode = ti === 1 && reverseT > 0.3;
+                const isHotNode = (n.id === 'billing-core' || n.id === 'ledger-rules') && chaosT > 0.25;
+                const isBypassNode = (n.id === 'checkout-api' || n.id === 'legacy-audit') && bypassT > 0.25;
+                const accentCol = isHotNode
+                  ? COLORS.security
+                  : isCycleNode
+                  ? COLORS.security
+                  : isBypassNode
+                  ? COLORS.ember
+                  : tier.color;
+                return (
+                  <div
+                    key={n.id}
+                    style={{
+                      position: 'absolute',
+                      left: n.x,
+                      top: tier.y + 8,
+                      width: 240,
+                      height: 76,
+                      borderRadius: 13,
+                      backgroundColor: isHotNode ? '#FFF1F2' : COLORS.surface,
+                      border: `${isHotNode || isCycleNode || isBypassNode ? '2.2px' : '1.4px'} solid ${accentCol}`,
+                      boxShadow: isHotNode
+                        ? `0 14px 36px ${COLORS.security}28`
+                        : '0 8px 22px rgba(18,20,23,0.06)',
+                      padding: '12px 16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      gap: 5,
+                      transform: `scale(${lerp(1, 0.72, boxSplitT)})`,
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontFamily: FONTS.mono, fontSize: 15.5, fontWeight: 800, color: COLORS.ink }}>
+                        {n.label}
+                      </span>
+                      {isHotNode && (
+                        <span style={{ fontFamily: FONTS.mono, fontSize: 11, fontWeight: 900, color: COLORS.security }}>
+                          CC {ni === 0 ? 26 : 21} ↑
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ height: 5, borderRadius: 999, backgroundColor: COLORS.paperSoft, overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          height: '100%',
+                          width: `${isHotNode ? lerp(28, 92, chaosT) : 28}%`,
+                          backgroundColor: isHotNode ? COLORS.security : tier.color,
+                          borderRadius: 999,
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </AbsoluteFill>
+        )}
+
+        {/* ==================== BEAT 2 CHROME: GREEN CI BAR + ALIGNED TELEMETRY + PUNCHLINE ==================== */}
+        {frame >= 194 && driftChromeOut < 0.99 && (
+          <AbsoluteFill
+            style={{
+              opacity: driftStageIn * (1 - driftChromeOut),
+              zIndex: 24,
+              pointerEvents: 'none',
+            }}
+          >
+            {/* Top Eternally-Green CI Bar */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 76,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 20,
+                padding: '12px 28px',
+                borderRadius: 999,
+                backgroundColor: COLORS.surface,
+                border: `1.5px solid ${COLORS.backend}`,
+                boxShadow: `0 14px 40px rgba(5, 150, 105, ${0.12 + prFlash * 0.24})`,
+              }}
+            >
+              <span style={{ fontFamily: FONTS.mono, fontSize: 22, fontWeight: 900, color: COLORS.ink, minWidth: 96 }}>
+                PR #{prNumber}
+              </span>
+              <span style={{ width: 1, height: 22, backgroundColor: COLORS.lineHi }} />
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 9, fontFamily: FONTS.mono, fontSize: 16, fontWeight: 800, color: COLORS.backend }}>
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: '50%',
+                    backgroundColor: COLORS.backend,
+                    boxShadow: `0 0 ${10 + prFlash * 14}px ${COLORS.backend}`,
+                  }}
+                />
+                ✓ {testsCount} / {testsCount} UNIT TESTS PASSED · MERGED
+              </span>
+            </div>
+
+            {/* RIGHT SIDE: Vertically Aligned Top-to-Bottom with the 3-Tier Swimlanes (y: 196..764)! */}
+            <div
+              style={{
+                position: 'absolute',
+                right: 92,
+                top: 196,
+                height: 568,
+                width: 420,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ fontFamily: FONTS.mono, fontSize: 12.5, fontWeight: 800, color: COLORS.muted, letterSpacing: '0.12em' }}>
+                HIDDEN BEHIND GREEN CI
+              </div>
+
+              {[
+                {
+                  label: 'LAYER BYPASSES · 跨层偷连',
+                  val: String(violationsCount),
+                  tag: violationsCount > 0 ? 'CI 未报错' : 'CLEAN',
+                  color: violationsCount > 0 ? COLORS.ember : COLORS.backend,
+                  hot: violationsCount > 0,
+                },
+                {
+                  label: 'IMPORT CYCLES · 循环依赖',
+                  val: String(cyclesCount),
+                  tag: cyclesCount > 0 ? '单测全绿' : 'CLEAN',
+                  color: cyclesCount > 0 ? COLORS.security : COLORS.backend,
+                  hot: cyclesCount > 0,
+                },
+                {
+                  label: 'MAX COMPLEXITY · 峰值复杂度',
+                  val: `CC ${maxCcCount}`,
+                  tag: maxCcCount > 15 ? '暗中飙升' : 'HEALTHY',
+                  color: maxCcCount > 15 ? COLORS.security : COLORS.backend,
+                  hot: maxCcCount > 15,
+                },
+              ].map((m) => (
+                <div
+                  key={m.label}
+                  style={{
+                    padding: '22px 24px',
+                    borderRadius: 16,
+                    backgroundColor: COLORS.surface,
+                    border: `1.8px solid ${m.hot ? m.color : COLORS.lineHi}`,
+                    boxShadow: m.hot ? `0 16px 40px ${m.color}1C` : '0 8px 24px rgba(18,20,23,0.05)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontFamily: FONTS.mono, fontSize: 11.5, fontWeight: 700, color: COLORS.muted }}>
+                      {m.label}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: FONTS.mono,
+                        fontSize: 11,
+                        fontWeight: 800,
+                        padding: '3px 9px',
+                        borderRadius: 999,
+                        backgroundColor: `${m.color}16`,
+                        color: m.color,
+                      }}
+                    >
+                      {m.tag}
+                    </span>
+                  </div>
+                  <div style={{ fontFamily: FONTS.mono, fontSize: 38, fontWeight: 900, color: m.color, marginTop: 8 }}>
+                    {m.val}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom Sharp Editorial Punchline */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 58,
+                left: 0,
+                right: 0,
+                textAlign: 'center',
+                opacity: easeOutCubic(progressBetween(frame, 230, 258)),
+              }}
+            >
+              <div style={{ fontFamily: FONTS.display, fontSize: 48, fontWeight: 800, color: COLORS.ink, letterSpacing: '-0.02em' }}>
+                CI 一路全绿，但架构早已
                 <span
                   style={{
                     background: `linear-gradient(100deg, ${COLORS.emberLight} 0%, ${COLORS.ember} 48%, ${COLORS.emberDeep} 100%)`,
@@ -576,60 +809,88 @@ export const Scene01CognitiveDebt: React.FC = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  架构漂移与认知负担
+                  面目全非
                 </span>
                 。
               </div>
+              <div style={{ fontFamily: FONTS.sans, fontSize: 20.5, color: COLORS.muted, marginTop: 8 }}>
+                AI 写的测试只验证单点「跑得通」，防不住跨层偷连、循环耦合与复杂度失控
+              </div>
+            </div>
+          </AbsoluteFill>
+        )}
 
-              <div style={{ display: 'flex', gap: 68, marginTop: 18 }}>
-                {HIDDEN_TRUTHS.map((item, idx) => {
-                  const tSpring = spring({
-                    frame: Math.max(0, frame - (260 + idx * 18)),
+        {/* ==================== BEAT 3: "WHAT WE BUILT" FLOATS OVER THE LIVING DRIFTED DIAGRAM (376 - 506) ==================== */}
+        {frame >= 374 && builtOut < 0.99 && (
+          <AbsoluteFill
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 28,
+              opacity: builtIn * (1 - builtOut),
+              transform: `scale(${lerp(0.95, 1, builtIn)}) translateY(${-builtOut * 28}px)`,
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 30,
+                maxWidth: 1460,
+                padding: '44px 56px',
+                borderRadius: 28,
+                backgroundColor: 'rgba(245, 246, 243, 0.84)',
+                border: `1px solid ${COLORS.line}`,
+                boxShadow: '0 28px 80px rgba(18, 20, 23, 0.08)',
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              <EditorialPill label="SO WHAT WE BUILT · ARCHIFY CODE ANALYSIS" color={COLORS.backend} />
+
+              <div style={{ textAlign: 'center', fontFamily: FONTS.display, fontSize: 64, fontWeight: 800, lineHeight: 1.18, color: COLORS.ink, letterSpacing: '-0.025em' }}>
+                所以我们为 Archify 打造了：
+                <br />
+                <span
+                  style={{
+                    background: `linear-gradient(100deg, ${COLORS.brandBlue} 0%, ${COLORS.brandTeal} 55%, ${COLORS.backend} 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }}
+                >
+                  确定性代码分析引擎
+                </span>
+              </div>
+
+              <div style={{ fontFamily: FONTS.sans, fontSize: 22.5, color: COLORS.muted, textAlign: 'center' }}>
+                不靠大模型盲猜，也不只盯着单测绿灯——直接把眼前的代码架构变成看得见的图谱
+              </div>
+
+              <div style={{ display: 'flex', gap: 38, marginTop: 8 }}>
+                {WHAT_WE_BUILT.map((item, idx) => {
+                  const pSpring = spring({
+                    frame: Math.max(0, frame - (398 + idx * 12)),
                     fps,
-                    config: { damping: 16, stiffness: 140 },
+                    config: { damping: 16, stiffness: 150 },
                   });
                   return (
                     <div
                       key={item.num}
                       style={{
-                        width: 390,
-                        paddingTop: 18,
-                        borderTop: `3px solid ${item.color}`,
-                        opacity: tSpring,
-                        transform: `translateY(${(1 - tSpring) * 32}px)`,
+                        width: 424,
+                        paddingTop: 16,
+                        borderTop: `3.5px solid ${item.color}`,
+                        opacity: pSpring,
+                        transform: `translateY(${(1 - pSpring) * 24}px)`,
                       }}
                     >
-                      <div
-                        style={{
-                          fontFamily: FONTS.mono,
-                          fontSize: 13,
-                          fontWeight: 800,
-                          color: item.color,
-                          letterSpacing: '0.12em',
-                        }}
-                      >
-                        {item.num} · HIDDEN BEHIND CI ✓
+                      <div style={{ fontFamily: FONTS.mono, fontSize: 13, fontWeight: 800, color: item.color, letterSpacing: '0.12em' }}>
+                        {item.num} · {item.en}
                       </div>
-                      <div
-                        style={{
-                          fontFamily: FONTS.display,
-                          fontSize: 30,
-                          fontWeight: 800,
-                          color: COLORS.ink,
-                          marginTop: 8,
-                        }}
-                      >
+                      <div style={{ fontFamily: FONTS.display, fontSize: 26, fontWeight: 800, color: COLORS.ink, marginTop: 8 }}>
                         {item.title}
                       </div>
-                      <div
-                        style={{
-                          fontFamily: FONTS.sans,
-                          fontSize: 18,
-                          color: COLORS.muted,
-                          marginTop: 8,
-                          lineHeight: 1.5,
-                        }}
-                      >
+                      <div style={{ fontFamily: FONTS.sans, fontSize: 16, color: COLORS.muted, marginTop: 6, lineHeight: 1.55 }}>
                         {item.desc}
                       </div>
                     </div>
@@ -638,6 +899,114 @@ export const Scene01CognitiveDebt: React.FC = () => {
               </div>
             </div>
           </AbsoluteFill>
+        )}
+
+        {/* ==================== BEAT 4: EXISTING 9 DRIFTED BOXES SPLIT & MORPH DIRECTLY INTO 2D ATLAS RING! (500 - 620) ==================== */}
+        {reticleInT > 0.01 && (
+          <svg width="1920" height="1080" style={{ position: 'absolute', inset: 0, zIndex: 30, pointerEvents: 'none' }}>
+            <defs>
+              <filter id="s1-glow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Existing dependencies curve from the 9 boxes' exact coordinates into bundled Bezier chords inside R=244! */}
+            {liveMorphGraph.edges.map((e, idx) => {
+              const na = liveMorphGraph.nodes[e.a];
+              const nb = liveMorphGraph.nodes[e.b];
+              const ax = lerp(na.parentX, na.rx, snapToCircleT);
+              const ay = lerp(na.parentY, na.ry, snapToCircleT);
+              const bx = lerp(nb.parentX, nb.rx, snapToCircleT);
+              const by = lerp(nb.parentY, nb.ry, snapToCircleT);
+              const pull = lerp(0.14, 0.58, snapToCircleT);
+              const c1x = lerp(ax, 960, pull);
+              const c1y = lerp(ay, 526, pull);
+              const c2x = lerp(bx, 960, pull);
+              const c2y = lerp(by, 526, pull);
+              const strokeColor =
+                portalDarkT > 0.25
+                  ? e.isBad
+                    ? COLORS.neonRose
+                    : `hsl(${na.hue}, 70%, 62%)`
+                  : e.isBad
+                  ? COLORS.security
+                  : COLORS.brandBlue;
+              return (
+                <path
+                  key={idx}
+                  d={`M ${ax.toFixed(1)} ${ay.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(
+                    1
+                  )} ${c2y.toFixed(1)}, ${bx.toFixed(1)} ${by.toFixed(1)}`}
+                  fill="none"
+                  stroke={strokeColor}
+                  strokeWidth={e.isBad ? 1.85 : 1.05}
+                  opacity={boxSplitT * (portalDarkT > 0.25 ? (e.isBad ? 0.72 : 0.26) : 0.28)}
+                />
+              );
+            })}
+
+            {/* 36 File Nodes born directly from the 9 drifted boxes, orbiting into Scene 2's exact R=244 ring + complexity spikes! */}
+            {liveMorphGraph.nodes.map((n) => {
+              const nx = lerp(n.parentX, n.rx, snapToCircleT);
+              const ny = lerp(n.parentY, n.ry, snapToCircleT);
+              return (
+                <g key={n.id} opacity={boxSplitT}>
+                  <circle cx={nx} cy={ny} r={4.2} fill={portalDarkT > 0.25 ? `hsl(${n.hue}, 74%, 65%)` : COLORS.brandBlue} />
+                  {snapToCircleT > 0.35 && (
+                    <line
+                      x1={nx}
+                      y1={ny}
+                      x2={nx + Math.cos(n.ringA) * n.spikeLen * clamp01((snapToCircleT - 0.35) / 0.65)}
+                      y2={ny + Math.sin(n.ringA) * n.spikeLen * clamp01((snapToCircleT - 0.35) / 0.65)}
+                      stroke={portalDarkT > 0.25 ? `hsl(${n.hue}, 74%, 65%)` : COLORS.signal}
+                      strokeWidth={2.2}
+                      strokeLinecap="round"
+                      opacity={clamp01((snapToCircleT - 0.35) / 0.55)}
+                    />
+                  )}
+                </g>
+              );
+            })}
+
+            {/* Optical Reticle locking onto (960, 526) — exact center of Scene 2 Atlas! */}
+            <g transform="translate(960, 526)" opacity={reticleInT} filter={portalDarkT > 0.2 ? 'url(#s1-glow)' : undefined}>
+              <g transform={`rotate(${reticleSpin})`}>
+                <circle
+                  r={lerp(430, 316, snapToCircleT)}
+                  fill="none"
+                  stroke={portalDarkT > 0.25 ? COLORS.neonCyan : COLORS.brandBlue}
+                  strokeWidth={1.8}
+                  strokeDasharray="18 14 4 14"
+                  opacity={0.78}
+                />
+              </g>
+              <g transform={`rotate(${-reticleSpin * 0.7})`}>
+                <circle
+                  r={lerp(490, 362, snapToCircleT)}
+                  fill="none"
+                  stroke={portalDarkT > 0.25 ? COLORS.neonGreen : COLORS.ember}
+                  strokeWidth={1.2}
+                  strokeDasharray="6 18"
+                  opacity={0.55}
+                />
+              </g>
+              <text
+                y={-lerp(465, 396, snapToCircleT)}
+                textAnchor="middle"
+                fontFamily={FONTS.mono}
+                fontSize="13.5"
+                fontWeight="800"
+                letterSpacing="0.16em"
+                fill={portalDarkT > 0.12 ? COLORS.neonCyan : COLORS.brandBlue}
+              >
+                STATIC GRAPH LOCK-ON · AST EXTRACTION
+              </text>
+            </g>
+          </svg>
         )}
       </CameraRig>
     </AbsoluteFill>

@@ -218,13 +218,18 @@ export const Scene03StoryChoreography: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // ==================== TIMELINE (665 frames = 22.2s) ====================
-  // 0 - 114: Comfortable Engine Intro — 10 Existing Archify Native Diagram Families -> Motion Engine!
+  // ==================== TIMELINE (820 frames = 27.3s) ====================
+  // Beat 3.0 (0 - 98): Engine Intro — 10 Existing Archify Native Diagram Families -> Motion Engine!
   const introIn = spring({ frame, fps, config: { damping: 16, stiffness: 145 } });
-  const introOut = easeInOutCubic(progressBetween(frame, 88, 116));
+  const introOut = easeInOutCubic(progressBetween(frame, 76, 100));
 
-  // Local frame for Pulse Billing multi-view walkthrough (starts cleanly after comfortable intro hold)
-  const f = Math.max(0, frame - 98);
+  // Beat 3.1 (92 - 262): WHY NOT LET AI HAND-CODE ANIMATIONS?
+  // Direct AI Hand-Coding (brittle pixels / hallucinated code / dead on next PR) vs. Archify Declarative Compiler!
+  const howIn = spring({ frame: Math.max(0, frame - 92), fps, config: { damping: 17, stiffness: 140 } });
+  const howOut = easeInOutQuart(progressBetween(frame, 236, 264));
+
+  // Local frame for Pulse Billing multi-view walkthrough (compiles directly out of choreography.json!)
+  const f = Math.max(0, frame - 248);
 
   // 0-58: Architecture establishing shot
   const enterT = easeOutCubic(progressBetween(f, 0, 32));
@@ -260,8 +265,8 @@ export const Scene03StoryChoreography: React.FC = () => {
     lerp(0.94, 1.11, easeInOutCubic(progressBetween(f, 85, 165))) *
     lerp(1, 1 / 1.11, morphToSeqT);
 
-  const seqCamX = lerp(0, 115, codePanelT) * (1 - morphToErdT);
-  const seqCamZoom = lerp(1.0, 0.94, codePanelT);
+  const seqCamX = lerp(0, 290, codePanelT) * (1 - morphToErdT);
+  const seqCamZoom = lerp(1.0, 0.8, codePanelT);
   const erdCamZoom = lerp(1.0, 1.08, easeOutCubic(progressBetween(f, 472, 540)));
 
   const camX = archTrackPanX + seqCamX;
@@ -288,14 +293,16 @@ export const Scene03StoryChoreography: React.FC = () => {
   const progressPct = clamp01(f / 555) * 100;
 
   let caption = '把 Archify 原生 10 种图结构直接变成动态演示：PR 评审、文档讲解、方案汇报或视频工作流，随需导出 SVG 与视频';
-  if (frame >= 82 && f < 205) {
-    caption = 'Pulse Billing #5：复用原有架构图结构，同步扣款原地虚化、异步队列入场，镜头紧跟语义流';
+  if (frame >= 92 && frame < 248) {
+    caption = '为什么不让 AI 直接手写动效代码？AI 只写 20 行声明式意图，镜头、源码校验与无脚本烘焙全交由确定性引擎';
+  } else if (frame >= 248 && f < 205) {
+    caption = 'Pulse Billing #5：一份 JSON 直接编译出活体演示 —— 同步扣款虚化、异步队列入场，镜头自动紧跟语义流';
   } else if (f >= 205 && f < 325) {
     caption = '跨视图同源变身：同一核心服务从架构图滑入时序图，清晰区分首次 202 与重复幂等命中';
   } else if (f >= 325 && f < 448) {
     caption = '镜头自动让位：右侧滑出 Git 固定提交的真实源码与诚实桩函数边界声明';
   } else if (f >= 448) {
-    caption = '一镜到底切入 ERD：org_id 归属迁移、幂等唯一索引与 bigint 类型变更清晰落盘';
+    caption = '一镜到底切入 ERD：UUID 主键不变，新增 org_id 归属、idempotency_key 唯一索引与 amount_cents 升 bigint';
   }
 
   return (
@@ -451,6 +458,221 @@ export const Scene03StoryChoreography: React.FC = () => {
         </AbsoluteFill>
       )}
 
+      {/* ==================== BEAT 3.1: WHY DECLARATIVE CHOREOGRAPHY > DIRECT AI HAND-CODING (92 - 264) ==================== */}
+      {frame >= 90 && howOut < 0.99 && (
+        <AbsoluteFill
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 44,
+            opacity: howIn * (1 - howOut),
+            transform: `scale(${lerp(0.94, 1, howIn) * lerp(1, 1.07, howOut)})`,
+          }}
+        >
+          <div style={{ width: 1620, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, marginTop: -22 }}>
+            <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+              <EditorialPill label="HOW IT WORKS · DETERMINISTIC CHOREOGRAPHY COMPILER" color={COLORS.brandBlue} />
+              <div
+                style={{
+                  fontFamily: FONTS.display,
+                  fontSize: 54,
+                  fontWeight: 800,
+                  color: COLORS.ink,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.15,
+                }}
+              >
+                为什么不让 AI 直接手写动效？
+                <span style={{ color: COLORS.brandBlue }}>AI 只写意图，引擎确定性编译。</span>
+              </div>
+            </div>
+
+            {/* Split Editorial Grid: Left = Fragile Direct AI Hand-Coding | Right = Archify Declarative JSON -> Compiler */}
+            <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '0.88fr 1.24fr', gap: 36, alignItems: 'stretch' }}>
+              {/* LEFT: Direct AI Hand-Coding Pitfalls */}
+              <div
+                style={{
+                  borderRadius: 22,
+                  backgroundColor: 'rgba(255, 255, 255, 0.72)',
+                  border: `1.5px solid ${COLORS.security}44`,
+                  padding: '26px 30px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  gap: 16,
+                  boxShadow: '0 16px 44px rgba(18, 20, 23, 0.05)',
+                }}
+              >
+                <div>
+                  <div style={{ fontFamily: FONTS.mono, fontSize: 12, fontWeight: 800, color: COLORS.security, letterSpacing: '0.1em' }}>
+                    VS. DIRECT AI HAND-CODED SVG / HTML / VIDEO
+                  </div>
+                  <div style={{ fontFamily: FONTS.display, fontSize: 25, fontWeight: 800, color: COLORS.ink, marginTop: 6 }}>
+                    直接让 AI 手写动画代码
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
+                  {[
+                    {
+                      title: '手猜像素坐标，改一处全图撞车',
+                      sub: '元素遮挡、字数溢出、镜头走位全靠人肉反复微调',
+                    },
+                    {
+                      title: '源码容易编造，与真实提交脱节',
+                      sub: 'AI 随手改写示例行号与字段，代码一合并立刻过时',
+                    },
+                    {
+                      title: '一次性死资产，贴不进 PR 与文档',
+                      sub: '无法在 GitHub PR / GitLab MR 原生播放，也难复用',
+                    },
+                  ].map((item, idx) => {
+                    const rowT = easeOutCubic(progressBetween(frame, 108 + idx * 14, 128 + idx * 14));
+                    return (
+                      <div
+                        key={item.title}
+                        style={{
+                          padding: '13px 16px',
+                          borderRadius: 13,
+                          backgroundColor: '#FFF1F2',
+                          border: `1px solid ${COLORS.security}33`,
+                          opacity: rowT,
+                          transform: `translateX(${(1 - rowT) * -18}px)`,
+                        }}
+                      >
+                        <div style={{ fontFamily: FONTS.sans, fontSize: 16.5, fontWeight: 800, color: COLORS.security }}>
+                          ✗ &nbsp;{item.title}
+                        </div>
+                        <div style={{ fontFamily: FONTS.sans, fontSize: 13.5, color: COLORS.muted, marginTop: 4 }}>
+                          {item.sub}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* RIGHT: Archify Declarative Choreography Spec -> Deterministic Compiler -> Any Output / Video Pipeline! */}
+              <div
+                style={{
+                  borderRadius: 22,
+                  backgroundColor: COLORS.surface,
+                  border: `2px solid ${COLORS.brandBlue}`,
+                  padding: '24px 28px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  gap: 16,
+                  boxShadow: `0 24px 64px ${COLORS.brandBlue}1A, 0 6px 20px rgba(18, 20, 23, 0.06)`,
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontFamily: FONTS.mono, fontSize: 12, fontWeight: 800, color: COLORS.brandBlue, letterSpacing: '0.1em' }}>
+                      ARCHIFY STORY CHOREOGRAPHY · DECLARATIVE SPEC
+                    </div>
+                    <div style={{ fontFamily: FONTS.display, fontSize: 25, fontWeight: 800, color: COLORS.ink, marginTop: 4 }}>
+                      一份极简 JSON 编排 → 确定性编译多端交付
+                    </div>
+                  </div>
+                  <EditorialPill label="ZERO KEYFRAMES" color={COLORS.backend} />
+                </div>
+
+                {/* Real Compact story-choreography JSON */}
+                <div
+                  style={{
+                    borderRadius: 14,
+                    backgroundColor: '#0C111D',
+                    padding: '14px 18px',
+                    fontFamily: FONTS.mono,
+                    fontSize: 13.2,
+                    lineHeight: 1.65,
+                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B', fontSize: 11.5, marginBottom: 4 }}>
+                    <span>pulse-billing.choreography.json</span>
+                    <span style={{ color: COLORS.neonCyan }}>AI ONLY AUTHORS INTENT</span>
+                  </div>
+                  {[
+                    { code: '"views": ["architecture", "sequence", "erd"],', c: '#E2E8F0', hl: false },
+                    { code: '"transition": { "shared": ["checkout_api"] },   // 跨视图同源变形', c: COLORS.neonCyan, hl: true },
+                    { code: '"trace": { "edges": ["m_claim", "m_enq"] },    // 原生路径语义流', c: COLORS.neonGreen, hl: true },
+                    { code: '"detail": { "path": "src/routes/checkout.ts", "revision": "8bcb443" }', c: COLORS.neonAmber, hl: true },
+                  ].map((ln, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        color: ln.c,
+                        backgroundColor: ln.hl ? `${ln.c}14` : 'transparent',
+                        borderLeft: ln.hl ? `3px solid ${ln.c}` : '3px solid transparent',
+                        padding: '1px 8px',
+                        borderRadius: 4,
+                      }}
+                    >
+                      {ln.code}
+                    </div>
+                  ))}
+                </div>
+
+                {/* 3 Deterministic Compiler Superpowers + Direct Video Workflow Plug-In */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                  {[
+                    {
+                      tag: 'AUTO CAMERA',
+                      title: '原生包围盒算镜头',
+                      sub: 'fitCamera() 自动取景，改图重跑零返工',
+                      color: COLORS.brandBlue,
+                    },
+                    {
+                      tag: 'GUARDRAILS',
+                      title: 'Git SHA 真实校验',
+                      sub: '强校验文件行号与护栏，拒绝编造幻觉',
+                      color: COLORS.backend,
+                    },
+                    {
+                      tag: 'VIDEO PIPELINE',
+                      title: '直入 PR & 视频流',
+                      sub: '贴 PR/MR 动图，或出 1080p60 入 Remotion',
+                      color: COLORS.ember,
+                    },
+                  ].map((p, idx) => {
+                    const pT = spring({
+                      frame: Math.max(0, frame - (142 + idx * 14)),
+                      fps,
+                      config: { damping: 16, stiffness: 150 },
+                    });
+                    return (
+                      <div
+                        key={p.tag}
+                        style={{
+                          padding: '12px 14px',
+                          borderRadius: 12,
+                          backgroundColor: COLORS.paper,
+                          border: `1.4px solid ${p.color}55`,
+                          opacity: pT,
+                          transform: `translateY(${(1 - pT) * 18}px)`,
+                        }}
+                      >
+                        <div style={{ fontFamily: FONTS.mono, fontSize: 10.5, fontWeight: 800, color: p.color, letterSpacing: '0.08em' }}>
+                          ✓ {p.tag}
+                        </div>
+                        <div style={{ fontFamily: FONTS.display, fontSize: 16.5, fontWeight: 800, color: COLORS.ink, marginTop: 4 }}>
+                          {p.title}
+                        </div>
+                        <div style={{ fontFamily: FONTS.sans, fontSize: 12.5, color: COLORS.muted, marginTop: 4, lineHeight: 1.45 }}>
+                          {p.sub}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </AbsoluteFill>
+      )}
+
       {/* ==================== BORDERLESS CAMERA-TRACKED WORLD ==================== */}
       <CameraRig x={camX} y={camY} zoom={camZoom}>
         {/* Architecture + Sequence Unified Morph Canvas */}
@@ -588,7 +810,7 @@ export const Scene03StoryChoreography: React.FC = () => {
                     strokeWidth={3}
                   />
                   <text x={812} y={410} fill={COLORS.messagebus} fontFamily={FONTS.mono} fontSize={15} fontWeight={700}>
-                    enqueueCheckoutJob(orgId, k1)
+                    enqueueCheckoutJob(&#123; orgId, idempotencyKey &#125;)
                   </text>
 
                   <line
@@ -710,7 +932,7 @@ export const Scene03StoryChoreography: React.FC = () => {
                 w={290}
                 h={100}
                 title="Idempotency Lock"
-                subtitle="UNIQUE(org_id, key)"
+                subtitle="UNIQUE(idempotency_key)"
                 color={COLORS.backend}
                 sigil="security"
                 change="added"
@@ -787,11 +1009,15 @@ export const Scene03StoryChoreography: React.FC = () => {
               <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 12, fontFamily: FONTS.mono, fontSize: 15 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: COLORS.ink, fontWeight: 600 }}>
                   <span>PK id</span>
-                  <span style={{ color: COLORS.muted }}>bigint</span>
+                  <span style={{ color: COLORS.muted }}>uuid</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', color: COLORS.muted }}>
                   <span>slug</span>
-                  <span>text UNIQUE</span>
+                  <span>text NOT NULL UNIQUE</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: COLORS.muted }}>
+                  <span>stripe_account_id</span>
+                  <span>text NOT NULL</span>
                 </div>
               </div>
             </div>
@@ -809,7 +1035,7 @@ export const Scene03StoryChoreography: React.FC = () => {
             {/* Invoices Table */}
             <div
               style={{
-                width: 590,
+                width: 630,
                 borderRadius: 18,
                 backgroundColor: COLORS.surface,
                 border: `2px solid ${COLORS.backend}`,
@@ -827,17 +1053,22 @@ export const Scene03StoryChoreography: React.FC = () => {
                   alignItems: 'center',
                 }}
               >
-                <span style={{ fontFamily: FONTS.mono, fontSize: 20, fontWeight: 800, color: COLORS.ink }}>
-                  invoices
-                </span>
+                <div>
+                  <span style={{ fontFamily: FONTS.mono, fontSize: 20, fontWeight: 800, color: COLORS.ink }}>
+                    invoices
+                  </span>
+                  <span style={{ fontFamily: FONTS.mono, fontSize: 12, color: COLORS.muted, marginLeft: 12 }}>
+                    db/schema.sql : L12–L21
+                  </span>
+                </div>
                 <EditorialPill label="~ SCHEMA MIGRATED" color={COLORS.backend} />
               </div>
-              <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontFamily: FONTS.mono, fontSize: 15 }}>
+              <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 12, fontFamily: FONTS.mono, fontSize: 14.5 }}>
                 {[
-                  { col: 'PK id', type: 'bigint', change: 'unchanged' as const },
-                  { col: '+ FK org_id', type: 'bigint NOT NULL', change: 'added' as const },
-                  { col: '+ idempotency_key', type: 'text · UNIQUE(org_id, key)', change: 'added' as const },
-                  { col: '~ amount_cents', type: 'int → bigint', change: 'modified' as const },
+                  { col: 'PK id', type: 'uuid', change: 'unchanged' as const },
+                  { col: '+ FK org_id', type: 'uuid NOT NULL', change: 'added' as const },
+                  { col: '+ idempotency_key', type: 'text · UNIQUE INDEX', change: 'added' as const },
+                  { col: '~ amount_cents', type: 'integer → bigint NOT NULL', change: 'modified' as const },
                   { col: 'status', type: "text DEFAULT 'queued'", change: 'unchanged' as const },
                 ].map((r, idx) => {
                   const rowT = easeOutCubic(progressBetween(f, 476 + idx * 8, 502 + idx * 8));
@@ -870,25 +1101,41 @@ export const Scene03StoryChoreography: React.FC = () => {
                     </div>
                   );
                 })}
+                <div
+                  style={{
+                    marginTop: 4,
+                    padding: '9px 14px',
+                    borderRadius: 9,
+                    backgroundColor: 'rgba(8, 86, 245, 0.06)',
+                    border: `1px solid ${COLORS.brandBlue}33`,
+                    fontFamily: FONTS.mono,
+                    fontSize: 12.5,
+                    color: COLORS.brandBlue,
+                    fontWeight: 700,
+                    opacity: erdRevealT,
+                  }}
+                >
+                  CREATE UNIQUE INDEX invoices_idempotency_key_idx ON invoices (idempotency_key);
+                </div>
               </div>
             </div>
           </AbsoluteFill>
         )}
       </CameraRig>
 
-      {/* Dark-Ink Git-Pinned Source Excerpt Floating Cleanly Over Bright Paper (High Editorial Contrast!) */}
+      {/* Dark-Ink Git-Pinned Source Excerpt — Vertically Centered on Optical Axis (y=508, EXACT commit 8bcb443!) */}
       {codePanelT > 0.01 && (
         <div
           style={{
             position: 'absolute',
-            right: 54,
-            top: 150,
-            width: 615,
+            right: 52,
+            top: 508,
+            width: 724,
             borderRadius: 20,
             backgroundColor: '#0C111D',
             border: `1px solid rgba(52, 211, 153, 0.45)`,
             boxShadow: '0 32px 84px rgba(18, 20, 23, 0.28)',
-            transform: `translateX(${(1 - codePanelT) * 680}px)`,
+            transform: `translateY(-50%) translateX(${(1 - codePanelT) * 780}px)`,
             opacity: codePanelT,
             overflow: 'hidden',
             zIndex: 55,
@@ -896,7 +1143,7 @@ export const Scene03StoryChoreography: React.FC = () => {
         >
           <div
             style={{
-              padding: '14px 20px',
+              padding: '13px 20px',
               borderBottom: '1px solid rgba(148,163,184,0.16)',
               display: 'flex',
               justifyContent: 'space-between',
@@ -904,7 +1151,7 @@ export const Scene03StoryChoreography: React.FC = () => {
             }}
           >
             <span style={{ fontFamily: FONTS.mono, fontSize: 13.5, fontWeight: 700, color: '#F8FAFC' }}>
-              src/checkout/handler.ts : L42–L52
+              src/routes/checkout.ts : L19–L34
             </span>
             <span
               style={{
@@ -917,41 +1164,58 @@ export const Scene03StoryChoreography: React.FC = () => {
                 backgroundColor: 'rgba(52, 211, 153, 0.14)',
               }}
             >
-              PINNED @ f6948a3
+              PINNED @ 8bcb443
             </span>
           </div>
-          <div style={{ padding: '20px 22px', fontFamily: FONTS.mono, fontSize: 14, lineHeight: 1.8 }}>
+          <div style={{ padding: '16px 20px', fontFamily: FONTS.mono, fontSize: 12.2, lineHeight: 1.62 }}>
             {[
-              { n: 42, code: 'const claim = await claimIdempotency(orgId, key);', hl: false },
-              { n: 43, code: 'if (claim.duplicate) {', hl: true, c: COLORS.neonAmber },
-              { n: 44, code: '  return res.status(202).json({', hl: true, c: COLORS.neonAmber },
-              { n: 45, code: '    status: "queued", invoiceId: claim.invoiceId', hl: true, c: COLORS.neonAmber },
-              { n: 46, code: '  });', hl: true, c: COLORS.neonAmber },
-              { n: 47, code: '}', hl: false },
-              { n: 48, code: 'const job = await enqueueCheckoutJob(orgId, claim.id);', hl: true, c: COLORS.neonGreen },
-              { n: 49, code: 'return res.status(202).json({', hl: true, c: COLORS.neonGreen },
-              { n: 50, code: '  status: "queued", invoiceId, jobId: job.id', hl: true, c: COLORS.neonGreen },
-              { n: 51, code: '});', hl: false },
+              { n: 19, code: '  if (!lock.acquired) {', hl: true, c: COLORS.neonAmber },
+              {
+                n: 20,
+                code: '    return { status: 202, body: { invoiceId: lock.existingInvoiceId, status: "queued" as const } };',
+                hl: true,
+                c: COLORS.neonAmber,
+              },
+              { n: 21, code: '  }', hl: true, c: COLORS.neonAmber },
+              { n: 23, code: '  const { jobId } = await enqueueCheckoutJob({', hl: true, c: COLORS.neonGreen },
+              { n: 24, code: '    invoiceId,', hl: false },
+              { n: 25, code: '    orgId: req.orgId,', hl: false },
+              { n: 26, code: '    seatCount: req.seatCount,', hl: false },
+              { n: 27, code: '    amountCents: req.amountCents,', hl: false },
+              { n: 28, code: '    idempotencyKey: req.idempotencyKey,', hl: false },
+              { n: 29, code: '  });', hl: false },
+              { n: 31, code: '  return {', hl: true, c: COLORS.neonGreen },
+              { n: 32, code: '    status: 202,', hl: true, c: COLORS.neonGreen },
+              { n: 33, code: '    body: { invoiceId, jobId, status: "queued" as const },', hl: true, c: COLORS.neonGreen },
+              { n: 34, code: '  };', hl: true, c: COLORS.neonGreen },
             ].map((row) => (
               <div
                 key={row.n}
                 style={{
                   display: 'flex',
-                  gap: 14,
-                  padding: '2px 10px',
-                  borderRadius: 6,
-                  backgroundColor: row.hl ? `${row.c}1F` : 'transparent',
+                  gap: 12,
+                  padding: '1.5px 8px',
+                  borderRadius: 5,
+                  backgroundColor: row.hl ? `${row.c}1E` : 'transparent',
                   borderLeft: row.hl ? `3px solid ${row.c}` : '3px solid transparent',
                 }}
               >
-                <span style={{ color: '#475569', width: 24, textAlign: 'right' }}>{row.n}</span>
-                <span style={{ color: row.hl ? '#FFFFFF' : '#94A3B8' }}>{row.code}</span>
+                <span style={{ color: '#475569', width: 22, textAlign: 'right', flexShrink: 0 }}>{row.n}</span>
+                <span
+                  style={{
+                    color: row.hl ? '#FFFFFF' : '#94A3B8',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {row.code}
+                </span>
               </div>
             ))}
           </div>
           <div
             style={{
-              padding: '13px 20px',
+              padding: '12px 20px',
               borderTop: '1px solid rgba(148,163,184,0.16)',
               backgroundColor: 'rgba(251, 191, 36, 0.1)',
               fontFamily: FONTS.sans,
@@ -959,7 +1223,7 @@ export const Scene03StoryChoreography: React.FC = () => {
               color: COLORS.neonAmber,
             }}
           >
-            诚实边界：enqueueCheckoutJob() 为示例桩，不从动效虚构持久化保证。
+            诚实边界：enqueueCheckoutJob() 为示例桩，仅返回示例 ID，不从动效虚构持久化保证。
           </div>
         </div>
       )}

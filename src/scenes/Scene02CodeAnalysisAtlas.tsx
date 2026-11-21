@@ -66,14 +66,58 @@ const MODULES: ModuleDef[] = [
   { id: 'audit', label: 'legacy/audit', fileCount: 5, hue: 42, prStats: '−2' },
 ];
 
-// 6 Supported Static Analysis Languages displayed on clean left/right orbital flanks around the Atlas!
+// 6 Supported Static Analysis Languages displayed on clean outer left/right flanks around the Atlas!
 const ORBITAL_LANGUAGES = [
-  { name: 'TypeScript / JS', sub: 'AST + ESM calls', x: 1685, y: 290, isRight: true, color: '#38BDF8' },
-  { name: 'Python', sub: 'Pyright parser', x: 1710, y: 526, isRight: true, color: '#FBBF24' },
-  { name: 'Java', sub: 'Static lexical', x: 1685, y: 762, isRight: true, color: '#FB923C' },
-  { name: 'Go', sub: 'go.mod packages', x: 235, y: 762, isRight: false, color: '#22D3EE' },
-  { name: 'Rust', sub: 'Cargo + traits', x: 210, y: 526, isRight: false, color: '#FB7185' },
-  { name: 'C / C++', sub: 'libclang DB', x: 235, y: 290, isRight: false, color: '#A78BFA' },
+  { name: 'TypeScript / JS', sub: 'AST + ESM calls', x: 1765, y: 318, isRight: true, color: '#38BDF8' },
+  { name: 'Python', sub: 'Pyright parser', x: 1775, y: 526, isRight: true, color: '#FBBF24' },
+  { name: 'Java', sub: 'Static lexical', x: 1765, y: 734, isRight: true, color: '#FB923C' },
+  { name: 'Go', sub: 'go.mod packages', x: 155, y: 734, isRight: false, color: '#22D3EE' },
+  { name: 'Rust', sub: 'Cargo + traits', x: 145, y: 526, isRight: false, color: '#FB7185' },
+  { name: 'C / C++', sub: 'libclang DB', x: 155, y: 318, isRight: false, color: '#A78BFA' },
+];
+
+// 4 Real Archify Code Analysis Rule Signals that ignite sequentially the moment the Radar Sweep crosses their sector!
+const RADAR_ARCH_SIGNALS = [
+  {
+    id: 'sig-cycle',
+    modIdx: 1, // core/billing (~ -0.58 rad, top-right)
+    code: 'coupling/cycle',
+    detail: '3-module import loop',
+    bx: 1455,
+    by: 196,
+    alignRight: false,
+    color: COLORS.neonRose,
+  },
+  {
+    id: 'sig-complexity',
+    modIdx: 3, // domain/ledger (~ +1.05 rad, bottom-right)
+    code: 'complexity/function',
+    detail: 'Max CC 25 · deep nesting',
+    bx: 1455,
+    by: 836,
+    alignRight: false,
+    color: COLORS.neonAmber,
+  },
+  {
+    id: 'sig-boundary',
+    modIdx: 5, // ir/compiler -> infra (~ +2.65 rad, bottom-left)
+    code: 'architecture/boundary',
+    detail: 'layer bypass detected',
+    bx: 465,
+    by: 836,
+    alignRight: true,
+    color: COLORS.neonCyan,
+  },
+  {
+    id: 'sig-leak',
+    modIdx: 7, // legacy/audit (~ +4.05 rad, top-left)
+    code: 'coupling/internal-leak',
+    detail: 'undeclared hub fan-in',
+    bx: 465,
+    by: 196,
+    alignRight: true,
+    color: COLORS.neonViolet,
+  },
 ];
 
 function buildAtlasData() {
@@ -410,13 +454,23 @@ const ClassicOverlayNode: React.FC<{
   sub: string;
   sigil: SigilKind;
   baseColor: string;
-  halo?: 'red' | 'amber' | 'green';
+  halo?: 'red' | 'amber' | 'green' | 'blue' | 'grey';
   haloAlpha: number;
   badge?: string;
   pulse: number;
-}> = ({ x, y, w, h, title, sub, sigil, baseColor, halo, haloAlpha, badge, pulse }) => {
+  selected?: boolean;
+}> = ({ x, y, w, h, title, sub, sigil, baseColor, halo, haloAlpha, badge, pulse, selected }) => {
   const haloColor =
-    halo === 'red' ? COLORS.security : halo === 'amber' ? COLORS.cloud : COLORS.backend;
+    halo === 'red'
+      ? COLORS.security
+      : halo === 'amber'
+      ? COLORS.cloud
+      : halo === 'blue'
+      ? COLORS.brandBlue
+      : halo === 'grey'
+      ? '#64748B'
+      : COLORS.backend;
+  const isUnmapped = halo === 'grey';
   return (
     <div style={{ position: 'absolute', left: x, top: y, width: w, height: h }}>
       {halo && haloAlpha > 0.02 && (
@@ -425,11 +479,13 @@ const ClassicOverlayNode: React.FC<{
             position: 'absolute',
             inset: -10,
             borderRadius: 22,
-            border: `4px solid ${haloColor}`,
-            boxShadow: `0 0 ${halo === 'red' ? 24 + pulse * 18 : 22}px ${haloColor}${
-              halo === 'red' ? '99' : '66'
-            }`,
-            opacity: haloAlpha * (halo === 'red' ? 0.65 + pulse * 0.35 : 0.85),
+            border: `${isUnmapped ? '2.5px dashed' : selected ? '4.5px solid' : '3.8px solid'} ${haloColor}`,
+            boxShadow: isUnmapped
+              ? 'none'
+              : `0 0 ${halo === 'red' ? 24 + pulse * 18 : 20}px ${haloColor}${
+                  halo === 'red' ? '99' : '55'
+                }`,
+            opacity: haloAlpha * (halo === 'red' ? 0.65 + pulse * 0.35 : isUnmapped ? 0.72 : 0.88),
             pointerEvents: 'none',
           }}
         />
@@ -541,7 +597,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
   const treePitch = lerp(0.06, 0.34, easeInOutCubic(progressBetween(frame, 372, 520)));
   const treeScale = lerp(1.02, 1.22, easeOutCubic(progressBetween(frame, 385, 535)));
 
-  // ACT 2C (554 - 785): CLASSIC DIAGRAM OVERLAY ("原版架构图叠加改造", --ir) + Comfortable Bridge to Scene 3
+  // ACT 2C (554 - 870): EXPANDED CLASSIC DIAGRAM OVERLAY ("原版架构图叠加改造", --ir) + Live Evidence Inspector + Unhurried Bridge!
   const classicWipeT = easeInOutQuart(progressBetween(frame, 554, 588));
   const overlayToggleT = easeOutCubic(progressBetween(frame, 600, 620));
   const toggleClickBounce = spring({
@@ -549,16 +605,26 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
     fps,
     config: { damping: 12, stiffness: 260 },
   });
-  const overlayScanT = easeInOutCubic(progressBetween(frame, 604, 668));
+  const overlayScanT = easeInOutCubic(progressBetween(frame, 604, 666));
   const scanX = lerp(130, 1760, overlayScanT);
   // Each node's diagnostic halo illuminates right as the feathered optical curtain sweeps past it!
   const apiHaloT = clamp01((scanX - 240) / 170) * overlayToggleT;
   const billingHaloT = clamp01((scanX - 720) / 180) * overlayToggleT;
   const ledgerHaloT = clamp01((scanX - 1240) / 180) * overlayToggleT;
   const driftLineT = clamp01((scanX - 1140) / 220) * overlayToggleT;
-  const classicCamPush = easeInOutCubic(progressBetween(frame, 646, 704));
-  // Narrative bridge fades in smoothly (700..726) and HOLDS crisp & readable until frame 785 (~2.0s)!
-  const bridgeToStoryT = easeInOutCubic(progressBetween(frame, 700, 726));
+
+  // NEW Deep-Dive Beat (674 - 796): Focus Billing Core + Slide in Archify Code Analysis Evidence Inspector Drawer!
+  const inspectorIn = spring({
+    frame: Math.max(0, frame - 674),
+    fps,
+    config: { damping: 18, stiffness: 135 },
+  });
+  const inspectorOut = easeInOutCubic(progressBetween(frame, 778, 804));
+  const inspectorT = clamp01(inspectorIn - inspectorOut);
+
+  const classicCamPush = easeInOutCubic(progressBetween(frame, 646, 706));
+  // Narrative bridge fades in smoothly (788..816) and HOLDS crisp & comfortable until frame 870 (~2.2s)!
+  const bridgeToStoryT = easeInOutCubic(progressBetween(frame, 788, 816));
   const redPulse = 0.5 + 0.5 * Math.sin((frame - 615) * 0.22);
 
   // ==================== 2D ATLAS CAMERA RIG ====================
@@ -730,10 +796,14 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
     kicker = 'VIEW 2/3 · ATLAS 3D TREE';
     kickerColor = COLORS.neonViolet;
     caption = '同一份静态分析数据三维升维：核心主干拔地而起，依赖层为高度、函数复杂度化作发光粒子云';
-  } else if (frame >= 562) {
+  } else if (frame >= 562 && frame < 678) {
     kicker = 'VIEW 3/3 · CLASSIC OVERLAY';
     kickerColor = COLORS.ember;
-    caption = '原版架构图无侵入叠加改造：直接点亮手写架构图上的诊断光晕，揪出未声明的架构漂移';
+    caption = '原生架构图叠加改造：五色诊断光晕覆盖报错、告警、信息、洁净与未映射外部依赖，直指越界漂移连线';
+  } else if (frame >= 678) {
+    kicker = 'CLASSIC · WORKBENCH';
+    kickerColor = COLORS.security;
+    caption = '优先级清单 + 内嵌循环/复杂度迷你图 + 工作区 Diff 源码直连 — 支持 Baseline 接纳与一键复制 AI 任务';
   }
 
   return (
@@ -1083,6 +1153,86 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
               })}
 
               {/* Floating Leaders for 2D Atlas */}
+              {/* Real Archify Architectural Signals igniting the instant the Radar Beam sweeps past each sector! */}
+              {langOrbitAlpha > 0.02 &&
+                to3DTreeT < 0.08 &&
+                RADAR_ARCH_SIGNALS.map((sig) => {
+                  const targetAngle = geo.mid(sig.modIdx);
+                  // Smooth angular detection as radarAngle sweeps from -PI/2 -> +1.75*PI
+                  const delta = radarAngle - targetAngle;
+                  if (delta < 0) return null;
+                  const popT = easeOutExpo(clamp01(delta / 0.35));
+                  const rippleT = clamp01(delta / 0.65);
+                  const anchor = geo.pt(targetAngle, geo.arcR + 6);
+                  const kneeX = sig.alignRight ? sig.bx + 128 : sig.bx - 128;
+                  const kneeY = sig.by;
+                  const alpha = popT * langOrbitAlpha;
+                  return (
+                    <g key={sig.id} opacity={alpha}>
+                      {/* Sonar Lock Ripple right on the Atlas module arc */}
+                      {rippleT < 0.99 && (
+                        <circle
+                          cx={anchor[0]}
+                          cy={anchor[1]}
+                          r={6 + rippleT * 30}
+                          fill="none"
+                          stroke={sig.color}
+                          strokeWidth={2 * (1 - rippleT)}
+                          opacity={1 - rippleT}
+                        />
+                      )}
+                      <circle
+                        cx={anchor[0]}
+                        cy={anchor[1]}
+                        r={4.8}
+                        fill="#FFFFFF"
+                        stroke={sig.color}
+                        strokeWidth={2.2}
+                        filter="url(#atlas-neon-cyan)"
+                      />
+                      <polyline
+                        points={`${anchor[0].toFixed(1)},${anchor[1].toFixed(1)} ${kneeX.toFixed(1)},${kneeY.toFixed(1)}`}
+                        fill="none"
+                        stroke={sig.color}
+                        strokeWidth={1.5}
+                        strokeDasharray="4 3"
+                        opacity={0.78}
+                      />
+                      <g transform={`translate(${sig.bx - 126}, ${sig.by - 28})`}>
+                        <rect
+                          width="252"
+                          height="56"
+                          rx="12"
+                          fill="rgba(11, 17, 32, 0.92)"
+                          stroke={`${sig.color}99`}
+                          strokeWidth="1.4"
+                        />
+                        <circle cx="18" cy="20" r="4.5" fill={sig.color} />
+                        <text
+                          x="31"
+                          y="24"
+                          fill={sig.color}
+                          fontFamily={FONTS.mono}
+                          fontSize="12.5"
+                          fontWeight="800"
+                        >
+                          {sig.code}
+                        </text>
+                        <text
+                          x="31"
+                          y="43"
+                          fill={COLORS.darkInk}
+                          fontFamily={FONTS.mono}
+                          fontSize="11.5"
+                          fontWeight="600"
+                        >
+                          {sig.detail}
+                        </text>
+                      </g>
+                    </g>
+                  );
+                })}
+
               {focusAmount > 0.35 && cycleAlpha < 0.25 && prModeAlpha < 0.25 && to3DTreeT < 0.1 && (
                 <g opacity={(focusAmount - 0.35) * 1.5}>
                   <polyline points={`${billingAnchor[0]},${billingAnchor[1]} ${billingAnchor[0] + 64},${billingAnchor[1] - 46} ${billingAnchor[0] + 240},${billingAnchor[1] - 46}`} fill="none" stroke={COLORS.neonGreen} strokeWidth={1.8} />
@@ -1098,12 +1248,12 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
 
               {cycleAlpha > 0.2 && to3DTreeT < 0.1 && (
                 <g opacity={cycleAlpha}>
-                  <polyline points="960,526 1270,350 1560,350" fill="none" stroke={COLORS.neonRose} strokeWidth={2} filter="url(#atlas-neon-rose)" />
+                  <polyline points="960,526 1390,286 1745,286" fill="none" stroke={COLORS.neonRose} strokeWidth={2} filter="url(#atlas-neon-rose)" />
                   <circle cx="960" cy="526" r="5" fill={COLORS.neonRose} />
-                  <text x="1280" y="334" fill={COLORS.neonRose} fontFamily={FONTS.mono} fontSize="15" fontWeight="800">
+                  <text x="1402" y="270" fill={COLORS.neonRose} fontFamily={FONTS.mono} fontSize="15" fontWeight="800">
                     ● coupling/cycle · 3 MODULES
                   </text>
-                  <text x="1280" y="374" fill={COLORS.darkInk} fontFamily={FONTS.mono} fontSize="15" fontWeight="600">
+                  <text x="1402" y="310" fill={COLORS.darkInk} fontFamily={FONTS.mono} fontSize="15" fontWeight="600">
                     billing → ledger → auth → billing
                   </text>
                 </g>
@@ -1111,18 +1261,18 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
 
               {prModeAlpha > 0.2 && to3DTreeT < 0.15 && (
                 <g opacity={prModeAlpha}>
-                  <polyline points="1265,375 1375,295 1700,295" fill="none" stroke={COLORS.neonGreen} strokeWidth={1.8} />
-                  <text x="1385" y="280" fill={COLORS.neonGreen} fontFamily={FONTS.mono} fontSize="14" fontWeight="800">
+                  <polyline points="1295,382 1408,290 1765,290" fill="none" stroke={COLORS.neonGreen} strokeWidth={1.8} />
+                  <text x="1418" y="274" fill={COLORS.neonGreen} fontFamily={FONTS.mono} fontSize="14" fontWeight="800">
                     + PR DIFF ANALYSIS · --pr
                   </text>
-                  <text x="1385" y="320" fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize="16" fontWeight="600">
+                  <text x="1418" y="314" fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize="16" fontWeight="600">
                     固定基线 → 当前提交 · 2 处直接调用方已定位
                   </text>
-                  <polyline points="655,395 540,320 220,320" fill="none" stroke={COLORS.neonRose} strokeWidth={1.8} strokeDasharray="5 4" />
-                  <text x="220" y="304" fill={COLORS.neonRose} fontFamily={FONTS.mono} fontSize="14" fontWeight="800">
+                  <polyline points="630,395 515,316 185,316" fill="none" stroke={COLORS.neonRose} strokeWidth={1.8} strokeDasharray="5 4" />
+                  <text x="185" y="300" fill={COLORS.neonRose} fontFamily={FONTS.mono} fontSize="14" fontWeight="800">
                     − REMOVED DEPENDENCIES · DRIFT GATE
                   </text>
-                  <text x="220" y="344" fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize="16" fontWeight="600">
+                  <text x="185" y="340" fill={COLORS.darkInk} fontFamily={FONTS.sans} fontSize="16" fontWeight="600">
                     移除同步 audit 依赖 · 灰虚线对照基线复杂度
                   </text>
                 </g>
@@ -1469,9 +1619,9 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
           </div>
 
           <CameraRig
-            x={lerp(0, 45, classicCamPush)}
-            y={lerp(0, -14, classicCamPush)}
-            zoom={lerp(0.96, 1.12, classicCamPush) * lerp(1, 0.9, bridgeToStoryT)}
+            x={lerp(0, 30, classicCamPush) * (1 - inspectorT) + lerp(0, 315, inspectorT)}
+            y={lerp(0, -14, classicCamPush) + lerp(0, 26, inspectorT)}
+            zoom={lerp(0.94, 1.0, classicCamPush) * lerp(1, 0.72, inspectorT) * lerp(1, 0.9, bridgeToStoryT)}
           >
             <AbsoluteFill style={{ opacity: 1 - bridgeToStoryT * 0.82 }}>
               <svg width="1920" height="1080" style={{ position: 'absolute', inset: 0 }}>
@@ -1489,7 +1639,7 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                     <stop offset="100%" stopColor="white" stopOpacity="0" />
                   </linearGradient>
                   <mask id="classic-veil-mask">
-                    <rect x="0" y="130" width="1920" height="780" fill="url(#classic-veil-v)" />
+                    <rect x="0" y="120" width="1920" height="800" fill="url(#classic-veil-v)" />
                   </mask>
                   <filter id="classic-beam-glow" x="-40%" y="-10%" width="180%" height="120%">
                     <feGaussianBlur stdDeviation="4" result="b" />
@@ -1500,71 +1650,113 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                   </filter>
                 </defs>
 
-                <g opacity={lerp(0.95, 0.28, overlayToggleT)}>
-                  <path d="M 480 420 L 675 420" fill="none" stroke={COLORS.frontend} strokeWidth="2.8" />
-                  <path d="M 1015 420 L 1225 420" fill="none" stroke={COLORS.database} strokeWidth="2.8" />
-                  <path d="M 845 480 L 845 640" fill="none" stroke={COLORS.messagebus} strokeWidth="2.6" />
+                {/* Authored Native Architecture Trust Boundary Container */}
+                <g opacity={0.85}>
+                  <rect
+                    x="595"
+                    y="238"
+                    width="995"
+                    height="536"
+                    rx="26"
+                    fill="rgba(255, 255, 255, 0.34)"
+                    stroke={COLORS.lineHi}
+                    strokeWidth="1.8"
+                    strokeDasharray="9 7"
+                  />
+                  <text
+                    x="622"
+                    y="270"
+                    fill={COLORS.muted}
+                    fontFamily={FONTS.mono}
+                    fontSize="12.5"
+                    fontWeight="800"
+                    letterSpacing="0.08em"
+                  >
+                    TRUST BOUNDARY · PAYMENT CORE DOMAIN (MAPPED TO src/**)
+                  </text>
                 </g>
 
-                {driftLineT > 0.02 && (
-                  <g opacity={driftLineT}>
-                    <path
-                      d="M 1015 445 C 1110 445, 1140 695, 1225 695"
-                      fill="none"
-                      stroke={COLORS.security}
-                      strokeWidth="3.6"
-                      strokeDasharray="9 6"
-                    />
-                    <rect
-                      x="1058"
-                      y="544"
-                      width="284"
-                      height="34"
-                      rx="10"
-                      fill="#FFF1F2"
-                      stroke={COLORS.security}
-                      strokeWidth="1.8"
-                    />
-                    <text
-                      x="1200"
-                      y="566"
-                      textAnchor="middle"
-                      fill={COLORS.security}
-                      fontFamily={FONTS.mono}
-                      fontSize="13"
-                      fontWeight="800"
-                    >
-                      ✗ UNDECLARED DRIFT IMPORT
-                    </text>
-                  </g>
-                )}
+                {/* Declared Authored Architecture Connections */}
+                <g opacity={lerp(0.92, 0.32, overlayToggleT)}>
+                  <path d="M 468 380 L 642 380" fill="none" stroke={COLORS.frontend} strokeWidth="2.8" />
+                  <path d="M 982 380 L 1190 380" fill="none" stroke={COLORS.database} strokeWidth="2.8" />
+                  <path d="M 812 438 L 812 586" fill="none" stroke={COLORS.messagebus} strokeWidth="2.6" />
+                  <path
+                    d="M 468 640 L 642 640"
+                    fill="none"
+                    stroke="#64748B"
+                    strokeWidth="2.2"
+                    strokeDasharray="6 5"
+                  />
+                </g>
+
+                {/* Undeclared Drift Edge discovered by static AST analysis! */}
+                {driftLineT > 0.02 && (() => {
+                  const driftU = ((frame - 620) % 48) / 48;
+                  const pt = cubicPoint([982, 410], [1085, 410], [1110, 642], [1190, 642], driftU);
+                  return (
+                    <g opacity={driftLineT}>
+                      <path
+                        d="M 982 410 C 1085 410, 1110 642, 1190 642"
+                        fill="none"
+                        stroke={COLORS.security}
+                        strokeWidth="3.6"
+                        strokeDasharray="9 6"
+                      />
+                      <circle cx={pt[0]} cy={pt[1]} r="5.5" fill="#FFFFFF" stroke={COLORS.security} strokeWidth="2.6" />
+                      <rect
+                        x="1018"
+                        y="506"
+                        width="284"
+                        height="34"
+                        rx="17"
+                        ry="17"
+                        fill="#FFF1F2"
+                        stroke={COLORS.security}
+                        strokeWidth="1.8"
+                      />
+                      <text
+                        x="1160"
+                        y="528"
+                        textAnchor="middle"
+                        fill={COLORS.security}
+                        fontFamily={FONTS.mono}
+                        fontSize="12.5"
+                        fontWeight="800"
+                      >
+                        ✗ UNDECLARED DRIFT IMPORT
+                      </text>
+                    </g>
+                  );
+                })()}
 
                 {/* Feathered Optical Diagnostic Veil (smooth vertical fade + soft gradient curtain!) */}
                 {overlayScanT > 0.01 && overlayScanT < 0.99 && (
                   <g mask="url(#classic-veil-mask)" opacity={Math.sin(overlayScanT * Math.PI)}>
-                    <rect x={scanX - 180} y="130" width="180" height="780" fill="url(#classic-veil-h)" />
+                    <rect x={scanX - 180} y="120" width="180" height="800" fill="url(#classic-veil-h)" />
                     <line
                       x1={scanX}
-                      y1="130"
+                      y1="120"
                       x2={scanX}
-                      y2="910"
+                      y2="920"
                       stroke={COLORS.backend}
                       strokeWidth="2.2"
                       opacity="0.72"
                       filter="url(#classic-beam-glow)"
                     />
-                    <line x1={scanX} y1="130" x2={scanX} y2="910" stroke="#ECFDF5" strokeWidth="1" opacity="0.95" />
+                    <line x1={scanX} y1="120" x2={scanX} y2="920" stroke="#ECFDF5" strokeWidth="1" opacity="0.95" />
                   </g>
                 )}
               </svg>
 
+              {/* 6 Native Nodes demonstrating ALL 5 Archify Diagnostic Halos: Clean, Error, Warning, Info, Unmapped! */}
               <ClassicOverlayNode
-                x={200}
-                y={360}
+                x={188}
+                y={322}
                 w={280}
-                h={118}
+                h={116}
                 title="API Gateway"
-                sub="Edge routing & auth guard"
+                sub="src/edge/** · 4 files clean"
                 sigil="frontend"
                 baseColor={COLORS.frontend}
                 halo="green"
@@ -1574,10 +1766,25 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
               />
 
               <ClassicOverlayNode
-                x={675}
-                y={360}
+                x={188}
+                y={584}
+                w={280}
+                h={112}
+                title="Stripe API"
+                sub="External SaaS · no local AST"
+                sigil="cloud"
+                baseColor="#64748B"
+                halo="grey"
+                haloAlpha={apiHaloT}
+                badge="◌ UNMAPPED"
+                pulse={redPulse}
+              />
+
+              <ClassicOverlayNode
+                x={642}
+                y={322}
                 w={340}
-                h={118}
+                h={116}
                 title="Billing Core"
                 sub="src/billing/** · 9 files mapped"
                 sigil="backend"
@@ -1586,13 +1793,14 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                 haloAlpha={billingHaloT}
                 badge="● CYCLE + DRIFT"
                 pulse={redPulse}
+                selected={inspectorT > 0.25}
               />
 
               <ClassicOverlayNode
-                x={1225}
-                y={360}
-                w={310}
-                h={118}
+                x={1190}
+                y={322}
+                w={335}
+                h={116}
                 title="Ledger Domain"
                 sub="src/ledger/** · CC hotspot"
                 sigil="database"
@@ -1604,24 +1812,24 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
               />
 
               <ClassicOverlayNode
-                x={695}
-                y={640}
-                w={300}
+                x={642}
+                y={586}
+                w={340}
                 h={112}
                 title="Org Queue"
-                sub="Per-org async worker bus"
+                sub="src/queue/** · high fan-in (7)"
                 sigil="messagebus"
                 baseColor={COLORS.messagebus}
-                halo="green"
+                halo="blue"
                 haloAlpha={billingHaloT}
-                badge="✓ CLEAN"
+                badge="ℹ INFO · FAN-IN 7"
                 pulse={redPulse}
               />
 
               <ClassicOverlayNode
-                x={1225}
-                y={640}
-                w={348}
+                x={1190}
+                y={586}
+                w={355}
                 h={112}
                 title="Legacy Audit"
                 sub="未声明连线 — 代码里却偷偷导入"
@@ -1632,8 +1840,311 @@ export const Scene02CodeAnalysisAtlas: React.FC = () => {
                 badge="✗ DRIFT TARGET"
                 pulse={redPulse}
               />
+
+              {/* Authentic Archify 5-Color Overlay Legend Bar (#bauify-legend) */}
+              {overlayToggleT > 0.25 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 188,
+                    top: 808,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 18,
+                    padding: '10px 22px',
+                    borderRadius: 999,
+                    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                    border: `1px solid ${COLORS.lineHi}`,
+                    boxShadow: '0 12px 32px rgba(18, 20, 23, 0.08)',
+                    opacity: clamp01((scanX - 900) / 360) * overlayToggleT,
+                    fontFamily: FONTS.mono,
+                    fontSize: 12.5,
+                    fontWeight: 700,
+                    color: COLORS.ink,
+                  }}
+                >
+                  <span style={{ color: COLORS.muted, fontSize: 11.5, letterSpacing: '0.08em' }}>OVERLAY LEGEND</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: COLORS.security }}>
+                    <span style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: COLORS.security }} /> Error (2)
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: COLORS.cloud }}>
+                    <span style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: COLORS.cloud }} /> Warning (1)
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: COLORS.brandBlue }}>
+                    <span style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: COLORS.brandBlue }} /> Info (1)
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: COLORS.backend }}>
+                    <span style={{ width: 9, height: 9, borderRadius: '50%', backgroundColor: COLORS.backend }} /> Clean (1)
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#64748B' }}>
+                    <span style={{ width: 9, height: 9, borderRadius: '50%', border: '1.8px dashed #64748B' }} /> Unmapped (1)
+                  </span>
+                  <span style={{ color: COLORS.muted, borderLeft: `1px solid ${COLORS.lineHi}`, paddingLeft: 14 }}>
+                    +2 Off-diagram · ESLint SARIF
+                  </span>
+                </div>
+              )}
             </AbsoluteFill>
           </CameraRig>
+
+          {/* ENRICHED Authentic Archify Native Overlay Workbench Drawer — Vertically Centered on Optical Axis (y=508)! */}
+          {inspectorT > 0.01 && (
+            <div
+              style={{
+                position: 'absolute',
+                right: 52,
+                top: 508,
+                width: 604,
+                borderRadius: 20,
+                backgroundColor: COLORS.surface,
+                border: `1.5px solid ${COLORS.security}66`,
+                boxShadow: '0 28px 80px rgba(18, 20, 23, 0.16)',
+                transform: `translateY(-50%) translateX(${(1 - inspectorT) * 660}px)`,
+                opacity: inspectorT,
+                overflow: 'hidden',
+                zIndex: 58,
+              }}
+            >
+              {/* Drawer Header */}
+              <div
+                style={{
+                  padding: '14px 20px',
+                  borderBottom: `1px solid ${COLORS.line}`,
+                  backgroundColor: '#FFF1F2',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <div>
+                  <div style={{ fontFamily: FONTS.mono, fontSize: 11, fontWeight: 800, color: COLORS.security, letterSpacing: '0.1em' }}>
+                    CODE ANALYSIS OVERLAY · COMPONENT DETAIL
+                  </div>
+                  <div style={{ fontFamily: FONTS.mono, fontSize: 20, fontWeight: 800, color: COLORS.ink, marginTop: 2 }}>
+                    Billing Core
+                  </div>
+                </div>
+                <EditorialPill label="9 FILES · 3 PRIORITIES · SARIF +1" color={COLORS.security} />
+              </div>
+
+              {/* Workbench Body */}
+              <div style={{ padding: '15px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {/* Top Priorities (Deduplicated Overview, matching overview.mjs MAX_PRIORITIES=3) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  <div style={{ fontFamily: FONTS.mono, fontSize: 11, fontWeight: 800, color: COLORS.muted, letterSpacing: '0.08em' }}>
+                    TOP PRIORITIES · DEDUPLICATED + EXTERNAL DIAGNOSTICS
+                  </div>
+                  {[
+                    {
+                      rank: '#1',
+                      rule: 'architecture/drift',
+                      loc: 'checkout.ts:38',
+                      detail: '未声明导入 legacy-audit/writer',
+                      c: COLORS.security,
+                    },
+                    {
+                      rank: '#2',
+                      rule: 'coupling/cycle',
+                      loc: '3 modules',
+                      detail: 'billing → ledger → auth → billing',
+                      c: COLORS.cloud,
+                    },
+                    {
+                      rank: '#3',
+                      rule: 'eslint / SARIF',
+                      loc: 'external',
+                      detail: 'no-restricted-imports (imported report)',
+                      c: COLORS.brandBlue,
+                    },
+                  ].map((p) => (
+                    <div
+                      key={p.rank}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 10,
+                        padding: '8px 12px',
+                        borderRadius: 10,
+                        backgroundColor: COLORS.paper,
+                        border: `1px solid ${p.c}44`,
+                        fontFamily: FONTS.mono,
+                        fontSize: 12,
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                        <span style={{ fontWeight: 900, color: p.c }}>{p.rank}</span>
+                        <span style={{ fontWeight: 800, color: COLORS.ink }}>{p.rule}</span>
+                        <span style={{ fontFamily: FONTS.sans, fontSize: 12.5, color: COLORS.muted, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {p.detail}
+                        </span>
+                      </div>
+                      <span style={{ color: p.c, fontWeight: 700, flexShrink: 0 }}>{p.loc}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Embedded SVG Mini-Diagrams (#bauify-detail svg.diagram: Cycle Triangle + Complexity Spark Bars!) */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <div
+                    style={{
+                      padding: '10px 12px',
+                      borderRadius: 12,
+                      backgroundColor: COLORS.paper,
+                      border: `1px solid ${COLORS.line}`,
+                    }}
+                  >
+                    <div style={{ fontFamily: FONTS.mono, fontSize: 10.5, fontWeight: 800, color: COLORS.muted, marginBottom: 4 }}>
+                      MINI-GRAPH · CYCLE PATH
+                    </div>
+                    <svg width="248" height="74" viewBox="0 0 248 74">
+                      <path d="M 54 18 L 194 18" stroke={COLORS.security} strokeWidth="2" fill="none" />
+                      <path d="M 194 26 L 126 58" stroke={COLORS.cloud} strokeWidth="2" fill="none" />
+                      <path d="M 118 58 L 54 26" stroke={COLORS.security} strokeWidth="2" strokeDasharray="4 3" fill="none" />
+                      <rect x="6" y="6" width="76" height="22" rx="6" fill="#FFF1F2" stroke={COLORS.security} strokeWidth="1.4" />
+                      <text x="44" y="21" textAnchor="middle" fill={COLORS.security} fontFamily={FONTS.mono} fontSize="10.5" fontWeight="800">
+                        billing
+                      </text>
+                      <rect x="164" y="6" width="76" height="22" rx="6" fill="#FFFBEB" stroke={COLORS.cloud} strokeWidth="1.4" />
+                      <text x="202" y="21" textAnchor="middle" fill={COLORS.cloud} fontFamily={FONTS.mono} fontSize="10.5" fontWeight="800">
+                        ledger
+                      </text>
+                      <rect x="86" y="48" width="76" height="22" rx="6" fill="#EFF6FF" stroke={COLORS.brandBlue} strokeWidth="1.4" />
+                      <text x="124" y="63" textAnchor="middle" fill={COLORS.brandBlue} fontFamily={FONTS.mono} fontSize="10.5" fontWeight="800">
+                        auth
+                      </text>
+                    </svg>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: '10px 12px',
+                      borderRadius: 12,
+                      backgroundColor: COLORS.paper,
+                      border: `1px solid ${COLORS.line}`,
+                    }}
+                  >
+                    <div style={{ fontFamily: FONTS.mono, fontSize: 10.5, fontWeight: 800, color: COLORS.muted, marginBottom: 4 }}>
+                      MINI-CHART · FUNCTION COMPLEXITY
+                    </div>
+                    <svg width="248" height="74" viewBox="0 0 248 74">
+                      <line x1="8" y1="24" x2="240" y2="24" stroke={COLORS.cloud} strokeWidth="1" strokeDasharray="3 3" opacity="0.7" />
+                      <text x="240" y="20" textAnchor="end" fill={COLORS.cloud} fontFamily={FONTS.mono} fontSize="9.5" fontWeight="700">
+                        warn=15
+                      </text>
+                      {[
+                        { x: 16, h: 16, v: 5, c: COLORS.backend },
+                        { x: 60, h: 26, v: 9, c: COLORS.backend },
+                        { x: 104, h: 36, v: 13, c: COLORS.brandBlue },
+                        { x: 148, h: 58, v: 24, c: COLORS.security },
+                        { x: 192, h: 46, v: 19, c: COLORS.cloud },
+                      ].map((bar) => (
+                        <g key={bar.x}>
+                          <rect x={bar.x} y={66 - bar.h} width="26" height={bar.h} rx="4" fill={`${bar.c}2E`} stroke={bar.c} strokeWidth="1.5" />
+                          <text x={bar.x + 13} y={62 - bar.h} textAnchor="middle" fill={bar.c} fontFamily={FONTS.mono} fontSize="10" fontWeight="800">
+                            {bar.v}
+                          </text>
+                        </g>
+                      ))}
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Working-Tree Source Pane with Authentic Git Diff Gutters (#bauify-code) */}
+                <div
+                  style={{
+                    borderRadius: 12,
+                    backgroundColor: '#0C111D',
+                    padding: '11px 14px',
+                    fontFamily: FONTS.mono,
+                    fontSize: 12,
+                    lineHeight: 1.65,
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B', marginBottom: 4, fontSize: 11 }}>
+                    <span>// Working-tree source · src/billing/checkout.ts</span>
+                    <span style={{ color: COLORS.neonGreen }}>● GIT DIFF GUTTERS</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 10, paddingLeft: 6, borderLeft: '3px solid transparent', color: '#94A3B8' }}>
+                    <span style={{ color: '#475569' }}>36</span>
+                    <span>import &#123; claimLock &#125; from &quot;./idempotency&quot;;</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 10, paddingLeft: 6, borderLeft: `3px solid ${COLORS.neonGreen}`, backgroundColor: 'rgba(52, 211, 153, 0.1)', color: '#D1FAE5' }}>
+                    <span style={{ color: COLORS.neonGreen }}>37+</span>
+                    <span>import &#123; queueJob &#125; from &quot;../queue&quot;;</span>
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: 10,
+                      paddingLeft: 6,
+                      borderLeft: `3px solid ${COLORS.neonRose}`,
+                      backgroundColor: 'rgba(251, 113, 133, 0.22)',
+                      color: '#FFE4E6',
+                      borderRadius: 3,
+                    }}
+                  >
+                    <span style={{ color: COLORS.neonRose }}>38~</span>
+                    <span>import &#123; auditSink &#125; from &quot;../legacy-audit/writer&quot;;</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: 10, paddingLeft: 6, borderLeft: '3px solid transparent', color: '#94A3B8' }}>
+                    <span style={{ color: '#475569' }}>39</span>
+                    <span>export async function handleCheckout(req) &#123;</span>
+                  </div>
+                </div>
+
+                {/* Action Buttons Footer: Copy Task for AI + Accept Baseline + Re-analyze */}
+                <div style={{ display: 'flex', gap: 9, marginTop: 2 }}>
+                  <div
+                    style={{
+                      flex: 1.35,
+                      padding: '10px 12px',
+                      borderRadius: 10,
+                      backgroundColor: COLORS.backend,
+                      color: '#FFFFFF',
+                      fontFamily: FONTS.mono,
+                      fontSize: 12.5,
+                      fontWeight: 800,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Copy Task for AI ↗
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                      padding: '10px 10px',
+                      borderRadius: 10,
+                      backgroundColor: COLORS.paper,
+                      border: `1px solid ${COLORS.lineHi}`,
+                      color: COLORS.ink,
+                      fontFamily: FONTS.mono,
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Accept Baseline
+                  </div>
+                  <div
+                    style={{
+                      padding: '10px 13px',
+                      borderRadius: 10,
+                      backgroundColor: COLORS.paper,
+                      border: `1px solid ${COLORS.lineHi}`,
+                      color: COLORS.ink,
+                      fontFamily: FONTS.mono,
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      textAlign: 'center',
+                    }}
+                  >
+                    Re-analyze
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Smooth Narrative Bridge to Scene 3 (Code Analysis -> Dynamic Story Choreography!) */}
           {bridgeToStoryT > 0.01 && (
