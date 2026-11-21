@@ -1,0 +1,27 @@
+{
+  "name": "archify-release-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Archify release promotional film built with Remotion — Code Analysis & Dynamic Story Choreography",
+  "scripts": {
+    "audio": "node scripts/generate-audio.mjs",
+    "predev": "node scripts/generate-audio.mjs --if-missing",
+    "dev": "remotion studio",
+    "prestudio": "node scripts/generate-audio.mjs --if-missing",
+    "studio": "remotion studio --port 3123",
+    "prebuild": "node scripts/generate-audio.mjs --if-missing",
+    "build": "remotion render src/index.ts ArchifyReleasePromo out/archify-release-promo.mp4",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.242",
+    "@remotion/transitions": "^4.0.242",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.242"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.2"
+  }
+}

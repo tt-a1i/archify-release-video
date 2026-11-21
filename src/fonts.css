@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../public/fonts/jetbrains-mono-normal-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../public/fonts/inter-normal-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  src: url('../public/fonts/space-grotesk-normal-latin.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
