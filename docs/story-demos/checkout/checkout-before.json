@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "Before: Send in the request", "output": "checkout-before.html", "viewBox": [1216, 436], "visual_preset": "signal-flow", "legend": { "mode": "hidden" } },
+  "components": [
+    { "id": "storefront", "type": "frontend", "label": "Storefront", "sublabel": "Checkout client", "pos": [92, 152], "size": [174, 78] },
+    { "id": "checkout", "type": "backend", "label": "Checkout API", "sublabel": "POST /checkout", "pos": [464, 152], "size": [188, 78] },
+    { "id": "provider", "type": "external", "label": "Email provider", "sublabel": "Receipt delivery", "pos": [848, 152], "size": [190, 78] }
+  ],
+  "connections": [
+    { "id": "checkout_request", "from": "storefront", "to": "checkout", "label": "Submit order", "fromSide": "right", "toSide": "left", "route": "straight" },
+    { "id": "blocking_send", "from": "checkout", "to": "provider", "label": "Send and wait", "variant": "emphasis", "fromSide": "right", "toSide": "left", "route": "straight" }
+  ]
+}

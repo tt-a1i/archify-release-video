@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "kind": "story-choreography",
+  "id": "checkout-receipt-handoff",
+  "title": "Take email off the checkout path",
+  "preset": "signal-flow",
+  "chrome": "story",
+  "badge": "ARCHITECTURE DIFF",
+  "statusBadges": "none",
+  "duration": 13,
+  "loop": true,
+  "stills": [1.8, 11.8],
+  "views": [
+    { "id": "before", "type": "architecture", "input": "checkout-before.json" },
+    {
+      "id": "after",
+      "type": "architecture",
+      "input": "checkout-after.json",
+      "callouts": {
+        "queue": { "text": "NEW", "tone": "added" },
+        "worker": { "text": "NEW", "tone": "added" }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "view": "before",
+      "at": 0,
+      "duration": 4,
+      "title": "Checkout waits for email",
+      "body": "The API sends the receipt inline. Checkout cannot return until the provider responds.",
+      "badge": "BEFORE",
+      "tone": "removed",
+      "trace": { "edges": ["checkout_request", "blocking_send"], "travel": 0.8 }
+    },
+    {
+      "view": "after",
+      "at": 4,
+      "duration": 4,
+      "title": "Keep the endpoint. Move the wait.",
+      "body": "The API returns once the queue accepts the receipt job.",
+      "badge": "AFTER",
+      "tone": "modified",
+      "transition": { "from": "before", "shared": [{ "id": "storefront" }, { "id": "checkout" }, { "id": "provider" }], "duration": 0.85 },
+      "enter": ["queue"],
+      "connect": ["enqueue"],
+      "trace": { "edges": ["enqueue"], "travel": 0.9 }
+    },
+    {
+      "view": "after",
+      "at": 8,
+      "duration": 5,
+      "title": "The worker sends the receipt",
+      "body": "Receipt delivery happens in the background. The email provider is no longer in the request path.",
+      "badge": "AFTER",
+      "tone": "added",
+      "enter": ["worker"],
+      "connect": { "edges": ["consume", "deliver"], "stagger": 0.28 },
+      "trace": { "edges": ["consume", "deliver"], "travel": 0.88 }
+    }
+  ]
+}

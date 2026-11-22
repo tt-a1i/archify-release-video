@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "kind": "story-choreography",
+  "id": "readme-cache-miss",
+  "title": "One cache miss, three handoffs",
+  "preset": "classic",
+  "chrome": "story",
+  "locale": "en",
+  "loop": true,
+  "views": [
+    {
+      "id": "cache-path",
+      "type": "sequence",
+      "input": "cache-miss.sequence.json"
+    }
+  ],
+  "steps": [
+    {
+      "view": "cache-path",
+      "title": "Redis returns a miss",
+      "body": "The API checks Redis. No cached dashboard data is available.",
+      "duration": 2.5,
+      "trace": {
+        "edges": [
+          "cache-read",
+          "cache-miss"
+        ],
+        "action": "trace",
+        "travel": 0.62
+      }
+    },
+    {
+      "view": "cache-path",
+      "title": "Postgres supplies the data",
+      "body": "The API falls back to Postgres for the profile and metrics.",
+      "duration": 2.65,
+      "trace": {
+        "edges": [
+          "profile-query",
+          "profile-rows"
+        ],
+        "action": "trace",
+        "travel": 0.7
+      }
+    },
+    {
+      "view": "cache-path",
+      "title": "Redis is refilled",
+      "body": "The API writes the fresh result back to Redis for the next request.",
+      "duration": 2.5,
+      "trace": {
+        "edges": [
+          "cache-write"
+        ],
+        "action": "trace",
+        "travel": 0.78
+      }
+    }
+  ],
+  "stills": [
+    1.15,
+    3.75,
+    6.15
+  ]
+}

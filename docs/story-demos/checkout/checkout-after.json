@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "After: Send outside the request", "output": "checkout-after.html", "viewBox": [1216, 436], "visual_preset": "signal-flow", "legend": { "mode": "hidden" } },
+  "components": [
+    { "id": "storefront", "type": "frontend", "label": "Storefront", "sublabel": "Checkout client", "pos": [56, 94], "size": [174, 78] },
+    { "id": "checkout", "type": "backend", "label": "Checkout API", "sublabel": "POST /checkout", "pos": [362, 94], "size": [188, 78] },
+    { "id": "queue", "type": "messagebus", "label": "Receipt queue", "sublabel": "Receipt jobs", "pos": [362, 302], "size": [188, 78] },
+    { "id": "worker", "type": "backend", "label": "Receipt worker", "sublabel": "Background delivery", "pos": [670, 302], "size": [190, 78] },
+    { "id": "provider", "type": "external", "label": "Email provider", "sublabel": "Receipt delivery", "pos": [972, 302], "size": [190, 78] }
+  ],
+  "connections": [
+    { "id": "checkout_request", "from": "storefront", "to": "checkout", "label": "Submit order", "fromSide": "right", "toSide": "left", "route": "straight" },
+    { "id": "enqueue", "from": "checkout", "to": "queue", "label": "Enqueue receipt", "variant": "emphasis", "labelAt": [536, 238], "fromSide": "bottom", "toSide": "top", "route": "straight" },
+    { "id": "consume", "from": "queue", "to": "worker", "label": "Consume job", "fromSide": "right", "toSide": "left", "route": "straight" },
+    { "id": "deliver", "from": "worker", "to": "provider", "label": "Send receipt", "fromSide": "right", "toSide": "left", "route": "straight" }
+  ]
+}

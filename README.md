@@ -6,6 +6,34 @@
 - **视觉语言**：对齐 `archify.si` 官方亮色建筑纸设计系统（`#F5F6F3` 暖纸底、64px 制图网格、`#E2500E` 焰橙、`#0856F5` 钴蓝、`#1DBBB7` 青绿），并在全仓星盘与 3D 粒子树专场切入高对比科幻暗色舞台。
 - **零外部视频/音频素材依赖**：离线内置字体（`JetBrains Mono` / `Space Grotesk` / `Inter`），全套立体声 BGM 与 10 类动效音效由 [`scripts/generate-audio.mjs`](scripts/generate-audio.mjs) 确定性合成。
 
+## 用 Archify 演示 Archify
+
+下面是 **Archify v3.3.0 直接导出的动态 SVG**，不是影片里的录屏片段。两张图都由原生图和编排 JSON 生成，会按系统深浅色切换，并尊重减少动态效果的设置。
+
+### 01 / 缓存未命中：让现有时序图动起来
+
+沿用 [Archify 的缓存未命中示例](https://archify.si/gallery/artifacts/cache-miss.sequence.html)，把 Redis 未命中、Postgres 回源、写回缓存分成三拍。三拍都在同一张图上。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/story-demos/cache-miss/cache-miss-dark.svg">
+  <img src="docs/story-demos/cache-miss/cache-miss-light.svg" alt="缓存未命中：API 查 Redis、回源 Postgres，再把结果写回 Redis" width="960">
+</picture>
+
+[时序图 JSON](docs/story-demos/cache-miss/cache-miss.sequence.json) · [编排 JSON](docs/story-demos/cache-miss/cache-miss.story.json)
+
+### 02 / 订单回执：把一次架构改动讲清楚
+
+这是一个假想 PR。保留结账 API，替换同步邮件调用，再让队列和后台 worker 依次入场。共享节点跨前后两张图保留，观众不用重新找同一个 API。
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/story-demos/checkout/checkout-dark.svg">
+  <img src="docs/story-demos/checkout/checkout-light.svg" alt="结账前后对照：同步发送邮件改成入队，由后台 worker 异步发送" width="960">
+</picture>
+
+[变更前](docs/story-demos/checkout/checkout-before.json) · [变更后](docs/story-demos/checkout/checkout-after.json) · [编排 JSON](docs/story-demos/checkout/checkout.story.json)
+
+[Story 编排与导出文档 ↗](https://github.com/tt-a1i/archify/blob/v3.3.0/archify/references/story-authoring.md)
+
 ## 六幕结构
 
 | 合成 ID | 主题 | 核心画面与动效 |
