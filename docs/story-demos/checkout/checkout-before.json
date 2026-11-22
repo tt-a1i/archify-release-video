@@ -1,14 +1,79 @@
 {
   "schema_version": 1,
   "diagram_type": "architecture",
-  "meta": { "title": "Before: Send in the request", "output": "checkout-before.html", "viewBox": [1216, 436], "visual_preset": "signal-flow", "legend": { "mode": "hidden" } },
+  "meta": {
+    "title": "Before: Send in the request",
+    "output": "checkout-before.html",
+    "viewBox": [
+      640,
+      240
+    ],
+    "visual_preset": "signal-flow",
+    "legend": {
+      "mode": "hidden"
+    }
+  },
   "components": [
-    { "id": "storefront", "type": "frontend", "label": "Storefront", "sublabel": "Checkout client", "pos": [92, 152], "size": [174, 78] },
-    { "id": "checkout", "type": "backend", "label": "Checkout API", "sublabel": "POST /checkout", "pos": [464, 152], "size": [188, 78] },
-    { "id": "provider", "type": "external", "label": "Email provider", "sublabel": "Receipt delivery", "pos": [848, 152], "size": [190, 78] }
+    {
+      "id": "storefront",
+      "type": "frontend",
+      "label": "Storefront",
+      "pos": [
+        20,
+        42
+      ],
+      "size": [
+        120,
+        62
+      ]
+    },
+    {
+      "id": "checkout",
+      "type": "backend",
+      "label": "Checkout API",
+      "pos": [
+        175,
+        42
+      ],
+      "size": [
+        120,
+        62
+      ],
+      "sublabel": "POST /checkout"
+    },
+    {
+      "id": "provider",
+      "type": "external",
+      "label": "Email provider",
+      "pos": [
+        485,
+        42
+      ],
+      "size": [
+        120,
+        62
+      ]
+    }
   ],
   "connections": [
-    { "id": "checkout_request", "from": "storefront", "to": "checkout", "label": "Submit order", "fromSide": "right", "toSide": "left", "route": "straight" },
-    { "id": "blocking_send", "from": "checkout", "to": "provider", "label": "Send and wait", "variant": "emphasis", "fromSide": "right", "toSide": "left", "route": "straight" }
+    {
+      "id": "checkout_request",
+      "from": "storefront",
+      "to": "checkout",
+      "label": "POST",
+      "fromSide": "right",
+      "toSide": "left",
+      "route": "straight"
+    },
+    {
+      "id": "blocking_send",
+      "from": "checkout",
+      "to": "provider",
+      "label": "Send and wait",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "left",
+      "route": "straight"
+    }
   ]
 }

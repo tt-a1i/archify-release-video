@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="archify-story-title archify-story-desc" data-theme="light" data-preset="classic" data-archify-bake="story" data-story-loop="infinite"><title id="archify-story-title">One cache miss, three handoffs</title><desc id="archify-story-desc">One cache miss, three handoffs: Redis returns a miss -&gt; Postgres supplies the data -&gt; Redis is refilled</desc><style><![CDATA[
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="archify-story-title archify-story-desc" data-theme="light" data-preset="classic" data-archify-bake="story" data-story-loop="infinite"><title id="archify-story-title">One cache miss, three handoffs</title><desc id="archify-story-desc">One cache miss, three handoffs: Redis misses -&gt; Postgres answers -&gt; Redis is ready</desc><style><![CDATA[
 /*
 JetBrains Mono variable WOFF2 subsets from Google Fonts service revision v24.
 These fixed bytes are shared by the viewer and its SVG/raster exports.
@@ -136,219 +136,563 @@ svg{font-family:'JetBrains Mono', system-ui, -apple-system, 'Segoe UI', 'PingFan
 [data-native-key] [data-legend]{display:none}
 [data-story-node-badge] text{font-size:10.5px!important}
 [data-story-metric]{visibility:visible}
-[data-native-key="native-light-cache-path"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
-[data-native-key="native-light-cache-path"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
-[data-native-key="native-light-cache-path"] :is(svg a.archify-drilldown-link){text-decoration:none;color:inherit}
-[data-native-key="native-light-cache-path"] :is(svg .archify-drilldown-mark-disc){fill:#23a37b;stroke:#5eb29f;stroke-width:1}
-[data-native-key="native-light-cache-path"] :is(svg .archify-drilldown-mark-arrow){stroke:#ffffff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-[data-native-key="native-light-cache-path"] :is(.c-grid){stroke:#e9edf2;fill:none}
-[data-native-key="native-light-cache-path"] :is(.c-mask){fill:#ffffff;stroke:none}
-[data-native-key="native-light-cache-path"] :is(.c-lane-rule){stroke:#cbd5e1;fill:none;opacity:0.7}
-[data-native-key="native-light-cache-path"] :is(.c-lane-wash){fill:rgba(248, 250, 252, 0.65);stroke:none}
-[data-native-key="native-light-cache-path"] :is(.c-frontend){fill:rgba(34, 211, 238, 0.15);stroke:#0891b2}
-[data-native-key="native-light-cache-path"] :is(.c-backend){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
-[data-native-key="native-light-cache-path"] :is(.c-database){fill:rgba(167, 139, 250, 0.2);stroke:#7c3aed}
-[data-native-key="native-light-cache-path"] :is(.c-cloud){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
-[data-native-key="native-light-cache-path"] :is(.c-security){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.c-messagebus){fill:rgba(251, 146, 60, 0.15);stroke:#ea580c}
-[data-native-key="native-light-cache-path"] :is(.c-external){fill:rgba(148, 163, 184, 0.18);stroke:#64748b}
-[data-native-key="native-light-cache-path"] :is(.t-primary){fill:#111827}
-[data-native-key="native-light-cache-path"] :is(.t-muted){fill:#5b6474}
-[data-native-key="native-light-cache-path"] :is(.t-dim){fill:#9aa3b2}
-[data-native-key="native-light-cache-path"] :is(.t-frontend){fill:#0891b2}
-[data-native-key="native-light-cache-path"] :is(.t-backend){fill:#059669}
-[data-native-key="native-light-cache-path"] :is(.t-database){fill:#7c3aed}
-[data-native-key="native-light-cache-path"] :is(.t-cloud){fill:#d97706}
-[data-native-key="native-light-cache-path"] :is(.t-security){fill:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.t-messagebus){fill:#ea580c}
-[data-native-key="native-light-cache-path"] :is(.t-external){fill:#64748b}
-[data-native-key="native-light-cache-path"] :is(.t-edge-default){fill:#5b6474}
-[data-native-key="native-light-cache-path"] :is(.t-edge-emphasis){fill:#059669}
-[data-native-key="native-light-cache-path"] :is(.t-edge-security){fill:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.t-edge-dashed){fill:#7c3aed}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="classic"] .c-grid){stroke:transparent}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="classic"][data-theme="light"] [data-node-id] > rect:not(.c-mask)){filter:drop-shadow(0 1px 1px rgba(17, 24, 39, 0.05)) drop-shadow(0 6px 12px rgba(17, 24, 39, 0.06))}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="classic"][data-theme="light"] [data-edge-from]){stroke-linecap:round;stroke-linejoin:round}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-wash){fill:rgba(17, 24, 39, 0.026)}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-rule){stroke:#e5e7eb;opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg .semantic-sigil){fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;opacity:0.76}
-[data-native-key="native-light-cache-path"] :is(svg .semantic-sigil > *){vector-effect:non-scaling-stroke}
-[data-native-key="native-light-cache-path"] :is(svg .semantic-sigil .sigil-fill){fill:currentColor;stroke:none}
-[data-native-key="native-light-cache-path"] :is(svg .s-frontend){color:#0891b2}
-[data-native-key="native-light-cache-path"] :is(svg .s-backend){color:#059669}
-[data-native-key="native-light-cache-path"] :is(svg .s-database){color:#7c3aed}
-[data-native-key="native-light-cache-path"] :is(svg .s-cloud){color:#d97706}
-[data-native-key="native-light-cache-path"] :is(svg .s-security){color:#e11d48}
-[data-native-key="native-light-cache-path"] :is(svg .s-messagebus){color:#ea580c}
-[data-native-key="native-light-cache-path"] :is(svg .s-external){color:#64748b}
-[data-native-key="native-light-cache-path"] :is(svg .brand-mark-badge){fill:#fff;stroke:none}
-[data-native-key="native-light-cache-path"] :is(svg .brand-mark-frame){fill:none;stroke:#cbd5e1;stroke-width:0.8;vector-effect:non-scaling-stroke}
-[data-native-key="native-light-cache-path"] :is(svg .brand-mark-fallback){fill:none;stroke:#475569;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
-[data-native-key="native-light-cache-path"] :is(svg [data-detail-anchor]){transform-box:fill-box;transform-origin:center}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-focus-match][data-detail], svg[data-focus-active] [data-focus-match] [data-detail], svg[data-reach-active] [data-reach-match][data-detail], svg[data-reach-active] [data-reach-match] [data-detail], svg[data-lens-active] [data-lens-match][data-detail], svg[data-lens-active] [data-lens-match] [data-detail], svg[data-legend-preview-active] [data-legend-preview-match][data-detail], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail], svg[data-intent-trace-active] [data-intent-trace-match][data-detail], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail], svg[data-route-active] [data-route-match][data-detail], svg[data-route-active] [data-route-match] [data-detail], svg[data-relationship-preview-active] [data-relationship-preview][data-detail], svg[data-relationship-preview-active] [data-relationship-preview] [data-detail]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-focus-match] [data-detail-anchor], svg[data-reach-active] [data-reach-match] [data-detail-anchor], svg[data-lens-active] [data-lens-match] [data-detail-anchor], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail-anchor], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail-anchor], svg[data-route-active] [data-route-match] [data-detail-anchor]){transform:none}
-[data-native-key="native-light-cache-path"] :is(.a-default){stroke:#64748b;fill:none}
-[data-native-key="native-light-cache-path"] :is(.a-emphasis){stroke:#059669;fill:none}
-[data-native-key="native-light-cache-path"] :is(.a-security){stroke:#e11d48;fill:none;stroke-dasharray:5,5}
-[data-native-key="native-light-cache-path"] :is(.a-dashed){stroke:#7c3aed;fill:none;stroke-dasharray:4,4}
-[data-native-key="native-light-cache-path"] :is(.m-default){fill:#64748b}
-[data-native-key="native-light-cache-path"] :is(.m-emphasis){fill:#059669}
-[data-native-key="native-light-cache-path"] :is(.m-security){fill:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.m-dashed){fill:#7c3aed}
-[data-native-key="native-light-cache-path"] :is(.c-change-swatch-added){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
-[data-native-key="native-light-cache-path"] :is(.c-change-swatch-modified){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
-[data-native-key="native-light-cache-path"] :is(.c-change-swatch-removed){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.c-change-badge-added){fill:#d2ece4;stroke:#059669}
-[data-native-key="native-light-cache-path"] :is(.c-change-badge-modified){fill:#f8e7d2;stroke:#d97706}
-[data-native-key="native-light-cache-path"] :is(.c-change-badge-removed){fill:#fad6de;stroke:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.c-change-swatch-removed){stroke-dasharray:3,2}
-[data-native-key="native-light-cache-path"] :is(.c-change-swatch-unchanged){fill:#ffffff;stroke:#9aa3b2}
-[data-native-key="native-light-cache-path"] :is(.t-change-added, .t-change-badge-added){fill:#059669}
-[data-native-key="native-light-cache-path"] :is(.t-change-modified, .t-change-badge-modified){fill:#d97706}
-[data-native-key="native-light-cache-path"] :is(.t-change-removed, .t-change-badge-removed){fill:#e11d48}
-[data-native-key="native-light-cache-path"] :is(.m-change-added){fill:#059669}
-[data-native-key="native-light-cache-path"] :is(.m-change-modified){fill:#d97706}
-[data-native-key="native-light-cache-path"] :is(.m-change-removed){fill:#e11d48}
-[data-native-key="native-light-cache-path"] :is(svg [data-change="added"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#059669;stroke-width:2.4}
-[data-native-key="native-light-cache-path"] :is(svg [data-change="modified"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#d97706;stroke-width:2.4}
-[data-native-key="native-light-cache-path"] :is(svg [data-change="removed"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
-[data-native-key="native-light-cache-path"] :is(svg rect[data-change="added"][data-graph-role], svg [data-change="added"] > rect.c-lane-wash, svg [data-change="added"] > rect.c-lane-rule){stroke:#059669;stroke-width:2;stroke-dasharray:none}
-[data-native-key="native-light-cache-path"] :is(svg rect[data-change="modified"][data-graph-role], svg [data-change="modified"] > rect.c-lane-wash, svg [data-change="modified"] > rect.c-lane-rule){stroke:#d97706;stroke-width:2;stroke-dasharray:none}
-[data-native-key="native-light-cache-path"] :is(svg rect[data-change="removed"][data-graph-role], svg [data-change="removed"] > rect.c-lane-wash, svg [data-change="removed"] > rect.c-lane-rule){stroke:#e11d48;stroke-width:1.4;stroke-dasharray:5,4}
-[data-native-key="native-light-cache-path"] :is(svg path[data-change="added"][data-edge-from], svg [data-change="added"][data-edge-from] > path){stroke:#059669;stroke-width:2.4}
-[data-native-key="native-light-cache-path"] :is(svg path[data-change="modified"][data-edge-from], svg [data-change="modified"][data-edge-from] > path){stroke:#d97706;stroke-width:2.4}
-[data-native-key="native-light-cache-path"] :is(svg path[data-change="removed"][data-edge-from], svg [data-change="removed"][data-edge-from] > path){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
-[data-native-key="native-light-cache-path"] :is(svg [data-change="removed"], svg text[data-change="removed"]){opacity:0.62}
-[data-native-key="native-light-cache-path"] :is(svg [data-change="removed"] > text[data-node-label], svg [data-change="removed"][data-graph-role] > text, svg [data-change="removed"][data-edge-from] text, svg text[data-change="removed"], svg [data-er-row][data-change="removed"] > text, svg [data-class-row][data-change="removed"] > text){text-decoration:line-through}
-[data-native-key="native-light-cache-path"] :is(svg [data-emphasis] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask), svg path[data-emphasis][data-edge-from], svg [data-emphasis][data-edge-from] > path){stroke-width:3.2}
-[data-native-key="native-light-cache-path"] :is(svg [data-emphasis] > text[data-node-label]){font-weight:800}
-[data-native-key="native-light-cache-path"] :is(svg [data-change-context="subdued"]){opacity:0.48}
-[data-native-key="native-light-cache-path"] :is(svg [data-change-context="subdued"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke-dasharray:none}
-[data-native-key="native-light-cache-path"] :is(svg [data-legend-hit]){fill:transparent;stroke:transparent;stroke-width:1.4;vector-effect:non-scaling-stroke}
-[data-native-key="native-light-cache-path"] :is(svg [data-legend-count-badge] rect){fill:#ffffff;stroke:#e5e7eb;stroke-width:1;vector-effect:non-scaling-stroke}
-[data-native-key="native-light-cache-path"] :is(svg [data-legend-count-badge] text){fill:#5b6474;font-size:8px;font-weight:700;text-anchor:middle}
-[data-native-key="native-light-cache-path"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-hit]){stroke:#7c3aed;stroke-width:2.2;stroke-dasharray:3 2}
-[data-native-key="native-light-cache-path"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-count-badge] rect){stroke:#7c3aed;stroke-width:1.8}
-[data-native-key="native-light-cache-path"] :is(svg [data-legend-kind][data-legend-zero]){opacity:0.44}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-node-id], svg[data-legend-preview-active] [data-edge-from]){opacity:0.11}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-legend-preview-match]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-legend-preview-peer]){opacity:0.62}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-legend-preview-selected]){filter:drop-shadow(0 0 8px #7c3aed)}
-[data-native-key="native-light-cache-path"] :is(svg[data-lens-active] [data-node-id], svg[data-lens-active] [data-edge-from]){opacity:0.11}
-[data-native-key="native-light-cache-path"] :is(svg[data-lens-active] [data-lens-match]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-lens-active] [data-lens-peer]){opacity:0.62}
-[data-native-key="native-light-cache-path"] :is(svg[data-lens-active] [data-lens-selected]){filter:drop-shadow(0 0 10px #7c3aed)}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-match]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-peer]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-peer]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-node-id], svg[data-focus-active] [data-edge-from]){opacity:0.13}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.13}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-lifecycle-rail]){opacity:0}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-focus-match]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 10px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active] [data-node-id], svg[data-reach-active] [data-edge-from]){opacity:0.09}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.09}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active] [data-reach-match]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"]:has(> [data-reach-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active="upstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #7c3aed)}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active="downstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #059669)}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active="upstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(124, 58, 237, 0.72))}
-[data-native-key="native-light-cache-path"] :is(svg[data-reach-active="downstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(5, 150, 105, 0.72))}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="blueprint"][data-reach-active] [data-reach-origin], svg[data-preset="blueprint"][data-reach-active] [data-edge-from][data-reach-match]){filter:none}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-direct-active] [data-node-id], svg[data-relationship-direct-active] [data-edge-from]){opacity:0.16}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.16}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-direct-active] [data-relationship-preview], svg[data-relationship-direct-active] [data-relationship-preview-node]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-focus-match]){opacity:0.18}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.18}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-lifecycle-rail]){opacity:0}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview-node]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-relationship-preview]){filter:drop-shadow(0 0 5px #059669)}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-relationship-preview] path, svg[data-relationship-preview-active] path[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] line, svg[data-relationship-preview-active] line[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] polyline, svg[data-relationship-preview-active] polyline[data-relationship-preview]){stroke-width:2.75}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-relationship-preview-source]){filter:drop-shadow(0 0 7px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(svg[data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 7px #7c3aed)}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-node-id]){fill-opacity:0.2;stroke-opacity:0.2}
-[data-native-key="native-light-cache-path"] :is(svg [data-node-id] > .c-mask){fill-opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-node-id][data-intent-trace-match]){fill-opacity:1;stroke-opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-edge-from]){opacity:0.2}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.2}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-lifecycle-rail]){opacity:0}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-intent-trace-match]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"]:has(> [data-intent-trace-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-intent-trace-active] [data-intent-trace-selected]){filter:drop-shadow(0 0 10px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-picking="target"] [data-node-id]){opacity:0.24}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-picking="target"] [data-route-candidate], svg[data-route-picking="target"] [data-route-start]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-picking] [data-route-start]){filter:drop-shadow(0 0 10px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-node-id], svg[data-route-active] [data-edge-from]){opacity:0.11}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-route-match]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"]:has(> [data-route-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-route-start]){filter:drop-shadow(0 0 11px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-route-end]){filter:drop-shadow(0 0 11px #e11d48)}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-active] [data-route-step]:not([data-route-start]):not([data-route-end])){filter:drop-shadow(0 0 7px #059669)}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="past"]){opacity:0.62}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="future"]){opacity:0.34}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="current"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="past"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="future"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.34}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="current"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-node-id][data-route-journey-current]){filter:drop-shadow(0 0 10px #059669)}
-[data-native-key="native-light-cache-path"] :is(svg[data-route-journey] [data-edge-from][data-route-journey-current]){opacity:1;filter:drop-shadow(0 0 6px #059669)}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="editorial"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 2px 2px rgba(17, 24, 39, 0.18))}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="blueprint"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 3px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="blueprint"][data-focus-active][data-reach-active] [data-focus-selected][data-reach-origin]){filter:none}
-[data-native-key="native-light-cache-path"] :is(svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-source], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 3px #0891b2)}
-[data-native-key="native-light-cache-path"] :is(.c-security-group){fill:transparent;stroke:#e11d48;stroke-dasharray:4,4}
-[data-native-key="native-light-cache-path"] :is(.c-region){fill:rgba(251, 191, 36, 0.05);stroke:#d97706;stroke-dasharray:8,4}
-[data-native-key="native-light-cache-path"] :is(.c-lane){fill:rgba(248, 250, 252, 0.65);stroke:#cbd5e1;stroke-dasharray:6,6}
-[data-native-key="native-light-cache-path"] :is(svg[data-theme="light"]){--bg:#f4f5f7;--grid:#e9edf2;--canvas-dot:#e2e7ec;--text:#111827;--text-muted:#5b6474;--text-dim:#9aa3b2;--text-faint:#6b7280;--panel:#ffffff;--panel-border:#e5e7eb;--lane-fill:rgba(248, 250, 252, 0.65);--lane-stroke:#cbd5e1;--arrow:#64748b;--arrow-emphasis:#059669;--edge-label:#5b6474;--mask:#ffffff;--frontend-fill:rgba(34, 211, 238, 0.15);--frontend-stroke:#0891b2;--backend-fill:rgba(52, 211, 153, 0.18);--backend-stroke:#059669;--database-fill:rgba(167, 139, 250, 0.2);--database-stroke:#7c3aed;--cloud-fill:rgba(251, 191, 36, 0.18);--cloud-stroke:#d97706;--security-fill:rgba(251, 113, 133, 0.15);--security-stroke:#e11d48;--messagebus-fill:rgba(251, 146, 60, 0.15);--messagebus-stroke:#ea580c;--external-fill:rgba(148, 163, 184, 0.18);--external-stroke:#64748b;--toolbar-bg:rgba(255, 255, 255, 0.92);--toolbar-border:#cbd5e1;--toolbar-text:#334155;--toolbar-hover:#ffffff;--toolbar-menu-bg:#ffffff;--reader-accent:#077f9c}
-#story-token-0-0{offset-path:path("M 159 160 L 371.5 160");offset-rotate:0deg}
-#story-token-0-1{offset-path:path("M 371.5 207 L 159 207");offset-rotate:0deg}
-#story-token-1-0{offset-path:path("M 159 260 L 598 260");offset-rotate:0deg}
-#story-token-1-1{offset-path:path("M 598 313 L 159 313");offset-rotate:0deg}
-#story-token-2-0{offset-path:path("M 159 366 L 371.5 366");offset-rotate:0deg}
-@keyframes sf-light-0{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}3.92157%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}7.18954%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}17.90850%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}18.03922%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
-@keyframes sf-light-1{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}7.18954%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}15.29412%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
-@keyframes sf-light-2{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}17.77778%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}17.90850%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}29.28105%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}33.20261%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
-@keyframes sf-light-3{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}17.90850%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}26.01307%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
-@keyframes sf-light-4{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}36.60131%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}39.86928%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}51.63399%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}51.76471%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
-@keyframes sf-light-5{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}39.86928%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}49.01961%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
-@keyframes sf-light-6{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}51.50327%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}51.63399%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}64.05229%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}67.97386%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
-@keyframes sf-light-7{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}51.63399%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}60.78431%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
-@keyframes sf-light-8{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}71.24183%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}74.50980%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}87.97386%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}91.89542%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
-@keyframes sf-light-9{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}74.50980%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}84.70588%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
-@keyframes sf-light-10{0.00000%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}25.49020%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}30.71895%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}}
-@keyframes sf-light-11{0.00000%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}32.67974%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}40.52288%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}60.13072%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}65.35948%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}}
-@keyframes sf-light-12{0.00000%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}67.32026%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}75.16340%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}}
-svg[data-theme="light"][data-archify-bake] :is(#story-token-0-0){animation:sf-light-0 7.65s linear infinite,sf-light-1 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-token-0-1){animation:sf-light-2 7.65s linear infinite,sf-light-3 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-token-1-0){animation:sf-light-4 7.65s linear infinite,sf-light-5 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-token-1-1){animation:sf-light-6 7.65s linear infinite,sf-light-7 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-token-2-0){animation:sf-light-8 7.65s linear infinite,sf-light-9 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-caption-0){animation:sf-light-10 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-caption-1){animation:sf-light-11 7.65s linear infinite}
-svg[data-theme="light"][data-archify-bake] :is(#story-caption-2){animation:sf-light-12 7.65s linear infinite}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}[data-story-tokens],[data-story-token],.story-shared-layer,.story-source-detail{display:none!important}.view-stage{opacity:0!important}#view-cache-path{opacity:1!important}#camera-cache-path{transform:translate(29.405px,54.952px) scale(1.19048)!important}#view-cache-path [data-node-id],#view-cache-path [data-edge-id],#view-cache-path [data-story-edge-id],#view-cache-path [data-story-edge-wrap]{opacity:1!important;visibility:visible!important;transform:none!important;stroke-dashoffset:0!important}.story-caption{opacity:0!important}#story-caption-2{opacity:1!important;transform:none!important}}
-]]></style><defs><clipPath id="story-diagram-viewport" clipPathUnits="userSpaceOnUse"><rect x="18" y="112" width="924" height="432"/></clipPath></defs><rect width="960" height="560" fill="#f4f5f7"/><g data-story-layer="diagram" clip-path="url(#story-diagram-viewport)"><g id="view-cache-path" class="view-stage" data-native-key="native-light-cache-path" style="opacity:1"><g id="camera-cache-path" style="transform:translate(29.405px,54.952px) scale(1.19048);transform-origin:0 0"><svg viewBox="0 0 735 490" data-sequence-column-fit="spread" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-motion-choreography="sequence" xmlns="http://www.w3.org/2000/svg" width="735" height="490" data-theme="light" data-archify-bake="static" x="0" y="0">
-        <title id="native-light-cache-path-archify-diagram-title">The cache-miss path</title>
-        <desc id="native-light-cache-path-archify-diagram-description">A sequence diagram generated by Archify.</desc>
+[data-native-key="native-light-cache-check"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
+[data-native-key="native-light-cache-check"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
+[data-native-key="native-light-cache-check"] :is(svg a.archify-drilldown-link){text-decoration:none;color:inherit}
+[data-native-key="native-light-cache-check"] :is(svg .archify-drilldown-mark-disc){fill:#23a37b;stroke:#5eb29f;stroke-width:1}
+[data-native-key="native-light-cache-check"] :is(svg .archify-drilldown-mark-arrow){stroke:#ffffff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-cache-check"] :is(.c-grid){stroke:#e9edf2;fill:none}
+[data-native-key="native-light-cache-check"] :is(.c-mask){fill:#ffffff;stroke:none}
+[data-native-key="native-light-cache-check"] :is(.c-lane-rule){stroke:#cbd5e1;fill:none;opacity:0.7}
+[data-native-key="native-light-cache-check"] :is(.c-lane-wash){fill:rgba(248, 250, 252, 0.65);stroke:none}
+[data-native-key="native-light-cache-check"] :is(.c-frontend){fill:rgba(34, 211, 238, 0.15);stroke:#0891b2}
+[data-native-key="native-light-cache-check"] :is(.c-backend){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
+[data-native-key="native-light-cache-check"] :is(.c-database){fill:rgba(167, 139, 250, 0.2);stroke:#7c3aed}
+[data-native-key="native-light-cache-check"] :is(.c-cloud){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
+[data-native-key="native-light-cache-check"] :is(.c-security){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.c-messagebus){fill:rgba(251, 146, 60, 0.15);stroke:#ea580c}
+[data-native-key="native-light-cache-check"] :is(.c-external){fill:rgba(148, 163, 184, 0.18);stroke:#64748b}
+[data-native-key="native-light-cache-check"] :is(.t-primary){fill:#111827}
+[data-native-key="native-light-cache-check"] :is(.t-muted){fill:#5b6474}
+[data-native-key="native-light-cache-check"] :is(.t-dim){fill:#9aa3b2}
+[data-native-key="native-light-cache-check"] :is(.t-frontend){fill:#0891b2}
+[data-native-key="native-light-cache-check"] :is(.t-backend){fill:#059669}
+[data-native-key="native-light-cache-check"] :is(.t-database){fill:#7c3aed}
+[data-native-key="native-light-cache-check"] :is(.t-cloud){fill:#d97706}
+[data-native-key="native-light-cache-check"] :is(.t-security){fill:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.t-messagebus){fill:#ea580c}
+[data-native-key="native-light-cache-check"] :is(.t-external){fill:#64748b}
+[data-native-key="native-light-cache-check"] :is(.t-edge-default){fill:#5b6474}
+[data-native-key="native-light-cache-check"] :is(.t-edge-emphasis){fill:#059669}
+[data-native-key="native-light-cache-check"] :is(.t-edge-security){fill:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.t-edge-dashed){fill:#7c3aed}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="classic"] .c-grid){stroke:transparent}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="classic"][data-theme="light"] [data-node-id] > rect:not(.c-mask)){filter:drop-shadow(0 1px 1px rgba(17, 24, 39, 0.05)) drop-shadow(0 6px 12px rgba(17, 24, 39, 0.06))}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="classic"][data-theme="light"] [data-edge-from]){stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-wash){fill:rgba(17, 24, 39, 0.026)}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-rule){stroke:#e5e7eb;opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg .semantic-sigil){fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;opacity:0.76}
+[data-native-key="native-light-cache-check"] :is(svg .semantic-sigil > *){vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-check"] :is(svg .semantic-sigil .sigil-fill){fill:currentColor;stroke:none}
+[data-native-key="native-light-cache-check"] :is(svg .s-frontend){color:#0891b2}
+[data-native-key="native-light-cache-check"] :is(svg .s-backend){color:#059669}
+[data-native-key="native-light-cache-check"] :is(svg .s-database){color:#7c3aed}
+[data-native-key="native-light-cache-check"] :is(svg .s-cloud){color:#d97706}
+[data-native-key="native-light-cache-check"] :is(svg .s-security){color:#e11d48}
+[data-native-key="native-light-cache-check"] :is(svg .s-messagebus){color:#ea580c}
+[data-native-key="native-light-cache-check"] :is(svg .s-external){color:#64748b}
+[data-native-key="native-light-cache-check"] :is(svg .brand-mark-badge){fill:#fff;stroke:none}
+[data-native-key="native-light-cache-check"] :is(svg .brand-mark-frame){fill:none;stroke:#cbd5e1;stroke-width:0.8;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-check"] :is(svg .brand-mark-fallback){fill:none;stroke:#475569;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-cache-check"] :is(svg [data-detail-anchor]){transform-box:fill-box;transform-origin:center}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-focus-match][data-detail], svg[data-focus-active] [data-focus-match] [data-detail], svg[data-reach-active] [data-reach-match][data-detail], svg[data-reach-active] [data-reach-match] [data-detail], svg[data-lens-active] [data-lens-match][data-detail], svg[data-lens-active] [data-lens-match] [data-detail], svg[data-legend-preview-active] [data-legend-preview-match][data-detail], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail], svg[data-intent-trace-active] [data-intent-trace-match][data-detail], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail], svg[data-route-active] [data-route-match][data-detail], svg[data-route-active] [data-route-match] [data-detail], svg[data-relationship-preview-active] [data-relationship-preview][data-detail], svg[data-relationship-preview-active] [data-relationship-preview] [data-detail]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-focus-match] [data-detail-anchor], svg[data-reach-active] [data-reach-match] [data-detail-anchor], svg[data-lens-active] [data-lens-match] [data-detail-anchor], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail-anchor], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail-anchor], svg[data-route-active] [data-route-match] [data-detail-anchor]){transform:none}
+[data-native-key="native-light-cache-check"] :is(.a-default){stroke:#64748b;fill:none}
+[data-native-key="native-light-cache-check"] :is(.a-emphasis){stroke:#059669;fill:none}
+[data-native-key="native-light-cache-check"] :is(.a-security){stroke:#e11d48;fill:none;stroke-dasharray:5,5}
+[data-native-key="native-light-cache-check"] :is(.a-dashed){stroke:#7c3aed;fill:none;stroke-dasharray:4,4}
+[data-native-key="native-light-cache-check"] :is(.m-default){fill:#64748b}
+[data-native-key="native-light-cache-check"] :is(.m-emphasis){fill:#059669}
+[data-native-key="native-light-cache-check"] :is(.m-security){fill:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.m-dashed){fill:#7c3aed}
+[data-native-key="native-light-cache-check"] :is(.c-change-swatch-added){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
+[data-native-key="native-light-cache-check"] :is(.c-change-swatch-modified){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
+[data-native-key="native-light-cache-check"] :is(.c-change-swatch-removed){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.c-change-badge-added){fill:#d2ece4;stroke:#059669}
+[data-native-key="native-light-cache-check"] :is(.c-change-badge-modified){fill:#f8e7d2;stroke:#d97706}
+[data-native-key="native-light-cache-check"] :is(.c-change-badge-removed){fill:#fad6de;stroke:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.c-change-swatch-removed){stroke-dasharray:3,2}
+[data-native-key="native-light-cache-check"] :is(.c-change-swatch-unchanged){fill:#ffffff;stroke:#9aa3b2}
+[data-native-key="native-light-cache-check"] :is(.t-change-added, .t-change-badge-added){fill:#059669}
+[data-native-key="native-light-cache-check"] :is(.t-change-modified, .t-change-badge-modified){fill:#d97706}
+[data-native-key="native-light-cache-check"] :is(.t-change-removed, .t-change-badge-removed){fill:#e11d48}
+[data-native-key="native-light-cache-check"] :is(.m-change-added){fill:#059669}
+[data-native-key="native-light-cache-check"] :is(.m-change-modified){fill:#d97706}
+[data-native-key="native-light-cache-check"] :is(.m-change-removed){fill:#e11d48}
+[data-native-key="native-light-cache-check"] :is(svg [data-change="added"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#059669;stroke-width:2.4}
+[data-native-key="native-light-cache-check"] :is(svg [data-change="modified"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#d97706;stroke-width:2.4}
+[data-native-key="native-light-cache-check"] :is(svg [data-change="removed"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
+[data-native-key="native-light-cache-check"] :is(svg rect[data-change="added"][data-graph-role], svg [data-change="added"] > rect.c-lane-wash, svg [data-change="added"] > rect.c-lane-rule){stroke:#059669;stroke-width:2;stroke-dasharray:none}
+[data-native-key="native-light-cache-check"] :is(svg rect[data-change="modified"][data-graph-role], svg [data-change="modified"] > rect.c-lane-wash, svg [data-change="modified"] > rect.c-lane-rule){stroke:#d97706;stroke-width:2;stroke-dasharray:none}
+[data-native-key="native-light-cache-check"] :is(svg rect[data-change="removed"][data-graph-role], svg [data-change="removed"] > rect.c-lane-wash, svg [data-change="removed"] > rect.c-lane-rule){stroke:#e11d48;stroke-width:1.4;stroke-dasharray:5,4}
+[data-native-key="native-light-cache-check"] :is(svg path[data-change="added"][data-edge-from], svg [data-change="added"][data-edge-from] > path){stroke:#059669;stroke-width:2.4}
+[data-native-key="native-light-cache-check"] :is(svg path[data-change="modified"][data-edge-from], svg [data-change="modified"][data-edge-from] > path){stroke:#d97706;stroke-width:2.4}
+[data-native-key="native-light-cache-check"] :is(svg path[data-change="removed"][data-edge-from], svg [data-change="removed"][data-edge-from] > path){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
+[data-native-key="native-light-cache-check"] :is(svg [data-change="removed"], svg text[data-change="removed"]){opacity:0.62}
+[data-native-key="native-light-cache-check"] :is(svg [data-change="removed"] > text[data-node-label], svg [data-change="removed"][data-graph-role] > text, svg [data-change="removed"][data-edge-from] text, svg text[data-change="removed"], svg [data-er-row][data-change="removed"] > text, svg [data-class-row][data-change="removed"] > text){text-decoration:line-through}
+[data-native-key="native-light-cache-check"] :is(svg [data-emphasis] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask), svg path[data-emphasis][data-edge-from], svg [data-emphasis][data-edge-from] > path){stroke-width:3.2}
+[data-native-key="native-light-cache-check"] :is(svg [data-emphasis] > text[data-node-label]){font-weight:800}
+[data-native-key="native-light-cache-check"] :is(svg [data-change-context="subdued"]){opacity:0.48}
+[data-native-key="native-light-cache-check"] :is(svg [data-change-context="subdued"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke-dasharray:none}
+[data-native-key="native-light-cache-check"] :is(svg [data-legend-hit]){fill:transparent;stroke:transparent;stroke-width:1.4;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-check"] :is(svg [data-legend-count-badge] rect){fill:#ffffff;stroke:#e5e7eb;stroke-width:1;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-check"] :is(svg [data-legend-count-badge] text){fill:#5b6474;font-size:8px;font-weight:700;text-anchor:middle}
+[data-native-key="native-light-cache-check"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-hit]){stroke:#7c3aed;stroke-width:2.2;stroke-dasharray:3 2}
+[data-native-key="native-light-cache-check"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-count-badge] rect){stroke:#7c3aed;stroke-width:1.8}
+[data-native-key="native-light-cache-check"] :is(svg [data-legend-kind][data-legend-zero]){opacity:0.44}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-node-id], svg[data-legend-preview-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-legend-preview-match]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-legend-preview-peer]){opacity:0.62}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-legend-preview-selected]){filter:drop-shadow(0 0 8px #7c3aed)}
+[data-native-key="native-light-cache-check"] :is(svg[data-lens-active] [data-node-id], svg[data-lens-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-cache-check"] :is(svg[data-lens-active] [data-lens-match]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-lens-active] [data-lens-peer]){opacity:0.62}
+[data-native-key="native-light-cache-check"] :is(svg[data-lens-active] [data-lens-selected]){filter:drop-shadow(0 0 10px #7c3aed)}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-match]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-peer]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-peer]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-node-id], svg[data-focus-active] [data-edge-from]){opacity:0.13}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.13}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-focus-match]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active] [data-node-id], svg[data-reach-active] [data-edge-from]){opacity:0.09}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.09}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active] [data-reach-match]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"]:has(> [data-reach-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active="upstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #7c3aed)}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active="downstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #059669)}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active="upstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(124, 58, 237, 0.72))}
+[data-native-key="native-light-cache-check"] :is(svg[data-reach-active="downstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(5, 150, 105, 0.72))}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="blueprint"][data-reach-active] [data-reach-origin], svg[data-preset="blueprint"][data-reach-active] [data-edge-from][data-reach-match]){filter:none}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-direct-active] [data-node-id], svg[data-relationship-direct-active] [data-edge-from]){opacity:0.16}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.16}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-direct-active] [data-relationship-preview], svg[data-relationship-direct-active] [data-relationship-preview-node]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-focus-match]){opacity:0.18}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.18}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview-node]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-relationship-preview]){filter:drop-shadow(0 0 5px #059669)}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-relationship-preview] path, svg[data-relationship-preview-active] path[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] line, svg[data-relationship-preview-active] line[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] polyline, svg[data-relationship-preview-active] polyline[data-relationship-preview]){stroke-width:2.75}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-relationship-preview-source]){filter:drop-shadow(0 0 7px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(svg[data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 7px #7c3aed)}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-node-id]){fill-opacity:0.2;stroke-opacity:0.2}
+[data-native-key="native-light-cache-check"] :is(svg [data-node-id] > .c-mask){fill-opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-node-id][data-intent-trace-match]){fill-opacity:1;stroke-opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-edge-from]){opacity:0.2}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.2}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-intent-trace-match]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"]:has(> [data-intent-trace-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-intent-trace-active] [data-intent-trace-selected]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-picking="target"] [data-node-id]){opacity:0.24}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-picking="target"] [data-route-candidate], svg[data-route-picking="target"] [data-route-start]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-picking] [data-route-start]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-node-id], svg[data-route-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-route-match]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"]:has(> [data-route-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-route-start]){filter:drop-shadow(0 0 11px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-route-end]){filter:drop-shadow(0 0 11px #e11d48)}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-active] [data-route-step]:not([data-route-start]):not([data-route-end])){filter:drop-shadow(0 0 7px #059669)}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="past"]){opacity:0.62}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="future"]){opacity:0.34}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="current"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="past"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="future"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.34}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="current"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-node-id][data-route-journey-current]){filter:drop-shadow(0 0 10px #059669)}
+[data-native-key="native-light-cache-check"] :is(svg[data-route-journey] [data-edge-from][data-route-journey-current]){opacity:1;filter:drop-shadow(0 0 6px #059669)}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="editorial"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 2px 2px rgba(17, 24, 39, 0.18))}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="blueprint"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 3px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="blueprint"][data-focus-active][data-reach-active] [data-focus-selected][data-reach-origin]){filter:none}
+[data-native-key="native-light-cache-check"] :is(svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-source], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 3px #0891b2)}
+[data-native-key="native-light-cache-check"] :is(.c-security-group){fill:transparent;stroke:#e11d48;stroke-dasharray:4,4}
+[data-native-key="native-light-cache-check"] :is(.c-region){fill:rgba(251, 191, 36, 0.05);stroke:#d97706;stroke-dasharray:8,4}
+[data-native-key="native-light-cache-check"] :is(.c-lane){fill:rgba(248, 250, 252, 0.65);stroke:#cbd5e1;stroke-dasharray:6,6}
+[data-native-key="native-light-cache-check"] :is(svg[data-theme="light"]){--bg:#f4f5f7;--grid:#e9edf2;--canvas-dot:#e2e7ec;--text:#111827;--text-muted:#5b6474;--text-dim:#9aa3b2;--text-faint:#6b7280;--panel:#ffffff;--panel-border:#e5e7eb;--lane-fill:rgba(248, 250, 252, 0.65);--lane-stroke:#cbd5e1;--arrow:#64748b;--arrow-emphasis:#059669;--edge-label:#5b6474;--mask:#ffffff;--frontend-fill:rgba(34, 211, 238, 0.15);--frontend-stroke:#0891b2;--backend-fill:rgba(52, 211, 153, 0.18);--backend-stroke:#059669;--database-fill:rgba(167, 139, 250, 0.2);--database-stroke:#7c3aed;--cloud-fill:rgba(251, 191, 36, 0.18);--cloud-stroke:#d97706;--security-fill:rgba(251, 113, 133, 0.15);--security-stroke:#e11d48;--messagebus-fill:rgba(251, 146, 60, 0.15);--messagebus-stroke:#ea580c;--external-fill:rgba(148, 163, 184, 0.18);--external-stroke:#64748b;--toolbar-bg:rgba(255, 255, 255, 0.92);--toolbar-border:#cbd5e1;--toolbar-text:#334155;--toolbar-hover:#ffffff;--toolbar-menu-bg:#ffffff;--reader-accent:#077f9c}
+[data-native-key="native-light-database-read"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
+[data-native-key="native-light-database-read"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
+[data-native-key="native-light-database-read"] :is(svg a.archify-drilldown-link){text-decoration:none;color:inherit}
+[data-native-key="native-light-database-read"] :is(svg .archify-drilldown-mark-disc){fill:#23a37b;stroke:#5eb29f;stroke-width:1}
+[data-native-key="native-light-database-read"] :is(svg .archify-drilldown-mark-arrow){stroke:#ffffff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-database-read"] :is(.c-grid){stroke:#e9edf2;fill:none}
+[data-native-key="native-light-database-read"] :is(.c-mask){fill:#ffffff;stroke:none}
+[data-native-key="native-light-database-read"] :is(.c-lane-rule){stroke:#cbd5e1;fill:none;opacity:0.7}
+[data-native-key="native-light-database-read"] :is(.c-lane-wash){fill:rgba(248, 250, 252, 0.65);stroke:none}
+[data-native-key="native-light-database-read"] :is(.c-frontend){fill:rgba(34, 211, 238, 0.15);stroke:#0891b2}
+[data-native-key="native-light-database-read"] :is(.c-backend){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
+[data-native-key="native-light-database-read"] :is(.c-database){fill:rgba(167, 139, 250, 0.2);stroke:#7c3aed}
+[data-native-key="native-light-database-read"] :is(.c-cloud){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
+[data-native-key="native-light-database-read"] :is(.c-security){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
+[data-native-key="native-light-database-read"] :is(.c-messagebus){fill:rgba(251, 146, 60, 0.15);stroke:#ea580c}
+[data-native-key="native-light-database-read"] :is(.c-external){fill:rgba(148, 163, 184, 0.18);stroke:#64748b}
+[data-native-key="native-light-database-read"] :is(.t-primary){fill:#111827}
+[data-native-key="native-light-database-read"] :is(.t-muted){fill:#5b6474}
+[data-native-key="native-light-database-read"] :is(.t-dim){fill:#9aa3b2}
+[data-native-key="native-light-database-read"] :is(.t-frontend){fill:#0891b2}
+[data-native-key="native-light-database-read"] :is(.t-backend){fill:#059669}
+[data-native-key="native-light-database-read"] :is(.t-database){fill:#7c3aed}
+[data-native-key="native-light-database-read"] :is(.t-cloud){fill:#d97706}
+[data-native-key="native-light-database-read"] :is(.t-security){fill:#e11d48}
+[data-native-key="native-light-database-read"] :is(.t-messagebus){fill:#ea580c}
+[data-native-key="native-light-database-read"] :is(.t-external){fill:#64748b}
+[data-native-key="native-light-database-read"] :is(.t-edge-default){fill:#5b6474}
+[data-native-key="native-light-database-read"] :is(.t-edge-emphasis){fill:#059669}
+[data-native-key="native-light-database-read"] :is(.t-edge-security){fill:#e11d48}
+[data-native-key="native-light-database-read"] :is(.t-edge-dashed){fill:#7c3aed}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="classic"] .c-grid){stroke:transparent}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="classic"][data-theme="light"] [data-node-id] > rect:not(.c-mask)){filter:drop-shadow(0 1px 1px rgba(17, 24, 39, 0.05)) drop-shadow(0 6px 12px rgba(17, 24, 39, 0.06))}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="classic"][data-theme="light"] [data-edge-from]){stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-wash){fill:rgba(17, 24, 39, 0.026)}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-rule){stroke:#e5e7eb;opacity:1}
+[data-native-key="native-light-database-read"] :is(svg .semantic-sigil){fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;opacity:0.76}
+[data-native-key="native-light-database-read"] :is(svg .semantic-sigil > *){vector-effect:non-scaling-stroke}
+[data-native-key="native-light-database-read"] :is(svg .semantic-sigil .sigil-fill){fill:currentColor;stroke:none}
+[data-native-key="native-light-database-read"] :is(svg .s-frontend){color:#0891b2}
+[data-native-key="native-light-database-read"] :is(svg .s-backend){color:#059669}
+[data-native-key="native-light-database-read"] :is(svg .s-database){color:#7c3aed}
+[data-native-key="native-light-database-read"] :is(svg .s-cloud){color:#d97706}
+[data-native-key="native-light-database-read"] :is(svg .s-security){color:#e11d48}
+[data-native-key="native-light-database-read"] :is(svg .s-messagebus){color:#ea580c}
+[data-native-key="native-light-database-read"] :is(svg .s-external){color:#64748b}
+[data-native-key="native-light-database-read"] :is(svg .brand-mark-badge){fill:#fff;stroke:none}
+[data-native-key="native-light-database-read"] :is(svg .brand-mark-frame){fill:none;stroke:#cbd5e1;stroke-width:0.8;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-database-read"] :is(svg .brand-mark-fallback){fill:none;stroke:#475569;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-database-read"] :is(svg [data-detail-anchor]){transform-box:fill-box;transform-origin:center}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-focus-match][data-detail], svg[data-focus-active] [data-focus-match] [data-detail], svg[data-reach-active] [data-reach-match][data-detail], svg[data-reach-active] [data-reach-match] [data-detail], svg[data-lens-active] [data-lens-match][data-detail], svg[data-lens-active] [data-lens-match] [data-detail], svg[data-legend-preview-active] [data-legend-preview-match][data-detail], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail], svg[data-intent-trace-active] [data-intent-trace-match][data-detail], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail], svg[data-route-active] [data-route-match][data-detail], svg[data-route-active] [data-route-match] [data-detail], svg[data-relationship-preview-active] [data-relationship-preview][data-detail], svg[data-relationship-preview-active] [data-relationship-preview] [data-detail]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-focus-match] [data-detail-anchor], svg[data-reach-active] [data-reach-match] [data-detail-anchor], svg[data-lens-active] [data-lens-match] [data-detail-anchor], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail-anchor], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail-anchor], svg[data-route-active] [data-route-match] [data-detail-anchor]){transform:none}
+[data-native-key="native-light-database-read"] :is(.a-default){stroke:#64748b;fill:none}
+[data-native-key="native-light-database-read"] :is(.a-emphasis){stroke:#059669;fill:none}
+[data-native-key="native-light-database-read"] :is(.a-security){stroke:#e11d48;fill:none;stroke-dasharray:5,5}
+[data-native-key="native-light-database-read"] :is(.a-dashed){stroke:#7c3aed;fill:none;stroke-dasharray:4,4}
+[data-native-key="native-light-database-read"] :is(.m-default){fill:#64748b}
+[data-native-key="native-light-database-read"] :is(.m-emphasis){fill:#059669}
+[data-native-key="native-light-database-read"] :is(.m-security){fill:#e11d48}
+[data-native-key="native-light-database-read"] :is(.m-dashed){fill:#7c3aed}
+[data-native-key="native-light-database-read"] :is(.c-change-swatch-added){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
+[data-native-key="native-light-database-read"] :is(.c-change-swatch-modified){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
+[data-native-key="native-light-database-read"] :is(.c-change-swatch-removed){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
+[data-native-key="native-light-database-read"] :is(.c-change-badge-added){fill:#d2ece4;stroke:#059669}
+[data-native-key="native-light-database-read"] :is(.c-change-badge-modified){fill:#f8e7d2;stroke:#d97706}
+[data-native-key="native-light-database-read"] :is(.c-change-badge-removed){fill:#fad6de;stroke:#e11d48}
+[data-native-key="native-light-database-read"] :is(.c-change-swatch-removed){stroke-dasharray:3,2}
+[data-native-key="native-light-database-read"] :is(.c-change-swatch-unchanged){fill:#ffffff;stroke:#9aa3b2}
+[data-native-key="native-light-database-read"] :is(.t-change-added, .t-change-badge-added){fill:#059669}
+[data-native-key="native-light-database-read"] :is(.t-change-modified, .t-change-badge-modified){fill:#d97706}
+[data-native-key="native-light-database-read"] :is(.t-change-removed, .t-change-badge-removed){fill:#e11d48}
+[data-native-key="native-light-database-read"] :is(.m-change-added){fill:#059669}
+[data-native-key="native-light-database-read"] :is(.m-change-modified){fill:#d97706}
+[data-native-key="native-light-database-read"] :is(.m-change-removed){fill:#e11d48}
+[data-native-key="native-light-database-read"] :is(svg [data-change="added"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#059669;stroke-width:2.4}
+[data-native-key="native-light-database-read"] :is(svg [data-change="modified"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#d97706;stroke-width:2.4}
+[data-native-key="native-light-database-read"] :is(svg [data-change="removed"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
+[data-native-key="native-light-database-read"] :is(svg rect[data-change="added"][data-graph-role], svg [data-change="added"] > rect.c-lane-wash, svg [data-change="added"] > rect.c-lane-rule){stroke:#059669;stroke-width:2;stroke-dasharray:none}
+[data-native-key="native-light-database-read"] :is(svg rect[data-change="modified"][data-graph-role], svg [data-change="modified"] > rect.c-lane-wash, svg [data-change="modified"] > rect.c-lane-rule){stroke:#d97706;stroke-width:2;stroke-dasharray:none}
+[data-native-key="native-light-database-read"] :is(svg rect[data-change="removed"][data-graph-role], svg [data-change="removed"] > rect.c-lane-wash, svg [data-change="removed"] > rect.c-lane-rule){stroke:#e11d48;stroke-width:1.4;stroke-dasharray:5,4}
+[data-native-key="native-light-database-read"] :is(svg path[data-change="added"][data-edge-from], svg [data-change="added"][data-edge-from] > path){stroke:#059669;stroke-width:2.4}
+[data-native-key="native-light-database-read"] :is(svg path[data-change="modified"][data-edge-from], svg [data-change="modified"][data-edge-from] > path){stroke:#d97706;stroke-width:2.4}
+[data-native-key="native-light-database-read"] :is(svg path[data-change="removed"][data-edge-from], svg [data-change="removed"][data-edge-from] > path){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
+[data-native-key="native-light-database-read"] :is(svg [data-change="removed"], svg text[data-change="removed"]){opacity:0.62}
+[data-native-key="native-light-database-read"] :is(svg [data-change="removed"] > text[data-node-label], svg [data-change="removed"][data-graph-role] > text, svg [data-change="removed"][data-edge-from] text, svg text[data-change="removed"], svg [data-er-row][data-change="removed"] > text, svg [data-class-row][data-change="removed"] > text){text-decoration:line-through}
+[data-native-key="native-light-database-read"] :is(svg [data-emphasis] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask), svg path[data-emphasis][data-edge-from], svg [data-emphasis][data-edge-from] > path){stroke-width:3.2}
+[data-native-key="native-light-database-read"] :is(svg [data-emphasis] > text[data-node-label]){font-weight:800}
+[data-native-key="native-light-database-read"] :is(svg [data-change-context="subdued"]){opacity:0.48}
+[data-native-key="native-light-database-read"] :is(svg [data-change-context="subdued"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke-dasharray:none}
+[data-native-key="native-light-database-read"] :is(svg [data-legend-hit]){fill:transparent;stroke:transparent;stroke-width:1.4;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-database-read"] :is(svg [data-legend-count-badge] rect){fill:#ffffff;stroke:#e5e7eb;stroke-width:1;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-database-read"] :is(svg [data-legend-count-badge] text){fill:#5b6474;font-size:8px;font-weight:700;text-anchor:middle}
+[data-native-key="native-light-database-read"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-hit]){stroke:#7c3aed;stroke-width:2.2;stroke-dasharray:3 2}
+[data-native-key="native-light-database-read"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-count-badge] rect){stroke:#7c3aed;stroke-width:1.8}
+[data-native-key="native-light-database-read"] :is(svg [data-legend-kind][data-legend-zero]){opacity:0.44}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-node-id], svg[data-legend-preview-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-legend-preview-match]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-legend-preview-peer]){opacity:0.62}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-legend-preview-selected]){filter:drop-shadow(0 0 8px #7c3aed)}
+[data-native-key="native-light-database-read"] :is(svg[data-lens-active] [data-node-id], svg[data-lens-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-database-read"] :is(svg[data-lens-active] [data-lens-match]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-lens-active] [data-lens-peer]){opacity:0.62}
+[data-native-key="native-light-database-read"] :is(svg[data-lens-active] [data-lens-selected]){filter:drop-shadow(0 0 10px #7c3aed)}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-match]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-peer]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-peer]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-node-id], svg[data-focus-active] [data-edge-from]){opacity:0.13}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.13}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-focus-match]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active] [data-node-id], svg[data-reach-active] [data-edge-from]){opacity:0.09}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.09}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active] [data-reach-match]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"]:has(> [data-reach-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active="upstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #7c3aed)}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active="downstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #059669)}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active="upstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(124, 58, 237, 0.72))}
+[data-native-key="native-light-database-read"] :is(svg[data-reach-active="downstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(5, 150, 105, 0.72))}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="blueprint"][data-reach-active] [data-reach-origin], svg[data-preset="blueprint"][data-reach-active] [data-edge-from][data-reach-match]){filter:none}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-direct-active] [data-node-id], svg[data-relationship-direct-active] [data-edge-from]){opacity:0.16}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.16}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-direct-active] [data-relationship-preview], svg[data-relationship-direct-active] [data-relationship-preview-node]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-focus-match]){opacity:0.18}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.18}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview-node]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-relationship-preview]){filter:drop-shadow(0 0 5px #059669)}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-relationship-preview] path, svg[data-relationship-preview-active] path[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] line, svg[data-relationship-preview-active] line[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] polyline, svg[data-relationship-preview-active] polyline[data-relationship-preview]){stroke-width:2.75}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-relationship-preview-source]){filter:drop-shadow(0 0 7px #0891b2)}
+[data-native-key="native-light-database-read"] :is(svg[data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 7px #7c3aed)}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-node-id]){fill-opacity:0.2;stroke-opacity:0.2}
+[data-native-key="native-light-database-read"] :is(svg [data-node-id] > .c-mask){fill-opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-node-id][data-intent-trace-match]){fill-opacity:1;stroke-opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-edge-from]){opacity:0.2}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.2}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-intent-trace-match]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"]:has(> [data-intent-trace-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-intent-trace-active] [data-intent-trace-selected]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-database-read"] :is(svg[data-route-picking="target"] [data-node-id]){opacity:0.24}
+[data-native-key="native-light-database-read"] :is(svg[data-route-picking="target"] [data-route-candidate], svg[data-route-picking="target"] [data-route-start]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-route-picking] [data-route-start]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-node-id], svg[data-route-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-route-match]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"]:has(> [data-route-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-route-start]){filter:drop-shadow(0 0 11px #0891b2)}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-route-end]){filter:drop-shadow(0 0 11px #e11d48)}
+[data-native-key="native-light-database-read"] :is(svg[data-route-active] [data-route-step]:not([data-route-start]):not([data-route-end])){filter:drop-shadow(0 0 7px #059669)}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="past"]){opacity:0.62}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="future"]){opacity:0.34}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="current"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="past"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="future"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.34}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="current"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-node-id][data-route-journey-current]){filter:drop-shadow(0 0 10px #059669)}
+[data-native-key="native-light-database-read"] :is(svg[data-route-journey] [data-edge-from][data-route-journey-current]){opacity:1;filter:drop-shadow(0 0 6px #059669)}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="editorial"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 2px 2px rgba(17, 24, 39, 0.18))}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="blueprint"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 3px #0891b2)}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="blueprint"][data-focus-active][data-reach-active] [data-focus-selected][data-reach-origin]){filter:none}
+[data-native-key="native-light-database-read"] :is(svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-source], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 3px #0891b2)}
+[data-native-key="native-light-database-read"] :is(.c-security-group){fill:transparent;stroke:#e11d48;stroke-dasharray:4,4}
+[data-native-key="native-light-database-read"] :is(.c-region){fill:rgba(251, 191, 36, 0.05);stroke:#d97706;stroke-dasharray:8,4}
+[data-native-key="native-light-database-read"] :is(.c-lane){fill:rgba(248, 250, 252, 0.65);stroke:#cbd5e1;stroke-dasharray:6,6}
+[data-native-key="native-light-database-read"] :is(svg[data-theme="light"]){--bg:#f4f5f7;--grid:#e9edf2;--canvas-dot:#e2e7ec;--text:#111827;--text-muted:#5b6474;--text-dim:#9aa3b2;--text-faint:#6b7280;--panel:#ffffff;--panel-border:#e5e7eb;--lane-fill:rgba(248, 250, 252, 0.65);--lane-stroke:#cbd5e1;--arrow:#64748b;--arrow-emphasis:#059669;--edge-label:#5b6474;--mask:#ffffff;--frontend-fill:rgba(34, 211, 238, 0.15);--frontend-stroke:#0891b2;--backend-fill:rgba(52, 211, 153, 0.18);--backend-stroke:#059669;--database-fill:rgba(167, 139, 250, 0.2);--database-stroke:#7c3aed;--cloud-fill:rgba(251, 191, 36, 0.18);--cloud-stroke:#d97706;--security-fill:rgba(251, 113, 133, 0.15);--security-stroke:#e11d48;--messagebus-fill:rgba(251, 146, 60, 0.15);--messagebus-stroke:#ea580c;--external-fill:rgba(148, 163, 184, 0.18);--external-stroke:#64748b;--toolbar-bg:rgba(255, 255, 255, 0.92);--toolbar-border:#cbd5e1;--toolbar-text:#334155;--toolbar-hover:#ffffff;--toolbar-menu-bg:#ffffff;--reader-accent:#077f9c}
+[data-native-key="native-light-cache-refill"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
+[data-native-key="native-light-cache-refill"] :is(svg){font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', 'Noto Sans Mono CJK SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', monospace}
+[data-native-key="native-light-cache-refill"] :is(svg a.archify-drilldown-link){text-decoration:none;color:inherit}
+[data-native-key="native-light-cache-refill"] :is(svg .archify-drilldown-mark-disc){fill:#23a37b;stroke:#5eb29f;stroke-width:1}
+[data-native-key="native-light-cache-refill"] :is(svg .archify-drilldown-mark-arrow){stroke:#ffffff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-cache-refill"] :is(.c-grid){stroke:#e9edf2;fill:none}
+[data-native-key="native-light-cache-refill"] :is(.c-mask){fill:#ffffff;stroke:none}
+[data-native-key="native-light-cache-refill"] :is(.c-lane-rule){stroke:#cbd5e1;fill:none;opacity:0.7}
+[data-native-key="native-light-cache-refill"] :is(.c-lane-wash){fill:rgba(248, 250, 252, 0.65);stroke:none}
+[data-native-key="native-light-cache-refill"] :is(.c-frontend){fill:rgba(34, 211, 238, 0.15);stroke:#0891b2}
+[data-native-key="native-light-cache-refill"] :is(.c-backend){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
+[data-native-key="native-light-cache-refill"] :is(.c-database){fill:rgba(167, 139, 250, 0.2);stroke:#7c3aed}
+[data-native-key="native-light-cache-refill"] :is(.c-cloud){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
+[data-native-key="native-light-cache-refill"] :is(.c-security){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.c-messagebus){fill:rgba(251, 146, 60, 0.15);stroke:#ea580c}
+[data-native-key="native-light-cache-refill"] :is(.c-external){fill:rgba(148, 163, 184, 0.18);stroke:#64748b}
+[data-native-key="native-light-cache-refill"] :is(.t-primary){fill:#111827}
+[data-native-key="native-light-cache-refill"] :is(.t-muted){fill:#5b6474}
+[data-native-key="native-light-cache-refill"] :is(.t-dim){fill:#9aa3b2}
+[data-native-key="native-light-cache-refill"] :is(.t-frontend){fill:#0891b2}
+[data-native-key="native-light-cache-refill"] :is(.t-backend){fill:#059669}
+[data-native-key="native-light-cache-refill"] :is(.t-database){fill:#7c3aed}
+[data-native-key="native-light-cache-refill"] :is(.t-cloud){fill:#d97706}
+[data-native-key="native-light-cache-refill"] :is(.t-security){fill:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.t-messagebus){fill:#ea580c}
+[data-native-key="native-light-cache-refill"] :is(.t-external){fill:#64748b}
+[data-native-key="native-light-cache-refill"] :is(.t-edge-default){fill:#5b6474}
+[data-native-key="native-light-cache-refill"] :is(.t-edge-emphasis){fill:#059669}
+[data-native-key="native-light-cache-refill"] :is(.t-edge-security){fill:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.t-edge-dashed){fill:#7c3aed}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="classic"] .c-grid){stroke:transparent}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="classic"][data-theme="light"] [data-node-id] > rect:not(.c-mask)){filter:drop-shadow(0 1px 1px rgba(17, 24, 39, 0.05)) drop-shadow(0 6px 12px rgba(17, 24, 39, 0.06))}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="classic"][data-theme="light"] [data-edge-from]){stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-wash){fill:rgba(17, 24, 39, 0.026)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="classic"][data-theme="light"] .c-lane-rule){stroke:#e5e7eb;opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg .semantic-sigil){fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;opacity:0.76}
+[data-native-key="native-light-cache-refill"] :is(svg .semantic-sigil > *){vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-refill"] :is(svg .semantic-sigil .sigil-fill){fill:currentColor;stroke:none}
+[data-native-key="native-light-cache-refill"] :is(svg .s-frontend){color:#0891b2}
+[data-native-key="native-light-cache-refill"] :is(svg .s-backend){color:#059669}
+[data-native-key="native-light-cache-refill"] :is(svg .s-database){color:#7c3aed}
+[data-native-key="native-light-cache-refill"] :is(svg .s-cloud){color:#d97706}
+[data-native-key="native-light-cache-refill"] :is(svg .s-security){color:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(svg .s-messagebus){color:#ea580c}
+[data-native-key="native-light-cache-refill"] :is(svg .s-external){color:#64748b}
+[data-native-key="native-light-cache-refill"] :is(svg .brand-mark-badge){fill:#fff;stroke:none}
+[data-native-key="native-light-cache-refill"] :is(svg .brand-mark-frame){fill:none;stroke:#cbd5e1;stroke-width:0.8;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-refill"] :is(svg .brand-mark-fallback){fill:none;stroke:#475569;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+[data-native-key="native-light-cache-refill"] :is(svg [data-detail-anchor]){transform-box:fill-box;transform-origin:center}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-focus-match][data-detail], svg[data-focus-active] [data-focus-match] [data-detail], svg[data-reach-active] [data-reach-match][data-detail], svg[data-reach-active] [data-reach-match] [data-detail], svg[data-lens-active] [data-lens-match][data-detail], svg[data-lens-active] [data-lens-match] [data-detail], svg[data-legend-preview-active] [data-legend-preview-match][data-detail], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail], svg[data-intent-trace-active] [data-intent-trace-match][data-detail], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail], svg[data-route-active] [data-route-match][data-detail], svg[data-route-active] [data-route-match] [data-detail], svg[data-relationship-preview-active] [data-relationship-preview][data-detail], svg[data-relationship-preview-active] [data-relationship-preview] [data-detail]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-focus-match] [data-detail-anchor], svg[data-reach-active] [data-reach-match] [data-detail-anchor], svg[data-lens-active] [data-lens-match] [data-detail-anchor], svg[data-legend-preview-active] [data-legend-preview-match] [data-detail-anchor], svg[data-intent-trace-active] [data-intent-trace-match] [data-detail-anchor], svg[data-route-active] [data-route-match] [data-detail-anchor]){transform:none}
+[data-native-key="native-light-cache-refill"] :is(.a-default){stroke:#64748b;fill:none}
+[data-native-key="native-light-cache-refill"] :is(.a-emphasis){stroke:#059669;fill:none}
+[data-native-key="native-light-cache-refill"] :is(.a-security){stroke:#e11d48;fill:none;stroke-dasharray:5,5}
+[data-native-key="native-light-cache-refill"] :is(.a-dashed){stroke:#7c3aed;fill:none;stroke-dasharray:4,4}
+[data-native-key="native-light-cache-refill"] :is(.m-default){fill:#64748b}
+[data-native-key="native-light-cache-refill"] :is(.m-emphasis){fill:#059669}
+[data-native-key="native-light-cache-refill"] :is(.m-security){fill:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.m-dashed){fill:#7c3aed}
+[data-native-key="native-light-cache-refill"] :is(.c-change-swatch-added){fill:rgba(52, 211, 153, 0.18);stroke:#059669}
+[data-native-key="native-light-cache-refill"] :is(.c-change-swatch-modified){fill:rgba(251, 191, 36, 0.18);stroke:#d97706}
+[data-native-key="native-light-cache-refill"] :is(.c-change-swatch-removed){fill:rgba(251, 113, 133, 0.15);stroke:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.c-change-badge-added){fill:#d2ece4;stroke:#059669}
+[data-native-key="native-light-cache-refill"] :is(.c-change-badge-modified){fill:#f8e7d2;stroke:#d97706}
+[data-native-key="native-light-cache-refill"] :is(.c-change-badge-removed){fill:#fad6de;stroke:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.c-change-swatch-removed){stroke-dasharray:3,2}
+[data-native-key="native-light-cache-refill"] :is(.c-change-swatch-unchanged){fill:#ffffff;stroke:#9aa3b2}
+[data-native-key="native-light-cache-refill"] :is(.t-change-added, .t-change-badge-added){fill:#059669}
+[data-native-key="native-light-cache-refill"] :is(.t-change-modified, .t-change-badge-modified){fill:#d97706}
+[data-native-key="native-light-cache-refill"] :is(.t-change-removed, .t-change-badge-removed){fill:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(.m-change-added){fill:#059669}
+[data-native-key="native-light-cache-refill"] :is(.m-change-modified){fill:#d97706}
+[data-native-key="native-light-cache-refill"] :is(.m-change-removed){fill:#e11d48}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change="added"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#059669;stroke-width:2.4}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change="modified"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#d97706;stroke-width:2.4}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change="removed"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
+[data-native-key="native-light-cache-refill"] :is(svg rect[data-change="added"][data-graph-role], svg [data-change="added"] > rect.c-lane-wash, svg [data-change="added"] > rect.c-lane-rule){stroke:#059669;stroke-width:2;stroke-dasharray:none}
+[data-native-key="native-light-cache-refill"] :is(svg rect[data-change="modified"][data-graph-role], svg [data-change="modified"] > rect.c-lane-wash, svg [data-change="modified"] > rect.c-lane-rule){stroke:#d97706;stroke-width:2;stroke-dasharray:none}
+[data-native-key="native-light-cache-refill"] :is(svg rect[data-change="removed"][data-graph-role], svg [data-change="removed"] > rect.c-lane-wash, svg [data-change="removed"] > rect.c-lane-rule){stroke:#e11d48;stroke-width:1.4;stroke-dasharray:5,4}
+[data-native-key="native-light-cache-refill"] :is(svg path[data-change="added"][data-edge-from], svg [data-change="added"][data-edge-from] > path){stroke:#059669;stroke-width:2.4}
+[data-native-key="native-light-cache-refill"] :is(svg path[data-change="modified"][data-edge-from], svg [data-change="modified"][data-edge-from] > path){stroke:#d97706;stroke-width:2.4}
+[data-native-key="native-light-cache-refill"] :is(svg path[data-change="removed"][data-edge-from], svg [data-change="removed"][data-edge-from] > path){stroke:#e11d48;stroke-width:1.6;stroke-dasharray:5,4}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change="removed"], svg text[data-change="removed"]){opacity:0.62}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change="removed"] > text[data-node-label], svg [data-change="removed"][data-graph-role] > text, svg [data-change="removed"][data-edge-from] text, svg text[data-change="removed"], svg [data-er-row][data-change="removed"] > text, svg [data-class-row][data-change="removed"] > text){text-decoration:line-through}
+[data-native-key="native-light-cache-refill"] :is(svg [data-emphasis] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask), svg path[data-emphasis][data-edge-from], svg [data-emphasis][data-edge-from] > path){stroke-width:3.2}
+[data-native-key="native-light-cache-refill"] :is(svg [data-emphasis] > text[data-node-label]){font-weight:800}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change-context="subdued"]){opacity:0.48}
+[data-native-key="native-light-cache-refill"] :is(svg [data-change-context="subdued"] > :is(rect, circle, ellipse, polygon, path)[class^="c-"]:not(.c-mask)){stroke-dasharray:none}
+[data-native-key="native-light-cache-refill"] :is(svg [data-legend-hit]){fill:transparent;stroke:transparent;stroke-width:1.4;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-refill"] :is(svg [data-legend-count-badge] rect){fill:#ffffff;stroke:#e5e7eb;stroke-width:1;vector-effect:non-scaling-stroke}
+[data-native-key="native-light-cache-refill"] :is(svg [data-legend-count-badge] text){fill:#5b6474;font-size:8px;font-weight:700;text-anchor:middle}
+[data-native-key="native-light-cache-refill"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-hit]){stroke:#7c3aed;stroke-width:2.2;stroke-dasharray:3 2}
+[data-native-key="native-light-cache-refill"] :is(svg [data-legend-kind][data-legend-selected] [data-legend-count-badge] rect){stroke:#7c3aed;stroke-width:1.8}
+[data-native-key="native-light-cache-refill"] :is(svg [data-legend-kind][data-legend-zero]){opacity:0.44}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-node-id], svg[data-legend-preview-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-legend-preview-match]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-legend-preview-peer]){opacity:0.62}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-legend-preview-selected]){filter:drop-shadow(0 0 8px #7c3aed)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-lens-active] [data-node-id], svg[data-lens-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-cache-refill"] :is(svg[data-lens-active] [data-lens-match]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-lens-active] [data-lens-peer]){opacity:0.62}
+[data-native-key="native-light-cache-refill"] :is(svg[data-lens-active] [data-lens-selected]){filter:drop-shadow(0 0 10px #7c3aed)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-match]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-legend-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-legend-preview-peer]) > [data-graph-role="automatic-crossover-underlay"], svg[data-lens-active] [data-graph-role="automatic-crossover"]:has(> [data-lens-peer]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-node-id], svg[data-focus-active] [data-edge-from]){opacity:0.13}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.13}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-focus-match]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active] [data-node-id], svg[data-reach-active] [data-edge-from]){opacity:0.09}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.09}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active] [data-reach-match]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active] [data-graph-role="automatic-crossover"]:has(> [data-reach-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active="upstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #7c3aed)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active="downstream"] [data-reach-origin]){filter:drop-shadow(0 0 11px #059669)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active="upstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(124, 58, 237, 0.72))}
+[data-native-key="native-light-cache-refill"] :is(svg[data-reach-active="downstream"] [data-edge-from][data-reach-match]){filter:drop-shadow(0 0 4px rgba(5, 150, 105, 0.72))}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="blueprint"][data-reach-active] [data-reach-origin], svg[data-preset="blueprint"][data-reach-active] [data-edge-from][data-reach-match]){filter:none}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-direct-active] [data-node-id], svg[data-relationship-direct-active] [data-edge-from]){opacity:0.16}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.16}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-direct-active] [data-relationship-preview], svg[data-relationship-direct-active] [data-relationship-preview-node]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-direct-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-focus-match]){opacity:0.18}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-focus-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.18}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview-node]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-graph-role="automatic-crossover"]:has(> [data-relationship-preview]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-relationship-preview]){filter:drop-shadow(0 0 5px #059669)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-relationship-preview] path, svg[data-relationship-preview-active] path[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] line, svg[data-relationship-preview-active] line[data-relationship-preview], svg[data-relationship-preview-active] [data-relationship-preview] polyline, svg[data-relationship-preview-active] polyline[data-relationship-preview]){stroke-width:2.75}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-relationship-preview-source]){filter:drop-shadow(0 0 7px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 7px #7c3aed)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-node-id]){fill-opacity:0.2;stroke-opacity:0.2}
+[data-native-key="native-light-cache-refill"] :is(svg [data-node-id] > .c-mask){fill-opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-node-id][data-intent-trace-match]){fill-opacity:1;stroke-opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-edge-from]){opacity:0.2}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.2}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-lifecycle-rail]){opacity:0}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-intent-trace-match]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-graph-role="automatic-crossover"]:has(> [data-intent-trace-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-intent-trace-active] [data-intent-trace-selected]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-picking="target"] [data-node-id]){opacity:0.24}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-picking="target"] [data-route-candidate], svg[data-route-picking="target"] [data-route-start]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-picking] [data-route-start]){filter:drop-shadow(0 0 10px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-node-id], svg[data-route-active] [data-edge-from]){opacity:0.11}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"] > [data-graph-role="automatic-crossover-underlay"]){opacity:0.11}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-route-match]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-graph-role="automatic-crossover"]:has(> [data-route-match]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-route-start]){filter:drop-shadow(0 0 11px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-route-end]){filter:drop-shadow(0 0 11px #e11d48)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-active] [data-route-step]:not([data-route-start]):not([data-route-end])){filter:drop-shadow(0 0 7px #059669)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="past"]){opacity:0.62}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="future"]){opacity:0.34}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-route-match][data-route-journey-state="current"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="past"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.62}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="future"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:0.34}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-graph-role="automatic-crossover"]:has(> [data-route-match][data-route-journey-state="current"]) > [data-graph-role="automatic-crossover-underlay"]){opacity:1}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-node-id][data-route-journey-current]){filter:drop-shadow(0 0 10px #059669)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-route-journey] [data-edge-from][data-route-journey-current]){opacity:1;filter:drop-shadow(0 0 6px #059669)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="editorial"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 2px 2px rgba(17, 24, 39, 0.18))}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="blueprint"][data-focus-active] [data-focus-selected]){filter:drop-shadow(0 0 3px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="blueprint"][data-focus-active][data-reach-active] [data-focus-selected][data-reach-origin]){filter:none}
+[data-native-key="native-light-cache-refill"] :is(svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-source], svg[data-preset="blueprint"][data-relationship-preview-active] [data-relationship-preview-target]){filter:drop-shadow(0 0 3px #0891b2)}
+[data-native-key="native-light-cache-refill"] :is(.c-security-group){fill:transparent;stroke:#e11d48;stroke-dasharray:4,4}
+[data-native-key="native-light-cache-refill"] :is(.c-region){fill:rgba(251, 191, 36, 0.05);stroke:#d97706;stroke-dasharray:8,4}
+[data-native-key="native-light-cache-refill"] :is(.c-lane){fill:rgba(248, 250, 252, 0.65);stroke:#cbd5e1;stroke-dasharray:6,6}
+[data-native-key="native-light-cache-refill"] :is(svg[data-theme="light"]){--bg:#f4f5f7;--grid:#e9edf2;--canvas-dot:#e2e7ec;--text:#111827;--text-muted:#5b6474;--text-dim:#9aa3b2;--text-faint:#6b7280;--panel:#ffffff;--panel-border:#e5e7eb;--lane-fill:rgba(248, 250, 252, 0.65);--lane-stroke:#cbd5e1;--arrow:#64748b;--arrow-emphasis:#059669;--edge-label:#5b6474;--mask:#ffffff;--frontend-fill:rgba(34, 211, 238, 0.15);--frontend-stroke:#0891b2;--backend-fill:rgba(52, 211, 153, 0.18);--backend-stroke:#059669;--database-fill:rgba(167, 139, 250, 0.2);--database-stroke:#7c3aed;--cloud-fill:rgba(251, 191, 36, 0.18);--cloud-stroke:#d97706;--security-fill:rgba(251, 113, 133, 0.15);--security-stroke:#e11d48;--messagebus-fill:rgba(251, 146, 60, 0.15);--messagebus-stroke:#ea580c;--external-fill:rgba(148, 163, 184, 0.18);--external-stroke:#64748b;--toolbar-bg:rgba(255, 255, 255, 0.92);--toolbar-border:#cbd5e1;--toolbar-text:#334155;--toolbar-hover:#ffffff;--toolbar-menu-bg:#ffffff;--reader-accent:#077f9c}
+#story-token-0-0{offset-path:path("M 139.5 166 L 314 166");offset-rotate:0deg}
+#story-token-0-1{offset-path:path("M 314 200 L 139.5 200");offset-rotate:0deg}
+#story-token-1-0{offset-path:path("M 139.5 234 L 502.5 234");offset-rotate:0deg}
+#story-token-1-1{offset-path:path("M 502.5 268 L 139.5 268");offset-rotate:0deg}
+#story-token-2-0{offset-path:path("M 139.5 302 L 314 302");offset-rotate:0deg}
+@keyframes sf-light-0{0.00000%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}33.33333%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}43.27485%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-1{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}33.33333%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}46.19883%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}66.66667%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}76.60819%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-2{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}66.66667%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}79.53216%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-3{0.00000%{transform:translate(-1.500px,109.500px) scale(1.50000);animation-timing-function:cubic-bezier(.65,0,.35,1)}4.91228%{transform:translate(-1.500px,109.500px) scale(1.50000);animation-timing-function:cubic-bezier(.65,0,.35,1)}21.87135%{transform:translate(-1.500px,109.500px) scale(1.50000);animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{transform:translate(-1.500px,109.500px) scale(1.50000);animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-4{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}3.50877%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}6.43275%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}16.95906%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}17.07602%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-5{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}6.43275%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}14.61988%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
+@keyframes sf-light-6{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}16.84211%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}16.95906%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}28.07018%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}31.57895%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-7{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}16.95906%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}25.14620%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
+@keyframes sf-light-8{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}36.84211%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}39.76608%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}50.29240%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}50.40936%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-9{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}39.76608%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}47.95322%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
+@keyframes sf-light-10{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}50.17544%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}50.29240%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}61.40351%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}64.91228%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-11{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}50.29240%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}58.47953%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
+@keyframes sf-light-12{0.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}70.17544%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}73.09942%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}86.78363%{opacity:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}90.29240%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100.00000%{opacity:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}}
+@keyframes sf-light-13{0.00000%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}73.09942%{offset-distance:0%;animation-timing-function:cubic-bezier(.4,0,.2,1)}83.85965%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}100.00000%{offset-distance:100%;animation-timing-function:cubic-bezier(.4,0,.2,1)}}
+@keyframes sf-light-14{0.00000%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}26.90058%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}31.57895%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}}
+@keyframes sf-light-15{0.00000%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}33.33333%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}40.35088%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}60.23392%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}64.91228%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:0;transform:translateY(-6px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}}
+@keyframes sf-light-16{0.00000%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}66.66667%{opacity:0;transform:translateY(8px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}73.68421%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}100.00000%{opacity:1;transform:translateY(0px);animation-timing-function:cubic-bezier(.22,.7,.2,1)}}
+svg[data-theme="light"][data-archify-bake] :is(#view-cache-check){animation:sf-light-0 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#view-database-read){animation:sf-light-1 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#view-cache-refill){animation:sf-light-2 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#camera-cache-check){animation:sf-light-3 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-token-0-0){animation:sf-light-4 8.55s linear infinite,sf-light-5 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-token-0-1){animation:sf-light-6 8.55s linear infinite,sf-light-7 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-token-1-0){animation:sf-light-8 8.55s linear infinite,sf-light-9 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-token-1-1){animation:sf-light-10 8.55s linear infinite,sf-light-11 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-token-2-0){animation:sf-light-12 8.55s linear infinite,sf-light-13 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-caption-0){animation:sf-light-14 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-caption-1){animation:sf-light-15 8.55s linear infinite}
+svg[data-theme="light"][data-archify-bake] :is(#story-caption-2){animation:sf-light-16 8.55s linear infinite}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}[data-story-tokens],[data-story-token],.story-shared-layer,.story-source-detail{display:none!important}.view-stage{opacity:0!important}#view-cache-refill{opacity:1!important}#camera-cache-refill{transform:translate(7.941px,38.706px) scale(1.47059)!important}#view-cache-refill [data-node-id],#view-cache-refill [data-edge-id],#view-cache-refill [data-story-edge-id],#view-cache-refill [data-story-edge-wrap]{opacity:1!important;visibility:visible!important;transform:none!important;stroke-dashoffset:0!important}.story-caption{opacity:0!important}#story-caption-2{opacity:1!important;transform:none!important}}
+]]></style><defs><clipPath id="story-diagram-viewport" clipPathUnits="userSpaceOnUse"><rect x="18" y="112" width="924" height="432"/></clipPath></defs><rect width="960" height="560" fill="#f4f5f7"/><g data-story-layer="diagram" clip-path="url(#story-diagram-viewport)"><g id="view-cache-check" class="view-stage" data-native-key="native-light-cache-check" style="opacity:1"><g id="camera-cache-check" style="transform:translate(-1.500px,109.500px) scale(1.50000);transform-origin:0 0"><svg viewBox="0 0 620 480" data-sequence-column-fit="spread" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-motion-choreography="sequence" xmlns="http://www.w3.org/2000/svg" width="620" height="480" data-theme="light" data-archify-bake="static" x="0" y="0">
+        <title id="native-light-cache-check-archify-diagram-title">The cache-miss path</title>
+        <desc id="native-light-cache-check-archify-diagram-description">A sequence diagram generated by Archify.</desc>
         
         <defs>
-          <marker id="native-light-cache-path-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <marker id="native-light-cache-check-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" class="m-default"/>
           </marker>
-          <marker id="native-light-cache-path-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <marker id="native-light-cache-check-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis"/>
           </marker>
-          <marker id="native-light-cache-path-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <marker id="native-light-cache-check-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" class="m-security"/>
           </marker>
-          <marker id="native-light-cache-path-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+          <marker id="native-light-cache-check-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" class="m-dashed"/>
           </marker>
-          <pattern id="native-light-cache-path-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <pattern id="native-light-cache-check-grid" width="40" height="40" patternUnits="userSpaceOnUse">
             <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
           </pattern>
         </defs>
@@ -360,58 +704,270 @@ svg[data-theme="light"][data-archify-bake] :is(#story-caption-2){animation:sf-li
 
 
         
-        <path d="M 152 142 L 152 394" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
-        <path d="M 378.5 142 L 378.5 394" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
-        <path d="M 605 142 L 605 394" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 132.5 142 L 132.5 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 321 142 L 321 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 509.5 142 L 509.5 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
 
         
-        <rect x="147" y="143" width="10" height="242" rx="3" class="c-mask"/>
-        <rect x="147" y="143" width="10" height="242" rx="3" class="c-backend" stroke-width="1"/>
-        <rect x="373.5" y="143" width="10" height="75" rx="3" class="c-mask"/>
-        <rect x="373.5" y="143" width="10" height="75" rx="3" class="c-database" stroke-width="1"/>
-        <rect x="373.5" y="355" width="10" height="25" rx="3" class="c-mask"/>
-        <rect x="373.5" y="355" width="10" height="25" rx="3" class="c-database" stroke-width="1"/>
-        <rect x="600" y="249" width="10" height="76" rx="3" class="c-mask"/>
-        <rect x="600" y="249" width="10" height="76" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="127.5" y="156" width="10" height="160" rx="3" class="c-mask"/>
+        <rect x="127.5" y="156" width="10" height="160" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="316" y="156" width="10" height="54" rx="3" class="c-mask"/>
+        <rect x="316" y="156" width="10" height="54" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="504.5" y="224" width="10" height="54" rx="3" class="c-mask"/>
+        <rect x="504.5" y="224" width="10" height="54" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="316" y="292" width="10" height="24" rx="3" class="c-mask"/>
+        <rect x="316" y="292" width="10" height="24" rx="3" class="c-database" stroke-width="1"/>
 
         
         <g data-edge-from="api" data-edge-to="redis" data-edge-label="Read cache" data-edge-key="0" data-edge-id="cache-read" data-story-edge-id="cache-read">
-          <path data-composition-edge-from="api" data-composition-edge-to="redis" data-composition-edge-id="cache-read" data-composition-points="159,160;371.5,160" d="M 159 160 L 371.5 160" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#native-light-cache-path-arrowhead)" data-story-edge-id="cache-read" data-story-path-idx="1"/>
+          <path data-composition-edge-from="api" data-composition-edge-to="redis" data-composition-edge-id="cache-read" data-composition-points="139.5,166;314,166" d="M 139.5 166 L 314 166" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#native-light-cache-check-arrowhead)" data-story-edge-id="cache-read" data-story-path-idx="1"/>
         <g data-detail="context">
-          <rect x="226.25" y="140" width="78" height="18" rx="3" class="c-mask"/>
-          <text x="265.25" y="150" class="t-muted" font-size="11" text-anchor="middle">Read cache</text>
+          <rect x="187.75" y="146" width="78" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="156" class="t-muted" font-size="11" text-anchor="middle">Read cache</text>
         </g>
         </g>
 
-        <g data-edge-from="redis" data-edge-to="api" data-edge-label="Miss" data-edge-key="1" data-edge-id="cache-miss" data-story-edge-id="cache-miss">
-          <path data-composition-edge-from="redis" data-composition-edge-to="api" data-composition-edge-id="cache-miss" data-composition-points="371.5,207;159,207" d="M 371.5 207 L 159 207" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-cache-path-arrowhead)" data-story-edge-id="cache-miss" data-story-path-idx="2"/>
+        <g data-edge-from="redis" data-edge-to="api" data-edge-label="Cache miss" data-edge-key="1" data-edge-id="cache-miss" data-story-edge-id="cache-miss">
+          <path data-composition-edge-from="redis" data-composition-edge-to="api" data-composition-edge-id="cache-miss" data-composition-points="314,200;139.5,200" d="M 314 200 L 139.5 200" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-cache-check-arrowhead)" data-story-edge-id="cache-miss" data-story-path-idx="2"/>
         <g data-detail="context">
-          <rect x="246.05" y="187" width="38.4" height="18" rx="3" class="c-mask"/>
-          <text x="265.25" y="197" class="t-muted" font-size="11" text-anchor="middle">Miss</text>
+          <rect x="187.75" y="180" width="78" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="190" class="t-muted" font-size="11" text-anchor="middle">Cache miss</text>
         </g>
         </g>
 
-        <g data-edge-from="api" data-edge-to="db" data-edge-label="Query profile + metrics" data-edge-key="2" data-edge-id="profile-query" data-story-edge-id="profile-query">
-          <path data-composition-edge-from="api" data-composition-edge-to="db" data-composition-edge-id="profile-query" data-composition-points="159,260;598,260" d="M 159 260 L 598 260" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#native-light-cache-path-arrowhead-emphasis)" data-story-edge-id="profile-query" data-story-path-idx="3"/>
+        
+
+
+        
+        <g id="native-light-cache-check-node-api" data-node-id="api" data-node-label="API" tabindex="0" role="button" aria-label="Focus API, Sequence participant" aria-pressed="false" data-node-kind="backend" data-node-context="Sequence participant">
+          <title>API · Sequence participant</title>
+          <rect x="62" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="62" y="72" width="141" height="60" rx="6" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(68 78) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" x="132.5" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API</text>
+        </g>
+
+        <g id="native-light-cache-check-node-redis" data-node-id="redis" data-node-label="Redis" tabindex="0" role="button" aria-label="Focus Redis, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-context="Sequence participant">
+          <title>Redis · Sequence participant</title>
+          <rect x="250.5" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="250.5" y="72" width="141" height="60" rx="6" class="c-database" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(256.5 78) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" x="321" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Redis</text>
+        </g>
+
+        <g id="native-light-cache-check-node-db" data-node-id="db" data-node-label="Postgres" tabindex="0" role="button" aria-label="Focus Postgres, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-context="Sequence participant">
+          <title>Postgres · Sequence participant</title>
+          <rect x="439" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="439" y="72" width="141" height="60" rx="6" class="c-database" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(445 78) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" x="509.5" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Postgres</text>
+        </g>
+
+        
+
+      </svg><g data-story-tokens=""><circle id="story-token-0-0" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/><circle id="story-token-0-1" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/></g></g></g><g id="view-database-read" class="view-stage" data-native-key="native-light-database-read" style="opacity:0"><g id="camera-database-read" style="transform:translate(-1.500px,58.500px) scale(1.50000);transform-origin:0 0"><svg viewBox="0 0 620 480" data-sequence-column-fit="spread" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-motion-choreography="sequence" xmlns="http://www.w3.org/2000/svg" width="620" height="480" data-theme="light" data-archify-bake="static" x="0" y="0">
+        <title id="native-light-database-read-archify-diagram-title">The cache-miss path</title>
+        <desc id="native-light-database-read-archify-diagram-description">A sequence diagram generated by Archify.</desc>
+        
+        <defs>
+          <marker id="native-light-database-read-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default"/>
+          </marker>
+          <marker id="native-light-database-read-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis"/>
+          </marker>
+          <marker id="native-light-database-read-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security"/>
+          </marker>
+          <marker id="native-light-database-read-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed"/>
+          </marker>
+          <pattern id="native-light-database-read-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        
+        
+
+        
+
+
+        
+        <path d="M 132.5 142 L 132.5 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 321 142 L 321 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 509.5 142 L 509.5 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+
+        
+        <rect x="127.5" y="156" width="10" height="160" rx="3" class="c-mask"/>
+        <rect x="127.5" y="156" width="10" height="160" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="316" y="156" width="10" height="54" rx="3" class="c-mask"/>
+        <rect x="316" y="156" width="10" height="54" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="504.5" y="224" width="10" height="54" rx="3" class="c-mask"/>
+        <rect x="504.5" y="224" width="10" height="54" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="316" y="292" width="10" height="24" rx="3" class="c-mask"/>
+        <rect x="316" y="292" width="10" height="24" rx="3" class="c-database" stroke-width="1"/>
+
+        
+        <g data-edge-from="api" data-edge-to="redis" data-edge-label="Read cache" data-edge-key="0" data-edge-id="cache-read" data-story-edge-id="cache-read">
+          <path data-composition-edge-from="api" data-composition-edge-to="redis" data-composition-edge-id="cache-read" data-composition-points="139.5,166;314,166" d="M 139.5 166 L 314 166" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#native-light-database-read-arrowhead)" data-story-edge-id="cache-read" data-story-path-idx="1"/>
         <g data-detail="context">
-          <rect x="296.6" y="240" width="163.79999999999998" height="18" rx="3" class="c-mask"/>
-          <text x="378.5" y="250" class="t-edge-emphasis" font-size="11" text-anchor="middle">Query profile + metrics</text>
+          <rect x="187.75" y="146" width="78" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="156" class="t-muted" font-size="11" text-anchor="middle">Read cache</text>
+        </g>
+        </g>
+
+        <g data-edge-from="redis" data-edge-to="api" data-edge-label="Cache miss" data-edge-key="1" data-edge-id="cache-miss" data-story-edge-id="cache-miss">
+          <path data-composition-edge-from="redis" data-composition-edge-to="api" data-composition-edge-id="cache-miss" data-composition-points="314,200;139.5,200" d="M 314 200 L 139.5 200" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-database-read-arrowhead)" data-story-edge-id="cache-miss" data-story-path-idx="2"/>
+        <g data-detail="context">
+          <rect x="187.75" y="180" width="78" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="190" class="t-muted" font-size="11" text-anchor="middle">Cache miss</text>
+        </g>
+        </g>
+
+        <g data-edge-from="api" data-edge-to="db" data-edge-label="Query DB" data-edge-key="2" data-edge-id="profile-query" data-story-edge-id="profile-query">
+          <path data-composition-edge-from="api" data-composition-edge-to="db" data-composition-edge-id="profile-query" data-composition-points="139.5,234;502.5,234" d="M 139.5 234 L 502.5 234" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#native-light-database-read-arrowhead-emphasis)" data-story-edge-id="profile-query" data-story-path-idx="3"/>
+        <g data-detail="context">
+          <rect x="288.6" y="214" width="64.8" height="18" rx="3" class="c-mask"/>
+          <text x="321" y="224" class="t-edge-emphasis" font-size="11" text-anchor="middle">Query DB</text>
         </g>
         </g>
 
         <g data-edge-from="db" data-edge-to="api" data-edge-label="Return rows" data-edge-key="3" data-edge-id="profile-rows" data-story-edge-id="profile-rows">
-          <path data-composition-edge-from="db" data-composition-edge-to="api" data-composition-edge-id="profile-rows" data-composition-points="598,313;159,313" d="M 598 313 L 159 313" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-cache-path-arrowhead)" data-story-edge-id="profile-rows" data-story-path-idx="4"/>
+          <path data-composition-edge-from="db" data-composition-edge-to="api" data-composition-edge-id="profile-rows" data-composition-points="502.5,268;139.5,268" d="M 502.5 268 L 139.5 268" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-database-read-arrowhead)" data-story-edge-id="profile-rows" data-story-path-idx="4"/>
         <g data-detail="context">
-          <rect x="336.2" y="293" width="84.6" height="18" rx="3" class="c-mask"/>
-          <text x="378.5" y="303" class="t-muted" font-size="11" text-anchor="middle">Return rows</text>
+          <rect x="278.7" y="248" width="84.6" height="18" rx="3" class="c-mask"/>
+          <text x="321" y="258" class="t-muted" font-size="11" text-anchor="middle">Return rows</text>
+        </g>
+        </g>
+
+        
+
+
+        
+        <g id="native-light-database-read-node-api" data-node-id="api" data-node-label="API" tabindex="0" role="button" aria-label="Focus API, Sequence participant" aria-pressed="false" data-node-kind="backend" data-node-context="Sequence participant">
+          <title>API · Sequence participant</title>
+          <rect x="62" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="62" y="72" width="141" height="60" rx="6" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(68 78) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" x="132.5" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API</text>
+        </g>
+
+        <g id="native-light-database-read-node-redis" data-node-id="redis" data-node-label="Redis" tabindex="0" role="button" aria-label="Focus Redis, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-context="Sequence participant">
+          <title>Redis · Sequence participant</title>
+          <rect x="250.5" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="250.5" y="72" width="141" height="60" rx="6" class="c-database" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(256.5 78) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" x="321" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Redis</text>
+        </g>
+
+        <g id="native-light-database-read-node-db" data-node-id="db" data-node-label="Postgres" tabindex="0" role="button" aria-label="Focus Postgres, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-context="Sequence participant">
+          <title>Postgres · Sequence participant</title>
+          <rect x="439" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="439" y="72" width="141" height="60" rx="6" class="c-database" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(445 78) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" x="509.5" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Postgres</text>
+        </g>
+
+        
+
+      </svg><g data-story-tokens=""><circle id="story-token-1-0" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/><circle id="story-token-1-1" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/></g></g></g><g id="view-cache-refill" class="view-stage" data-native-key="native-light-cache-refill" style="opacity:0"><g id="camera-cache-refill" style="transform:translate(7.941px,38.706px) scale(1.47059);transform-origin:0 0"><svg viewBox="0 0 620 480" data-sequence-column-fit="spread" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase" data-motion-choreography="sequence" xmlns="http://www.w3.org/2000/svg" width="620" height="480" data-theme="light" data-archify-bake="static" x="0" y="0">
+        <title id="native-light-cache-refill-archify-diagram-title">The cache-miss path</title>
+        <desc id="native-light-cache-refill-archify-diagram-description">A sequence diagram generated by Archify.</desc>
+        
+        <defs>
+          <marker id="native-light-cache-refill-arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-default"/>
+          </marker>
+          <marker id="native-light-cache-refill-arrowhead-emphasis" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-emphasis"/>
+          </marker>
+          <marker id="native-light-cache-refill-arrowhead-security" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-security"/>
+          </marker>
+          <marker id="native-light-cache-refill-arrowhead-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="m-dashed"/>
+          </marker>
+          <pattern id="native-light-cache-refill-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" class="c-grid" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        
+        
+
+        
+
+
+        
+        <path d="M 132.5 142 L 132.5 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 321 142 L 321 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+        <path d="M 509.5 142 L 509.5 415" class="a-default" stroke-width="0.8" stroke-dasharray="3,7"/>
+
+        
+        <rect x="127.5" y="156" width="10" height="160" rx="3" class="c-mask"/>
+        <rect x="127.5" y="156" width="10" height="160" rx="3" class="c-backend" stroke-width="1"/>
+        <rect x="316" y="156" width="10" height="54" rx="3" class="c-mask"/>
+        <rect x="316" y="156" width="10" height="54" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="504.5" y="224" width="10" height="54" rx="3" class="c-mask"/>
+        <rect x="504.5" y="224" width="10" height="54" rx="3" class="c-database" stroke-width="1"/>
+        <rect x="316" y="292" width="10" height="24" rx="3" class="c-mask"/>
+        <rect x="316" y="292" width="10" height="24" rx="3" class="c-database" stroke-width="1"/>
+
+        
+        <g data-edge-from="api" data-edge-to="redis" data-edge-label="Read cache" data-edge-key="0" data-edge-id="cache-read" data-story-edge-id="cache-read">
+          <path data-composition-edge-from="api" data-composition-edge-to="redis" data-composition-edge-id="cache-read" data-composition-points="139.5,166;314,166" d="M 139.5 166 L 314 166" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#native-light-cache-refill-arrowhead)" data-story-edge-id="cache-read" data-story-path-idx="1"/>
+        <g data-detail="context">
+          <rect x="187.75" y="146" width="78" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="156" class="t-muted" font-size="11" text-anchor="middle">Read cache</text>
+        </g>
+        </g>
+
+        <g data-edge-from="redis" data-edge-to="api" data-edge-label="Cache miss" data-edge-key="1" data-edge-id="cache-miss" data-story-edge-id="cache-miss">
+          <path data-composition-edge-from="redis" data-composition-edge-to="api" data-composition-edge-id="cache-miss" data-composition-points="314,200;139.5,200" d="M 314 200 L 139.5 200" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-cache-refill-arrowhead)" data-story-edge-id="cache-miss" data-story-path-idx="2"/>
+        <g data-detail="context">
+          <rect x="187.75" y="180" width="78" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="190" class="t-muted" font-size="11" text-anchor="middle">Cache miss</text>
+        </g>
+        </g>
+
+        <g data-edge-from="api" data-edge-to="db" data-edge-label="Query DB" data-edge-key="2" data-edge-id="profile-query" data-story-edge-id="profile-query">
+          <path data-composition-edge-from="api" data-composition-edge-to="db" data-composition-edge-id="profile-query" data-composition-points="139.5,234;502.5,234" d="M 139.5 234 L 502.5 234" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#native-light-cache-refill-arrowhead-emphasis)" data-story-edge-id="profile-query" data-story-path-idx="3"/>
+        <g data-detail="context">
+          <rect x="288.6" y="214" width="64.8" height="18" rx="3" class="c-mask"/>
+          <text x="321" y="224" class="t-edge-emphasis" font-size="11" text-anchor="middle">Query DB</text>
+        </g>
+        </g>
+
+        <g data-edge-from="db" data-edge-to="api" data-edge-label="Return rows" data-edge-key="3" data-edge-id="profile-rows" data-story-edge-id="profile-rows">
+          <path data-composition-edge-from="db" data-composition-edge-to="api" data-composition-edge-id="profile-rows" data-composition-points="502.5,268;139.5,268" d="M 502.5 268 L 139.5 268" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-cache-refill-arrowhead)" data-story-edge-id="profile-rows" data-story-path-idx="4"/>
+        <g data-detail="context">
+          <rect x="278.7" y="248" width="84.6" height="18" rx="3" class="c-mask"/>
+          <text x="321" y="258" class="t-muted" font-size="11" text-anchor="middle">Return rows</text>
         </g>
         </g>
 
         <g data-edge-from="api" data-edge-to="redis" data-edge-label="Refill cache" data-edge-key="4" data-edge-id="cache-write" data-story-edge-id="cache-write">
-          <path data-composition-edge-from="api" data-composition-edge-to="redis" data-composition-edge-id="cache-write" data-composition-points="159,366;371.5,366" d="M 159 366 L 371.5 366" class="a-dashed" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#native-light-cache-path-arrowhead-dashed)" data-story-edge-id="cache-write" data-story-path-idx="5"/>
+          <path data-composition-edge-from="api" data-composition-edge-to="redis" data-composition-edge-id="cache-write" data-composition-points="139.5,302;314,302" d="M 139.5 302 L 314 302" class="a-dashed" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#native-light-cache-refill-arrowhead-dashed)" data-story-edge-id="cache-write" data-story-path-idx="5"/>
         <g data-detail="context">
-          <rect x="219.65" y="346" width="91.19999999999999" height="18" rx="3" class="c-mask"/>
-          <text x="265.25" y="356" class="t-edge-dashed" font-size="11" text-anchor="middle">Refill cache</text>
+          <rect x="181.15" y="282" width="91.19999999999999" height="18" rx="3" class="c-mask"/>
+          <text x="226.75" y="292" class="t-edge-dashed" font-size="11" text-anchor="middle">Refill cache</text>
         </g>
         </g>
 
@@ -419,62 +975,41 @@ svg[data-theme="light"][data-archify-bake] :is(#story-caption-2){animation:sf-li
 
 
         
-        <g id="native-light-cache-path-node-api" data-node-id="api" data-node-label="API" tabindex="0" role="button" aria-label="Focus API, request handler, Sequence participant" aria-pressed="false" data-node-kind="backend" data-node-sublabel="request handler" data-node-context="Sequence participant">
-          <title>API · request handler · Sequence participant</title>
-          <rect x="62" y="72" width="180" height="60" rx="6" class="c-mask"/>
-          <rect x="62" y="72" width="180" height="60" rx="6" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+        <g id="native-light-cache-refill-node-api" data-node-id="api" data-node-label="API" tabindex="0" role="button" aria-label="Focus API, Sequence participant" aria-pressed="false" data-node-kind="backend" data-node-context="Sequence participant">
+          <title>API · Sequence participant</title>
+          <rect x="62" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="62" y="72" width="141" height="60" rx="6" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(68 78) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="152" y="101" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API</text>
-          <text data-detail="context" x="152" y="115" class="t-muted" font-size="7" text-anchor="middle">request handler</text>
+          <text data-node-label="" x="132.5" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">API</text>
         </g>
 
-        <g id="native-light-cache-path-node-redis" data-node-id="redis" data-node-label="Redis" tabindex="0" role="button" aria-label="Focus Redis, cache, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-sublabel="cache" data-node-context="Sequence participant">
-          <title>Redis · cache · Sequence participant</title>
-          <rect x="288.5" y="72" width="180" height="60" rx="6" class="c-mask"/>
-          <rect x="288.5" y="72" width="180" height="60" rx="6" class="c-database" data-animate="node" style="--step:1" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(294.5 78) scale(0.6875)">
+        <g id="native-light-cache-refill-node-redis" data-node-id="redis" data-node-label="Redis" tabindex="0" role="button" aria-label="Focus Redis, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-context="Sequence participant">
+          <title>Redis · Sequence participant</title>
+          <rect x="250.5" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="250.5" y="72" width="141" height="60" rx="6" class="c-database" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(256.5 78) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="378.5" y="101" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Redis</text>
-          <text data-detail="context" x="378.5" y="115" class="t-muted" font-size="7" text-anchor="middle">cache</text>
+          <text data-node-label="" x="321" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Redis</text>
         </g>
 
-        <g id="native-light-cache-path-node-db" data-node-id="db" data-node-label="Postgres" tabindex="0" role="button" aria-label="Focus Postgres, source of truth, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-sublabel="source of truth" data-node-context="Sequence participant">
-          <title>Postgres · source of truth · Sequence participant</title>
-          <rect x="515" y="72" width="180" height="60" rx="6" class="c-mask"/>
-          <rect x="515" y="72" width="180" height="60" rx="6" class="c-database" data-animate="node" style="--step:2" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(521 78) scale(0.6875)">
+        <g id="native-light-cache-refill-node-db" data-node-id="db" data-node-label="Postgres" tabindex="0" role="button" aria-label="Focus Postgres, Sequence participant" aria-pressed="false" data-node-kind="database" data-node-context="Sequence participant">
+          <title>Postgres · Sequence participant</title>
+          <rect x="439" y="72" width="141" height="60" rx="6" class="c-mask"/>
+          <rect x="439" y="72" width="141" height="60" rx="6" class="c-database" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(445 78) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="605" y="101" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Postgres</text>
-          <text data-detail="context" x="605" y="115" class="t-muted" font-size="7" text-anchor="middle">source of truth</text>
+          <text data-node-label="" x="509.5" y="106" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Postgres</text>
         </g>
 
         
-        <g data-legend="">
-          <text x="40" y="416" class="t-primary" font-size="12" font-weight="650">Legend</text>
-          <g data-legend-semantic-kind="emphasis" data-legend-x="40" data-legend-baseline="436" data-legend-width="118">
-            <path d="M 40 433 L 74 433" class="a-emphasis" stroke-width="1.8" marker-end="url(#native-light-cache-path-arrowhead-emphasis)"/>
-            <text x="83" y="436" class="t-muted" font-size="10" font-weight="500">main request</text>
-          </g>
-          <g data-legend-semantic-kind="return" data-legend-x="180" data-legend-baseline="436" data-legend-width="81">
-            <path d="M 180 433 L 214 433" class="a-default" stroke-width="1.4" stroke-dasharray="3,5" marker-end="url(#native-light-cache-path-arrowhead)"/>
-            <text x="223" y="436" class="t-muted" font-size="10" font-weight="500">return</text>
-          </g>
-          <g data-legend-semantic-kind="dashed" data-legend-x="283" data-legend-baseline="436" data-legend-width="112">
-            <path d="M 283 433 L 317 433" class="a-dashed" stroke-width="1.4" marker-end="url(#native-light-cache-path-arrowhead-dashed)"/>
-            <text x="326" y="436" class="t-muted" font-size="10" font-weight="500">async trace</text>
-          </g>
-          <g data-legend-semantic-kind="default" data-legend-x="417" data-legend-baseline="436" data-legend-width="87">
-            <path d="M 417 433 L 451 433" class="a-default" stroke-width="1.4" marker-end="url(#native-light-cache-path-arrowhead)"/>
-            <text x="460" y="436" class="t-muted" font-size="10" font-weight="500">message</text>
-          </g>
-        </g>
-      </svg><g data-story-tokens=""><circle id="story-token-0-0" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/><circle id="story-token-0-1" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/><circle id="story-token-1-0" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/><circle id="story-token-1-1" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/><circle id="story-token-2-0" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/></g></g></g></g><g data-story-layer="captions"><g id="story-caption-0" class="story-caption" style="opacity:1"><line x1="30" x2="30" y1="29" y2="96" stroke="#059669" stroke-width="2"/><rect x="44" y="33" width="24" height="18" rx="5" fill="#cbd5e1" fill-opacity="0.7"/><text x="56" y="45.5" font-size="10.5" font-weight="650" fill="#111827" text-anchor="middle">01</text><text x="78" y="49" font-size="20" fill="#111827" font-weight="650" class="caption-title">Redis returns a miss</text><text x="44" y="79" font-size="14.5" fill="#5b6474" class="caption-body">The API checks Redis. No cached dashboard data is available.</text><rect x="879" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="898" y="42" width="13" height="3" rx="1.5" fill="#cbd5e1"/><rect x="917" y="42" width="13" height="3" rx="1.5" fill="#cbd5e1"/></g><g id="story-caption-1" class="story-caption" style="opacity:0"><line x1="30" x2="30" y1="29" y2="96" stroke="#059669" stroke-width="2"/><rect x="44" y="33" width="24" height="18" rx="5" fill="#cbd5e1" fill-opacity="0.7"/><text x="56" y="45.5" font-size="10.5" font-weight="650" fill="#111827" text-anchor="middle">02</text><text x="78" y="49" font-size="20" fill="#111827" font-weight="650" class="caption-title">Postgres supplies the data</text><text x="44" y="79" font-size="14.5" fill="#5b6474" class="caption-body">The API falls back to Postgres for the profile and metrics.</text><rect x="879" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="898" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="917" y="42" width="13" height="3" rx="1.5" fill="#cbd5e1"/></g><g id="story-caption-2" class="story-caption" style="opacity:0"><line x1="30" x2="30" y1="29" y2="96" stroke="#059669" stroke-width="2"/><rect x="44" y="33" width="24" height="18" rx="5" fill="#cbd5e1" fill-opacity="0.7"/><text x="56" y="45.5" font-size="10.5" font-weight="650" fill="#111827" text-anchor="middle">03</text><text x="78" y="49" font-size="20" fill="#111827" font-weight="650" class="caption-title">Redis is refilled</text><text x="44" y="79" font-size="14.5" fill="#5b6474" class="caption-body">The API writes the fresh result back to Redis for the next request.</text><rect x="879" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="898" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="917" y="42" width="13" height="3" rx="1.5" fill="#059669"/></g></g><metadata id="archify-software-notices">NOTICE
+
+      </svg><g data-story-tokens=""><circle id="story-token-2-0" data-story-token="" cx="0" cy="0" r="5" fill="#059669" stroke="#f4f5f7" stroke-width="2" style="opacity:0"/></g></g></g></g><g data-story-layer="captions"><g id="story-caption-0" class="story-caption" style="opacity:1"><line x1="30" x2="30" y1="29" y2="96" stroke="#d97706" stroke-width="2"/><rect x="44" y="33" width="64" height="18" rx="5" fill="#cbd5e1" fill-opacity="0.7"/><text x="76" y="45.5" font-size="10.5" font-weight="650" fill="#111827" text-anchor="middle">01 / MISS</text><text x="118" y="49" font-size="20" fill="#111827" font-weight="650" class="caption-title">Redis misses</text><text x="44" y="79" font-size="14.5" fill="#5b6474" class="caption-body">The API checks Redis; no cached result.</text><rect x="879" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="898" y="42" width="13" height="3" rx="1.5" fill="#cbd5e1"/><rect x="917" y="42" width="13" height="3" rx="1.5" fill="#cbd5e1"/></g><g id="story-caption-1" class="story-caption" style="opacity:0"><line x1="30" x2="30" y1="29" y2="96" stroke="#059669" stroke-width="2"/><rect x="44" y="33" width="87" height="18" rx="5" fill="#cbd5e1" fill-opacity="0.7"/><text x="87.5" y="45.5" font-size="10.5" font-weight="650" fill="#111827" text-anchor="middle">02 / FALLBACK</text><text x="141" y="49" font-size="20" fill="#111827" font-weight="650" class="caption-title">Postgres answers</text><text x="44" y="79" font-size="14.5" fill="#5b6474" class="caption-body">The API fetches fresh rows from Postgres.</text><rect x="879" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="898" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="917" y="42" width="13" height="3" rx="1.5" fill="#cbd5e1"/></g><g id="story-caption-2" class="story-caption" style="opacity:0"><line x1="30" x2="30" y1="29" y2="96" stroke="#059669" stroke-width="2"/><rect x="44" y="33" width="76" height="18" rx="5" fill="#cbd5e1" fill-opacity="0.7"/><text x="82" y="45.5" font-size="10.5" font-weight="650" fill="#111827" text-anchor="middle">03 / REFILL</text><text x="130" y="49" font-size="20" fill="#059669" font-weight="650" class="caption-title">Redis is ready</text><text x="44" y="79" font-size="14.5" fill="#5b6474" class="caption-body">The API refills Redis for the next request.</text><rect x="879" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="898" y="42" width="13" height="3" rx="1.5" fill="#059669"/><rect x="917" y="42" width="13" height="3" rx="1.5" fill="#059669"/></g></g><metadata id="archify-software-notices">NOTICE
 Archify
 Copyright (c) 2026 tt-a1i (Archify)
 Copyright (c) 2025 Cocoon AI

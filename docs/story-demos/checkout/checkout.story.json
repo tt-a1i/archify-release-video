@@ -5,58 +5,129 @@
   "title": "Take email off the checkout path",
   "preset": "signal-flow",
   "chrome": "story",
-  "badge": "ARCHITECTURE DIFF",
+  "badge": "PR WALKTHROUGH",
   "statusBadges": "none",
-  "duration": 13,
+  "duration": 10.5,
   "loop": true,
-  "stills": [1.8, 11.8],
+  "stills": [
+    2.5,
+    5.5,
+    10.15
+  ],
   "views": [
-    { "id": "before", "type": "architecture", "input": "checkout-before.json" },
+    {
+      "id": "before",
+      "type": "architecture",
+      "input": "checkout-before.json",
+      "preset": "classic"
+    },
     {
       "id": "after",
       "type": "architecture",
       "input": "checkout-after.json",
       "callouts": {
-        "queue": { "text": "NEW", "tone": "added" },
-        "worker": { "text": "NEW", "tone": "added" }
-      }
+        "queue": {
+          "text": "NEW",
+          "tone": "added"
+        },
+        "worker": {
+          "text": "NEW",
+          "tone": "added"
+        }
+      },
+      "preset": "signal-flow"
     }
   ],
   "steps": [
     {
       "view": "before",
       "at": 0,
-      "duration": 4,
-      "title": "Checkout waits for email",
-      "body": "The API sends the receipt inline. Checkout cannot return until the provider responds.",
+      "duration": 3.2,
+      "title": "Checkout waits on email",
+      "body": "The API waits for the email provider before returning.",
       "badge": "BEFORE",
       "tone": "removed",
-      "trace": { "edges": ["checkout_request", "blocking_send"], "travel": 0.8 }
+      "trace": {
+        "edges": [
+          "checkout_request",
+          "blocking_send"
+        ],
+        "travel": 0.65
+      }
     },
     {
       "view": "after",
-      "at": 4,
-      "duration": 4,
-      "title": "Keep the endpoint. Move the wait.",
-      "body": "The API returns once the queue accepts the receipt job.",
+      "at": 3.2,
+      "duration": 3.1,
+      "title": "Same endpoint, shorter path",
+      "body": "Checkout returns once the queue accepts the receipt job.",
       "badge": "AFTER",
       "tone": "modified",
-      "transition": { "from": "before", "shared": [{ "id": "storefront" }, { "id": "checkout" }, { "id": "provider" }], "duration": 0.85 },
-      "enter": ["queue"],
-      "connect": ["enqueue"],
-      "trace": { "edges": ["enqueue"], "travel": 0.9 }
+      "enter": [
+        "queue"
+      ],
+      "connect": [
+        "enqueue"
+      ],
+      "trace": {
+        "edges": [
+          "enqueue"
+        ],
+        "travel": 0.7
+      }
     },
     {
       "view": "after",
-      "at": 8,
-      "duration": 5,
+      "at": 6.3,
+      "duration": 4.2,
       "title": "The worker sends the receipt",
-      "body": "Receipt delivery happens in the background. The email provider is no longer in the request path.",
+      "body": "The worker delivers email in the background, outside checkout.",
       "badge": "AFTER",
       "tone": "added",
-      "enter": ["worker"],
-      "connect": { "edges": ["consume", "deliver"], "stagger": 0.28 },
-      "trace": { "edges": ["consume", "deliver"], "travel": 0.88 }
+      "enter": [
+        "worker"
+      ],
+      "connect": {
+        "edges": [
+          "consume",
+          "deliver"
+        ],
+        "stagger": 0.28
+      },
+      "trace": {
+        "edges": [
+          "consume",
+          "deliver"
+        ],
+        "travel": 0.65
+      }
+    }
+  ],
+  "pair": {
+    "before": "before",
+    "after": "after",
+    "at": 3.2,
+    "duration": 0.85,
+    "shared": [
+      {
+        "id": "storefront"
+      },
+      {
+        "id": "checkout"
+      },
+      {
+        "id": "provider"
+      }
+    ]
+  },
+  "fade": [
+    {
+      "view": "before",
+      "edges": [
+        "blocking_send"
+      ],
+      "at": 3.05,
+      "to": 0
     }
   ]
 }

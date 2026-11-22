@@ -5,31 +5,31 @@
     "title": "The cache-miss path",
     "output": "cache-miss.sequence.html",
     "viewBox": [
-      735,
-      490
+      620,
+      480
     ],
     "column_fit": "spread",
     "animation": "trace",
-    "quality_profile": "showcase"
+    "quality_profile": "showcase",
+    "legend": {
+      "mode": "hidden"
+    }
   },
   "participants": [
     {
       "id": "api",
       "type": "backend",
-      "label": "API",
-      "sublabel": "request handler"
+      "label": "API"
     },
     {
       "id": "redis",
       "type": "database",
-      "label": "Redis",
-      "sublabel": "cache"
+      "label": "Redis"
     },
     {
       "id": "db",
       "type": "database",
-      "label": "Postgres",
-      "sublabel": "source of truth"
+      "label": "Postgres"
     }
   ],
   "messages": [
@@ -37,7 +37,7 @@
       "id": "cache-read",
       "from": "api",
       "to": "redis",
-      "y": 160,
+      "y": 166,
       "label": "Read cache",
       "variant": "default"
     },
@@ -45,23 +45,23 @@
       "id": "cache-miss",
       "from": "redis",
       "to": "api",
-      "y": 207,
-      "label": "Miss",
+      "y": 200,
+      "label": "Cache miss",
       "variant": "return"
     },
     {
       "id": "profile-query",
       "from": "api",
       "to": "db",
-      "y": 260,
-      "label": "Query profile + metrics",
+      "y": 234,
+      "label": "Query DB",
       "variant": "emphasis"
     },
     {
       "id": "profile-rows",
       "from": "db",
       "to": "api",
-      "y": 313,
+      "y": 268,
       "label": "Return rows",
       "variant": "return"
     },
@@ -69,7 +69,7 @@
       "id": "cache-write",
       "from": "api",
       "to": "redis",
-      "y": 366,
+      "y": 302,
       "label": "Refill cache",
       "variant": "dashed"
     }
@@ -77,26 +77,26 @@
   "activations": [
     {
       "participant": "api",
-      "from": 143,
-      "to": 385,
+      "from": 156,
+      "to": 316,
       "type": "backend"
     },
     {
       "participant": "redis",
-      "from": 143,
-      "to": 218,
-      "type": "database"
-    },
-    {
-      "participant": "redis",
-      "from": 355,
-      "to": 380,
+      "from": 156,
+      "to": 210,
       "type": "database"
     },
     {
       "participant": "db",
-      "from": 249,
-      "to": 325,
+      "from": 224,
+      "to": 278,
+      "type": "database"
+    },
+    {
+      "participant": "redis",
+      "from": 292,
+      "to": 316,
       "type": "database"
     }
   ]

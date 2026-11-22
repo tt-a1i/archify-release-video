@@ -8,11 +8,11 @@
 
 ## 用 Archify 演示 Archify
 
-下面是 **Archify v3.3.0 直接导出的动态 SVG**，不是影片里的录屏片段。两张图都由原生图和编排 JSON 生成，会按系统深浅色切换，并尊重减少动态效果的设置。
+**原版 Story 在已有图上做讲解；Story Choreography 把讲解扩展到多种原生图结构，还能跨图转场。** 前两张是 Archify v3.3.0 直接导出的动态 SVG，按系统切换深浅色；第三张是原版播放器的片段。
 
 ### 01 / 缓存未命中：让现有时序图动起来
 
-沿用 [Archify 的缓存未命中示例](https://archify.si/gallery/artifacts/cache-miss.sequence.html)，把 Redis 未命中、Postgres 回源、写回缓存分成三拍。三拍都在同一张图上。
+沿用 [Archify 的缓存未命中示例](https://archify.si/gallery/artifacts/cache-miss.sequence.html)，把 Redis 未命中、Postgres 回源、写回缓存分成三拍。每一拍依次揭开新消息并追踪流向，后续路径不提前出现。镜头跟着当前路径切换取景。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/story-demos/cache-miss/cache-miss-dark.svg">
@@ -23,7 +23,7 @@
 
 ### 02 / 订单回执：把一次架构改动讲清楚
 
-这是一个假想 PR。保留结账 API，替换同步邮件调用，再让队列和后台 worker 依次入场。共享节点跨前后两张图保留，观众不用重新找同一个 API。
+这是一个假想 PR。结账 API 在转场中留在原位，同步邮件路径退场，队列和 worker 依次入场。两张图分别使用 Classic 和 Signal Flow 配色，新增点用 NEW 标记，不只靠颜色区分。
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/story-demos/checkout/checkout-dark.svg">
@@ -31,6 +31,17 @@
 </picture>
 
 [变更前](docs/story-demos/checkout/checkout-before.json) · [变更后](docs/story-demos/checkout/checkout-after.json) · [编排 JSON](docs/story-demos/checkout/checkout.story.json)
+
+### 03 / 原版 Story：在一张架构图上分章节讲解
+
+还是上面的结账例子，但这次不换图。原版 Viewer 沿同一张架构图的节点和连线讲解，**字幕在下方**，时间轴可播放、暂停和拖动。README 内是实拍预览，真正的控件在离线 HTML 里。
+
+<picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="docs/story-demos/native/native-story-poster.png">
+  <img src="docs/story-demos/native/native-story-preview.gif" alt="原版 Story Viewer：在同一张结账架构图上聚焦同步邮件路径和队列交接，下方显示字幕与时间轴" width="760">
+</picture>
+
+[下载原版交互播放器与脚本](docs/story-demos/native/checkout-native-story.zip?raw=true) · 解压后打开 `checkout-flow.story.html`，切换 **Motion → Story**。
 
 [Story 编排与导出文档 ↗](https://github.com/tt-a1i/archify/blob/v3.3.0/archify/references/story-authoring.md)
 

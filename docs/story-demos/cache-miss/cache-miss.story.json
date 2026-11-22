@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "kind": "story-choreography",
-  "id": "readme-cache-miss",
+  "id": "readme-cache-miss-v2",
   "title": "One cache miss, three handoffs",
   "preset": "classic",
   "chrome": "story",
@@ -9,31 +9,319 @@
   "loop": true,
   "views": [
     {
-      "id": "cache-path",
+      "id": "cache-check",
       "type": "sequence",
-      "input": "cache-miss.sequence.json"
+      "diagram": {
+        "schema_version": 1,
+        "diagram_type": "sequence",
+        "meta": {
+          "title": "The cache-miss path",
+          "output": "cache-check.html",
+          "viewBox": [
+            620,
+            480
+          ],
+          "column_fit": "spread",
+          "animation": "trace",
+          "quality_profile": "showcase",
+          "legend": {
+            "mode": "hidden"
+          }
+        },
+        "participants": [
+          {
+            "id": "api",
+            "type": "backend",
+            "label": "API"
+          },
+          {
+            "id": "redis",
+            "type": "database",
+            "label": "Redis"
+          },
+          {
+            "id": "db",
+            "type": "database",
+            "label": "Postgres"
+          }
+        ],
+        "messages": [
+          {
+            "id": "cache-read",
+            "from": "api",
+            "to": "redis",
+            "y": 166,
+            "label": "Read cache",
+            "variant": "default"
+          },
+          {
+            "id": "cache-miss",
+            "from": "redis",
+            "to": "api",
+            "y": 200,
+            "label": "Cache miss",
+            "variant": "return"
+          }
+        ],
+        "activations": [
+          {
+            "participant": "api",
+            "from": 156,
+            "to": 316,
+            "type": "backend"
+          },
+          {
+            "participant": "redis",
+            "from": 156,
+            "to": 210,
+            "type": "database"
+          },
+          {
+            "participant": "db",
+            "from": 224,
+            "to": 278,
+            "type": "database"
+          },
+          {
+            "participant": "redis",
+            "from": 292,
+            "to": 316,
+            "type": "database"
+          }
+        ]
+      }
+    },
+    {
+      "id": "database-read",
+      "type": "sequence",
+      "diagram": {
+        "schema_version": 1,
+        "diagram_type": "sequence",
+        "meta": {
+          "title": "The cache-miss path",
+          "output": "database-read.html",
+          "viewBox": [
+            620,
+            480
+          ],
+          "column_fit": "spread",
+          "animation": "trace",
+          "quality_profile": "showcase",
+          "legend": {
+            "mode": "hidden"
+          }
+        },
+        "participants": [
+          {
+            "id": "api",
+            "type": "backend",
+            "label": "API"
+          },
+          {
+            "id": "redis",
+            "type": "database",
+            "label": "Redis"
+          },
+          {
+            "id": "db",
+            "type": "database",
+            "label": "Postgres"
+          }
+        ],
+        "messages": [
+          {
+            "id": "cache-read",
+            "from": "api",
+            "to": "redis",
+            "y": 166,
+            "label": "Read cache",
+            "variant": "default"
+          },
+          {
+            "id": "cache-miss",
+            "from": "redis",
+            "to": "api",
+            "y": 200,
+            "label": "Cache miss",
+            "variant": "return"
+          },
+          {
+            "id": "profile-query",
+            "from": "api",
+            "to": "db",
+            "y": 234,
+            "label": "Query DB",
+            "variant": "emphasis"
+          },
+          {
+            "id": "profile-rows",
+            "from": "db",
+            "to": "api",
+            "y": 268,
+            "label": "Return rows",
+            "variant": "return"
+          }
+        ],
+        "activations": [
+          {
+            "participant": "api",
+            "from": 156,
+            "to": 316,
+            "type": "backend"
+          },
+          {
+            "participant": "redis",
+            "from": 156,
+            "to": 210,
+            "type": "database"
+          },
+          {
+            "participant": "db",
+            "from": 224,
+            "to": 278,
+            "type": "database"
+          },
+          {
+            "participant": "redis",
+            "from": 292,
+            "to": 316,
+            "type": "database"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cache-refill",
+      "type": "sequence",
+      "diagram": {
+        "schema_version": 1,
+        "diagram_type": "sequence",
+        "meta": {
+          "title": "The cache-miss path",
+          "output": "cache-refill.html",
+          "viewBox": [
+            620,
+            480
+          ],
+          "column_fit": "spread",
+          "animation": "trace",
+          "quality_profile": "showcase",
+          "legend": {
+            "mode": "hidden"
+          }
+        },
+        "participants": [
+          {
+            "id": "api",
+            "type": "backend",
+            "label": "API"
+          },
+          {
+            "id": "redis",
+            "type": "database",
+            "label": "Redis"
+          },
+          {
+            "id": "db",
+            "type": "database",
+            "label": "Postgres"
+          }
+        ],
+        "messages": [
+          {
+            "id": "cache-read",
+            "from": "api",
+            "to": "redis",
+            "y": 166,
+            "label": "Read cache",
+            "variant": "default"
+          },
+          {
+            "id": "cache-miss",
+            "from": "redis",
+            "to": "api",
+            "y": 200,
+            "label": "Cache miss",
+            "variant": "return"
+          },
+          {
+            "id": "profile-query",
+            "from": "api",
+            "to": "db",
+            "y": 234,
+            "label": "Query DB",
+            "variant": "emphasis"
+          },
+          {
+            "id": "profile-rows",
+            "from": "db",
+            "to": "api",
+            "y": 268,
+            "label": "Return rows",
+            "variant": "return"
+          },
+          {
+            "id": "cache-write",
+            "from": "api",
+            "to": "redis",
+            "y": 302,
+            "label": "Refill cache",
+            "variant": "dashed"
+          }
+        ],
+        "activations": [
+          {
+            "participant": "api",
+            "from": 156,
+            "to": 316,
+            "type": "backend"
+          },
+          {
+            "participant": "redis",
+            "from": 156,
+            "to": 210,
+            "type": "database"
+          },
+          {
+            "participant": "db",
+            "from": 224,
+            "to": 278,
+            "type": "database"
+          },
+          {
+            "participant": "redis",
+            "from": 292,
+            "to": 316,
+            "type": "database"
+          }
+        ]
+      }
     }
   ],
   "steps": [
     {
-      "view": "cache-path",
-      "title": "Redis returns a miss",
-      "body": "The API checks Redis. No cached dashboard data is available.",
-      "duration": 2.5,
+      "view": "cache-check",
+      "title": "Redis misses",
+      "body": "The API checks Redis; no cached result.",
+      "duration": 2.85,
+      "badge": "01 / MISS",
+      "tone": "modified",
       "trace": {
         "edges": [
           "cache-read",
           "cache-miss"
         ],
         "action": "trace",
-        "travel": 0.62
+        "travel": 0.7
       }
     },
     {
-      "view": "cache-path",
-      "title": "Postgres supplies the data",
-      "body": "The API falls back to Postgres for the profile and metrics.",
-      "duration": 2.65,
+      "view": "database-read",
+      "title": "Postgres answers",
+      "body": "The API fetches fresh rows from Postgres.",
+      "duration": 2.85,
+      "badge": "02 / FALLBACK",
+      "tone": "accent",
       "trace": {
         "edges": [
           "profile-query",
@@ -44,22 +332,34 @@
       }
     },
     {
-      "view": "cache-path",
-      "title": "Redis is refilled",
-      "body": "The API writes the fresh result back to Redis for the next request.",
-      "duration": 2.5,
+      "view": "cache-refill",
+      "title": "Redis is ready",
+      "body": "The API refills Redis for the next request.",
+      "duration": 2.85,
+      "badge": "03 / REFILL",
+      "tone": "added",
       "trace": {
         "edges": [
           "cache-write"
         ],
         "action": "trace",
-        "travel": 0.78
-      }
+        "travel": 0.92
+      },
+      "focus": [
+        "api",
+        "redis"
+      ]
     }
   ],
-  "stills": [
-    1.15,
-    3.75,
-    6.15
+  "focus": [
+    {
+      "view": "cache-check",
+      "nodes": [
+        "api",
+        "redis"
+      ],
+      "at": 0.42,
+      "area": "center"
+    }
   ]
 }
