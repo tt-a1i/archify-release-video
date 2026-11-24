@@ -85,7 +85,7 @@ export const SIXTY_SECOND_CLIPS: readonly Clip[] = [
   },
   {
     scene: 4, from: 300, to: 470, transitionIn: CUT,
-    caption: { zh: '真实 PR：找出 Vue #2532 里藏着的复杂度', en: 'Real PR: the complexity hidden in Vue #2532' },
+    caption: { zh: '真实 PR：找出 Vue\u00a0#2532 里藏着的复杂度', en: 'Real PR: the complexity hidden in Vue #2532' },
   },
   {
     scene: 5, from: 30, to: 160, transitionIn: CUT,

@@ -104,6 +104,18 @@ npx remotion render src/index.ts XPromo-en out/x/archify-x-en.mp4
 
 `XPromo-zh` / `XPromo-en` 是 60 秒版前加 20 帧封面再淡入正片，首帧就是封面，缩略图取首帧时不必另选。换封面改 [`src/covers/XPromo.tsx`](src/covers/XPromo.tsx) 里的 `X_VIDEO_COVER`。
 
+### 平台封面与视频：小红书
+
+[`src/covers/Xiaohongshu.tsx`](src/covers/Xiaohongshu.tsx)，3:4 竖版（1080 × 1440），只做中文。
+
+- 封面 `XhsCover-atlas`（深色星盘，「CI 全绿，架构早已面目全非」）与 `XhsCover-drift`（浅色漂移卡片，「47 个 PR 测试全绿，架构悄悄走样」）。
+- 视频 `XhsVideo`：顶部固定标题「AI 写的代码，架构还好吗？」，中间是 60 秒版，下方用大号字幕。小红书发布时可单独上传封面，所以视频不内嵌封面帧。
+
+```bash
+npx remotion still src/index.ts XhsCover-atlas out/xiaohongshu/cover-atlas.png
+npx remotion render src/index.ts XhsVideo out/xiaohongshu/archify-xiaohongshu.mp4
+```
+
 ## 关联仓库
 
 - Archify 主仓库：https://github.com/tt-a1i/archify

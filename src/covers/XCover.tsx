@@ -143,6 +143,8 @@ const TextBlock: React.FC<{ copy: Copy; dark: boolean; size: number; width: numb
 };
 
 /** 16:9 cover for X. Text sits in the left half; the right half shows a real frame of the film. */
+export { FrozenScene };
+
 export const XCover: React.FC<{ variant: XCoverVariant }> = ({ variant }) => {
   const locale = useLocale();
   const copy = COPY[variant][locale];

@@ -13,6 +13,7 @@ import { PromoLocaleContext } from './locale';
 import { ArchifyPromoCut, SIXTY_SECOND_DURATION } from './ArchifyPromoCut';
 import { XCover, type XCoverVariant } from './covers/XCover';
 import { XPromo, X_PROMO_DURATION } from './covers/XPromo';
+import { XHS_HEIGHT, XHS_VIDEO_DURATION, XHS_WIDTH, XhsCover, XhsVideo } from './covers/Xiaohongshu';
 import type { PromoLocale } from './locale';
 
 const X_COVER_VARIANTS: XCoverVariant[] = ['atlas', 'tree', 'drift'];
@@ -96,6 +97,24 @@ export const RemotionRoot: React.FC = () => {
           />
         </React.Fragment>
       ))}
+      {(['atlas', 'drift'] as const).map((variant) => (
+        <Still
+          key={variant}
+          id={`XhsCover-${variant}`}
+          component={XhsCover}
+          defaultProps={{ variant }}
+          width={XHS_WIDTH}
+          height={XHS_HEIGHT}
+        />
+      ))}
+      <Composition
+        id="XhsVideo"
+        component={XhsVideo}
+        durationInFrames={XHS_VIDEO_DURATION}
+        fps={FPS}
+        width={XHS_WIDTH}
+        height={XHS_HEIGHT}
+      />
       <Composition
         id="01-CognitiveDebt"
         component={Scene01CognitiveDebt}

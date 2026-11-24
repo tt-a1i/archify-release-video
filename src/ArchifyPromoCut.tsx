@@ -5,7 +5,7 @@ import { fade } from '@remotion/transitions/fade';
 import { SoundTrack } from './components/SoundTrack';
 import { FloatingCaption } from './components/ConsoleChrome';
 import { CompactCutContext } from './cut/context';
-import { SIXTY_SECOND_CLIPS, clipLength, editLength, type Clip, type SceneNumber } from './cut/clips';
+import { SIXTY_SECOND_CLIPS, clipLength, clipStarts, editLength, type Clip, type SceneNumber } from './cut/clips';
 import { useLocale } from './locale';
 import { COLORS } from './theme';
 import { Scene01CognitiveDebt } from './scenes/Scene01CognitiveDebt';
@@ -25,6 +25,25 @@ const SCENES: Record<SceneNumber, React.FC> = {
 };
 
 export const SIXTY_SECOND_DURATION = editLength(SIXTY_SECOND_CLIPS);
+
+const SIXTY_SECOND_STARTS = clipStarts(SIXTY_SECOND_CLIPS);
+
+/** The clip caption showing at a global frame of the 60-second cut, with its fade opacity. */
+export const captionAt = (frame: number) => {
+  for (let i = SIXTY_SECOND_CLIPS.length - 1; i >= 0; i--) {
+    const clip = SIXTY_SECOND_CLIPS[i];
+    const local = frame - SIXTY_SECOND_STARTS[i];
+    if (local >= 0 && local < clipLength(clip)) {
+      if (!clip.caption) return null;
+      const opacity = interpolate(local, [6, 16, clipLength(clip) - 12, clipLength(clip) - 2], [0, 1, 1, 0], {
+        extrapolateLeft: 'clamp',
+        extrapolateRight: 'clamp',
+      });
+      return { caption: clip.caption, opacity };
+    }
+  }
+  return null;
+};
 
 const ClipCaptionOverlay: React.FC<{ clip: Clip }> = ({ clip }) => {
   const frame = useCurrentFrame();
@@ -47,7 +66,8 @@ const ClipCaptionOverlay: React.FC<{ clip: Clip }> = ({ clip }) => {
   );
 };
 
-export const ArchifyPromoCut: React.FC = () => {
+/** captions: 'overlay' draws each clip caption on the video; 'none' leaves them to a surrounding layout. */
+export const ArchifyPromoCut: React.FC<{ captions?: 'overlay' | 'none' }> = ({ captions = 'overlay' }) => {
   return (
     <CompactCutContext.Provider value>
       <AbsoluteFill>
@@ -70,7 +90,7 @@ export const ArchifyPromoCut: React.FC = () => {
                 <Sequence from={-clip.from} layout="none">
                   <Scene />
                 </Sequence>
-                <ClipCaptionOverlay clip={clip} />
+                {captions === 'overlay' && <ClipCaptionOverlay clip={clip} />}
               </TransitionSeries.Sequence>
             );
             return items;
