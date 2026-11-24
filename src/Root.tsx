@@ -10,10 +10,17 @@ import { Scene05WorkflowDeliverables } from './scenes/Scene05WorkflowDeliverable
 import { Scene06MetaOutro } from './scenes/Scene06MetaOutro';
 import { FPS, HEIGHT, WIDTH } from './theme';
 import { PromoLocaleContext } from './locale';
+import { ArchifyPromoCut, SIXTY_SECOND_DURATION } from './ArchifyPromoCut';
 
 const EnglishPromo: React.FC = () => (
   <PromoLocaleContext.Provider value="en">
     <ArchifyPromoVideo />
+  </PromoLocaleContext.Provider>
+);
+
+const EnglishCut: React.FC = () => (
+  <PromoLocaleContext.Provider value="en">
+    <ArchifyPromoCut />
   </PromoLocaleContext.Provider>
 );
 
@@ -32,6 +39,22 @@ export const RemotionRoot: React.FC = () => {
         id="ArchifyReleasePromoEN"
         component={EnglishPromo}
         durationInFrames={TOTAL_DURATION}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="ArchifyReleasePromo60"
+        component={ArchifyPromoCut}
+        durationInFrames={SIXTY_SECOND_DURATION}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="ArchifyReleasePromo60EN"
+        component={EnglishCut}
+        durationInFrames={SIXTY_SECOND_DURATION}
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}

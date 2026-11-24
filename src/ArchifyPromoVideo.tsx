@@ -18,7 +18,7 @@ export { SCENE_DURATIONS, TOTAL_DURATION, TRANSITION_DURATION };
 export const ArchifyPromoVideo: React.FC = () => {
   return (
     <AbsoluteFill>
-      <SoundTrack />
+      <SoundTrack totalFrames={TOTAL_DURATION} />
       <TransitionSeries>
         <TransitionSeries.Sequence durationInFrames={SCENE_DURATIONS.scene1}>
           <Scene01CognitiveDebt />

@@ -13,6 +13,10 @@
     "build": "remotion render src/index.ts ArchifyReleasePromo out/archify-release-promo.mp4",
     "prebuild:en": "node scripts/generate-audio.mjs --if-missing",
     "build:en": "remotion render src/index.ts ArchifyReleasePromoEN out/archify-release-promo-en.mp4",
+    "prebuild:60": "node scripts/generate-audio.mjs --if-missing",
+    "build:60": "remotion render src/index.ts ArchifyReleasePromo60 out/archify-release-60s.mp4",
+    "prebuild:60:en": "node scripts/generate-audio.mjs --if-missing",
+    "build:60:en": "remotion render src/index.ts ArchifyReleasePromo60EN out/archify-release-60s-en.mp4",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

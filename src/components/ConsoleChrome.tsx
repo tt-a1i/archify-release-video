@@ -1,5 +1,6 @@
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { useCompactCut } from '../cut/context';
 import { COLORS, FONTS, clamp01, easeInOutCubic, easeOutCubic, easeOutExpo, lerp, progressBetween } from '../theme';
 
 /**
@@ -334,7 +335,12 @@ export const FloatingCaption: React.FC<{
   accent?: string;
   dark?: boolean;
   opacity?: number;
-}> = ({ kicker, text, accent = COLORS.ember, dark = false, opacity = 1 }) => (
+  /** Render even inside the compact cut, which hides scene-authored captions. */
+  force?: boolean;
+  /** Caption text size in px. */
+  size?: number;
+}> = ({ kicker, text, accent = COLORS.ember, dark = false, opacity = 1, force = false, size = 21 }) =>
+  useCompactCut() && !force ? null : (
   <div
     style={{
       position: 'absolute',
@@ -391,7 +397,7 @@ export const FloatingCaption: React.FC<{
       <span
         style={{
           fontFamily: FONTS.sans,
-          fontSize: 21,
+          fontSize: size,
           fontWeight: 600,
           color: dark ? COLORS.darkInk : COLORS.ink,
           letterSpacing: '0.01em',

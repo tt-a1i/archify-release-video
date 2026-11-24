@@ -196,7 +196,7 @@ export const Scene06MetaOutro: React.FC = () => {
                   color: '#F8FAFC',
                 }}
               >
-                <span style={{ color: COLORS.neonGreen }}>$</span> npx skills add tt-a1i/archify -g
+                <span style={{ color: COLORS.neonGreen }}>$</span> npx skills add https://archify.si --skill archify
               </div>
               <div style={{ fontFamily: FONTS.mono, fontSize: 16, fontWeight: 600, color: COLORS.muted, letterSpacing: '0.04em' }}>
                 archify.si &nbsp;·&nbsp; github.com/tt-a1i/archify &nbsp;·&nbsp; Apache-2.0 Open Source
