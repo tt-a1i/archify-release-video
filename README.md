@@ -87,6 +87,23 @@ To render the English edition locally when needed, run `npm run build:en`. Its o
 
 `npm run build:60` 与 `npm run build:60:en` 分别输出 `out/archify-release-60s.mp4` 和 `out/archify-release-60s-en.mp4`。剪辑表在 [`src/cut/clips.ts`](src/cut/clips.ts)：每段是某一幕内的帧区间 `[from, to)` 加一句中英短字幕，改帧号即可重剪，不需要动各幕代码。音效按幕内帧号登记在 `SoundTrack.tsx`，落在保留片段内的会自动挪到新时间线上。
 
+### 平台封面与视频：X
+
+封面在 [`src/covers/XCover.tsx`](src/covers/XCover.tsx)，16:9，三个方案各有中英两版，背景是片中真实画面：
+
+| 方案 | 背景 | 中文标题 | English headline |
+| --- | --- | --- | --- |
+| `atlas` | 2D 全仓星盘 | CI 全绿，架构早已面目全非 | Green CI. Drifting architecture. |
+| `tree` | 3D 粒子树 | 整个代码库，一眼看清结构 | Your whole repo, mapped in 3D. |
+| `drift` | PR #47 架构漂移 | 47 个 PR 测试全绿，架构悄悄走样 | 47 PRs. All green. Architecture: drifted. |
+
+```bash
+npx remotion still src/index.ts XCover-atlas-zh out/x/cover-atlas-zh.png
+npx remotion render src/index.ts XPromo-en out/x/archify-x-en.mp4
+```
+
+`XPromo-zh` / `XPromo-en` 是 60 秒版前加 20 帧封面再淡入正片，首帧就是封面，缩略图取首帧时不必另选。换封面改 [`src/covers/XPromo.tsx`](src/covers/XPromo.tsx) 里的 `X_VIDEO_COVER`。
+
 ## 关联仓库
 
 - Archify 主仓库：https://github.com/tt-a1i/archify

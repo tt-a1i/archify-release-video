@@ -1,5 +1,5 @@
 import React from 'react';
-import { Composition } from 'remotion';
+import { Composition, Still } from 'remotion';
 import './fonts.css';
 import { ArchifyPromoVideo, SCENE_DURATIONS, TOTAL_DURATION } from './ArchifyPromoVideo';
 import { Scene01CognitiveDebt } from './scenes/Scene01CognitiveDebt';
@@ -11,6 +11,21 @@ import { Scene06MetaOutro } from './scenes/Scene06MetaOutro';
 import { FPS, HEIGHT, WIDTH } from './theme';
 import { PromoLocaleContext } from './locale';
 import { ArchifyPromoCut, SIXTY_SECOND_DURATION } from './ArchifyPromoCut';
+import { XCover, type XCoverVariant } from './covers/XCover';
+import { XPromo, X_PROMO_DURATION } from './covers/XPromo';
+import type { PromoLocale } from './locale';
+
+const X_COVER_VARIANTS: XCoverVariant[] = ['atlas', 'tree', 'drift'];
+const LOCALES: PromoLocale[] = ['zh', 'en'];
+
+const Localized = <P extends object>(Component: React.FC<P>, locale: PromoLocale): React.FC<P> => {
+  const Wrapped: React.FC<P> = (props) => (
+    <PromoLocaleContext.Provider value={locale}>
+      <Component {...props} />
+    </PromoLocaleContext.Provider>
+  );
+  return Wrapped;
+};
 
 const EnglishPromo: React.FC = () => (
   <PromoLocaleContext.Provider value="en">
@@ -59,6 +74,28 @@ export const RemotionRoot: React.FC = () => {
         width={WIDTH}
         height={HEIGHT}
       />
+      {LOCALES.map((locale) => (
+        <React.Fragment key={locale}>
+          {X_COVER_VARIANTS.map((variant) => (
+            <Still
+              key={variant}
+              id={`XCover-${variant}-${locale}`}
+              component={Localized(XCover, locale)}
+              defaultProps={{ variant }}
+              width={WIDTH}
+              height={HEIGHT}
+            />
+          ))}
+          <Composition
+            id={`XPromo-${locale}`}
+            component={Localized(XPromo, locale)}
+            durationInFrames={X_PROMO_DURATION}
+            fps={FPS}
+            width={WIDTH}
+            height={HEIGHT}
+          />
+        </React.Fragment>
+      ))}
       <Composition
         id="01-CognitiveDebt"
         component={Scene01CognitiveDebt}
